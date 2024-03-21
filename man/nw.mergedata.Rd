@@ -20,14 +20,15 @@ dataframe; A dataframe of merged nest attempts and checks unified on "Attemp.ID"
 Merge NestWatch Datasets
 }
 \examples{
- \dontrun{
-# Create simplified example data
-NW.attempts <- data.frame
+
+# load example NestWatch data
+NW.attempts <- nestwatchR::exNWattempts
+NW.checks <- nestwatchR::exNWchecks
 
 # Merge downloaded NestWatch datasets
 nw.mergedata(NW.attempts, NW.checks)
 
-
+\dontrun{
 # Specify the new dataframe name
 nw.mergedata(NW.attempts, NW.checks, output = "merged_data")
 }
