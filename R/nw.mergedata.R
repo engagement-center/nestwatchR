@@ -7,37 +7,49 @@
 #' @return dataframe; A dataframe of merged nest attempts and checks unified on "Attemp.ID"
 #' @export
 #'
+#' @import dplyr
 #' @examples
+#'  \dontrun{
+#' # Create simplified example data
+#' NW.attempts <- data.frame
+#'
 #' # Merge downloaded NestWatch datasets
 #' nw.mergedata(NW.attempts, NW.checks)
 #'
-#' \dontrun{
+#'
 #' # Specify the new dataframe name
 #' nw.mergedata(NW.attempts, NW.checks, output = "merged_data")
 #' }
-nw.mergedata <- function(attempts, checks, output = NULL) {                                   # define mergedata function, with two required argument to select datasets, one optional to name output
+nw.mergedata <- function(attempts, checks, output = NULL) {
 
-    data <- left_join(x = attempts, y = checks, by = "Attempt.ID")                            # join attempts and checks together
-    data <- data %>% rename(Observer.ID = Observer.ID.x) %>%                                  # rename observer ID column
-                     select(-Observer.ID.y)                                                   # drop teh duplicate observer column (obs for attempts always = checks)
-    data <- data %>% relocate(Species.Name, .after = Subnational.Code) %>%                    # reorder columns in a logical manor
-                     relocate(Species.Code, .after = Species.Name) %>%
-                     relocate(Year, .after = Species.Code) %>%
-                     relocate(Elevation.m, .after = Year) %>%
-                     relocate(Height.m, .after = Elevation.m) %>%
-                     relocate(Substrate.Relationship, .after = Substrate) %>%
-                     relocate(Predator.Guard, .after = Substrate.Other.Description) %>%
-                     relocate(Predator.Guard.Other, .after = Predator.Guard)
+  # Join attempts and checks together
+  data <- left_join(x = attempts, y = checks, by = "Attempt.ID")
 
+  # Remove ".x" or ".y" from column names
+  col_names <- colnames(data)
+  clean_col_names <- gsub("\\.x$|\\.y$", "", col_names)
+  colnames(data) <- clean_col_names
 
-    if (is.null(output)) {                                                                    # if output name is not provided
-      merged.data <<- data                                                                    # name of new dataframe will be "data"
-    } else {                                                                                  # if output name is provided
-      assign(paste0(output), data, envir = .GlobalEnv)                                        # name of new dataframe will be argument of "output"
+  # Reorder columns in a logical manor
+  data <- data %>% relocate(Species.Name, .after = Subnational.Code) %>%
+    relocate(Species.Code, .after = Species.Name) %>%
+    relocate(Year, .after = Species.Code) %>%
+    relocate(Elevation.m, .after = Year) %>%
+    relocate(Height.m, .after = Elevation.m) %>%
+    relocate(Substrate.Relationship, .after = Substrate) %>%
+    relocate(Predator.Guard, .after = Substrate.Other.Description) %>%
+    relocate(Predator.Guard.Other, .after = Predator.Guard)
 
-    }
+  # If output name is specified
+  if (is.null(output)) {
+    merged.data <<- data
+  } else {
+    assign(paste0(output), data, envir = .GlobalEnv)
+
+  }
 
 }
+
 
 
 

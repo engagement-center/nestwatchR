@@ -12,6 +12,13 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.1
 Imports:
-  dplyr
+    dplyr,
+    magrittr
 URL: https://github.com/kimsavides/nestwatchR
 BugReports: https://github.com/kimsavides/nestwatchR/issues
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+Depends: 
+    R (>= 2.10)
