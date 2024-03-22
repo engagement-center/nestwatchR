@@ -3,3 +3,6 @@
 ^README\.Rmd$
 ^data/wren-quickstart.csv
 ^data-raw$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
