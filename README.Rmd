@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# NestWatch Data Products
+# is GIT connected now? NestWatch Data Products
 
 <!-- badges: start -->
 ![Static Badge](https://img.shields.io/badge/Dataset%20License-CC%20BY--NC%204.0-blue)

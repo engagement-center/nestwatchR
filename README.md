@@ -1,5 +1,5 @@
 
-# NestWatch Data Products
+# is GIT connected now? NestWatch Data Products
 
 <!-- badges: start -->
 
