@@ -53,7 +53,7 @@ nw.getdata <- function(version = NULL) {                                        
   NW.attempts <- read.csv(grep("attempt", files, value = TRUE))              # filter to get Attempt/Location dataset and move to Global Environment
   NW.checks   <- read.csv(grep("check",   files, value = TRUE))              # filter to get Nest Visits dataset and move to Global Environment
   assign("NW.attempts", NW.attempts, envir = envir)
-  assign("NW.attempts", NW.attempts, envir = envir)
+  assign("NW.checks", NW.checks, envir = envir)
 
   unlink("data-raw/temp-dir", recursive = TRUE)                              # remove the temporary directory
 }
