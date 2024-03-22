@@ -32,20 +32,22 @@ nw.mergedata <- function(attempts, checks, output = NULL) {
   colnames(data) <- clean_col_names
 
   # Reorder columns in a logical manor
-  data <- data %>% relocate(Species.Name, .after = Subnational.Code) %>%
-    relocate(Species.Code, .after = Species.Name) %>%
-    relocate(Year, .after = Species.Code) %>%
-    relocate(Elevation.m, .after = Year) %>%
-    relocate(Height.m, .after = Elevation.m) %>%
-    relocate(Substrate.Relationship, .after = Substrate) %>%
-    relocate(Predator.Guard, .after = Substrate.Other.Description) %>%
-    relocate(Predator.Guard.Other, .after = Predator.Guard)
+  data <- data %>% relocate(.data$Species.Name, .after = .data$Subnational.Code) %>%
+    relocate(.data$Species.Code, .after = .data$Species.Name) %>%
+    relocate(.data$Year, .after = .data$Species.Code) %>%
+    relocate(.data$Elevation.m, .after = .data$Year) %>%
+    relocate(.data$Height.m, .after = .data$Elevation.m) %>%
+    relocate(.data$Substrate.Relationship, .after = .data$Substrate) %>%
+    relocate(.data$Predator.Guard, .after = .data$Substrate.Other.Description) %>%
+    relocate(.data$Predator.Guard.Other, .after = .data$Predator.Guard)
 
-  # If output name is specified
+  # Prep for and output
+  pos <- 1
+  envir = as.environment(pos)
   if (is.null(output)) {
-    merged.data <<- data
+    assign("merged.data", data, envir = envir)
   } else {
-    assign(paste0(output), data, envir = .GlobalEnv)
+    assign(paste0(output), data, envir = envir)
 
   }
 
