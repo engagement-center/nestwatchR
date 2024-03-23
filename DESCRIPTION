@@ -2,9 +2,21 @@ Package: nestwatchR
 Type: Package
 Title: Download, Clean, and Filter NestWatch Data
 Version: 0.0.100
-Author: c(person("Kim", "Savides", , "kim.savides@cornell.edu", role = c("cre", "aut"), comment = c("ORCID = 0000-0002-8778-3815"),
-            person("Robyn", "Bailey", , , role = c("auth"), comment = c(ORCHID = 0000-0002-5298-3710)),
-            person("David", "Bonter", , , role = c("auth"), comment = c(ORCHID = 0000-0003-1768-1941)))
+Authors@R:
+    c(person(given = "Kim",
+             family = "Savides",
+             role = c("aut", "cre"),
+             email = "kim.savides@cornell.edu",
+             comment = c(ORCID = "0000-0002-8778-3815")),
+      person(given = "Robyn",
+             family = "Bailey",
+             role = "aut",
+             comment = c(ORCID = "0000-0002-5298-3710")),
+      person(given = "David",
+             family = "Bonter",
+             role = "aut",
+             comment = c(ORCID = "0000-0003-1768-1941")),
+      person("Cornell Lab of Ornithology", role = "cph"))
 Maintainer: Kim Savides <kim.savides@cornell.edu>
 Description: This package was build to improve accessability for downloading, cleaning, and filtering data from the NestWatch database of bird nesting records. Functions in this package are designed to assist users in conducting common cleaning procedures to the raw data contained in the database.
 License: GPL-3
@@ -19,6 +31,7 @@ URL: https://github.com/kimsavides/nestwatchR
 BugReports: https://github.com/kimsavides/nestwatchR/issues
 Suggests: 
     knitr,
+    kableExtra,
     rmarkdown
 VignetteBuilder: knitr
 Depends: 
