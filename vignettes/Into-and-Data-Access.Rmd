@@ -1,6 +1,6 @@
 ---
 title: "Introduction to NestWatch Data and Data Access"
-output: rmarkdown::html_vignette
+output: rmarkdown::html_document
 vignette: >
   %\VignetteEncoding{UTF-8}
   %\VignetteIndexEntry{Introduction to NestWatch Data and Data Access}
@@ -8,11 +8,7 @@ vignette: >
 editor_options: 
   chunk_output_type: console
 ---
-<style type="text/css">
-.table {
-    width: 75%;
-}
-</style>
+
 
 
 ```{r setup, include=FALSE}
@@ -38,7 +34,7 @@ This vignette gives an overview of the NestWatch Data Products, which represent 
 
 
 
-# Data access {#access}
+# Data Access {#access}
 
 The NestWatch database is freely accessible via a [Mendeley data repository](https://data.mendeley.com/datasets/wjf794z7gc), the [NestWatch website](https://nestwatch.org/explore/nestwatch-open-dataset-downloads/), or the `nestwatchR::nw.getdata()` function and is licensed under [CC BY-NC 4.0](http://creativecommons.org/licenses/by-nc/4.0/?ref=chooser-v1). Users are free to access and modify the data for non-commercial use with proper citation. By downloading the data, the user agrees to have read the below terms of use prior to use. 
 
@@ -50,8 +46,12 @@ The NestWatch database is freely accessible via a [Mendeley data repository](htt
 
 There are two data products available for download via the function `nestwatchR::nw.getdata()`. The only argument, `version = `, to this function defines the version of the database to be downloaded and if not provided will default to the latest version. This function will download, unzip, and import two dataframes to the global environment. Depending on your connection speed, this may take a few minutes. 
 
+
+```{=gfm}
 > [!NOTE]
 > This function depends on the library `reticulate` which requires `Python` to be installed on your machine. See the [installation instructions](https://github.com/engagement-center/2024-NestWatch-Package-Internal?tab=readme-ov-file#installation-computer) for more information.
+```
+
 
 ```{r access, eval = F}
 library(reticulate)
@@ -82,8 +82,9 @@ NW.checks <- nestwatchR::exNWchecks
 
 ```{r inspect attempts, echo = F, eval= T}
 library(kableExtra)
-kable(NW.attempts, "html") %>% kable_styling("striped") #%>% scroll_box(width = "100%", height = "300px")
-
+library(DT)
+#kable(NW.attempts, "html") %>% kable_styling("striped") #%>% scroll_box(width = "100%", height = "300px")
+datatable(NW.attempts, options = list(paging = F, scrollX = T, searching  = F))
 ```
 
 <details>
@@ -136,7 +137,8 @@ into database).
 
 ```{r inspect checks, echo = F, eval= T}
 library(kableExtra)
-kable(NW.checks, "html") %>% kable_styling("striped") #%>% scroll_box(width = "100%", height = "300px")
+#kable(NW.checks, "html") %>% kable_styling("striped") %>% scroll_box(width = "100%", height = "300px")
+datatable(NW.checks, options = list(paging = F, scrollX = T, searching  = F, scrollY = "300px"))
 
 ```
 
@@ -197,6 +199,7 @@ head(merged.data, 20)
 nw.mergedata(attempts = NW.attempts, checks = NW.checks, output = "merged.data")
 data <- head(merged.data, 20)
 
-kable(data, "html") %>% kable_styling("striped") %>% scroll_box(width = "100%", height = "300px")
+#kable(data, "html") %>% kable_styling("striped") %>% scroll_box(width = "100%", height = "300px")
+datatable(data, options = list(paging = F, scrollX = T, searching  = F, scrollY = "300px"))
 
 ```
