@@ -16,7 +16,7 @@ two dataframes; `NW.attempts` containing nest-level parameters for each "Attempt
 Download archived versions of the NestWatch database, with optional control over what version is downloaded.
 }
 \details{
-The NestWatch dataset consists of two large files and this function might ake severla minutes to run depending on yoru connection speed. Presently, there is no option to subset the data prior to download.
+The NestWatch dataset consists of two large files and this function might take several minutes to run depending on your connection speed. Presently, there is no option to subset the data prior to download.
 }
 \examples{
 \dontrun{

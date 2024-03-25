@@ -7,7 +7,7 @@
 #' @return two dataframes; `NW.attempts` containing nest-level parameters for each "Attempt.ID" and `NW.checks` containing check-level information for "Attempt.ID"s that have nest check data.
 #' @export
 #'
-#' @details The NestWatch dataset consists of two large files and this function might ake severla minutes to run depending on yoru connection speed. Presently, there is no option to subset the data prior to download.
+#' @details The NestWatch dataset consists of two large files and this function might take several minutes to run depending on your connection speed. Presently, there is no option to subset the data prior to download.
 #'
 #' @import reticulate
 #' @importFrom utils read.csv
