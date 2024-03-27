@@ -15,9 +15,9 @@ Badge](https://img.shields.io/badge/Code%20License-GPL%20v3-blue)
 This repository is in early development with plans to add additional
 functions create an R package to facilitate accessibility.
 
-- [ ] Fix nw.taxaclean to update species codes
+- [x] Fix nw.taxaclean to update species codes
 - [ ] Complete code to estimate first lay date if not provided
-- [ ] Create “intro” vignette
+- [x] Create “intro” vignette
 - [ ] Create “clean” vignette
 - [ ] Create “filter” vignette
 

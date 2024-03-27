@@ -28,6 +28,12 @@
     <loc>/reference/index.html</loc>
   </url>
   <url>
+    <loc>/reference/nw.cleandata.html</loc>
+  </url>
+  <url>
+    <loc>/reference/nw.cleantaxa.html</loc>
+  </url>
+  <url>
     <loc>/reference/nw.getdata.html</loc>
   </url>
   <url>

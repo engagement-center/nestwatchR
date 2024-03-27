@@ -65,3 +65,15 @@ deciding what cleaning procedures to conduct. This function contains 10 cleaning
        individually to verify if a typo occurred.
 }
 }
+\examples{
+# Load example wren data
+wrens <- nestwatchR::wren_quickstart
+
+# Flag data not meeting procedures e, f, g, and h
+nw.cleandata(data = wrens, mode = "flag",
+             methods = c("a", "b", "c", "d", "e", "f", "g", "h"))
+
+# Remove data not meeting procedures i or j.
+nw.cleandata(data = wrens, mode = "remove",
+             methods = c("i", "j"))
+}

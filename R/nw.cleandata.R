@@ -65,7 +65,7 @@
 #'
 #' # Remove data not meeting procedures i or j.
 #' nw.cleandata(data = wrens, mode = "remove",
-#'              methods = c("i", j"))
+#'              methods = c("i", "j"))
 nw.cleandata  <- function(data, mode, methods = NULL, output = NULL) {
 
   #####################################                                         # Stops the function if the provided arguments are not correctly provided
