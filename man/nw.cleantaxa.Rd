@@ -45,7 +45,7 @@ Uses the current eBird taxonomy as in \code{\link[auk:ebird_taxonomy]{auk::ebird
   \item if \code{FALSE}, retains original Species.Names and Species.Codes.
 }}
 
-\item{output}{character; An optional character vector to custom name the output dataframe}
+\item{output}{character; An optional character string to custom name the output dataframe}
 }
 \value{
 a dataframe

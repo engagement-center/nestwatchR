@@ -39,7 +39,7 @@
 #'   \item if \code{TRUE}, preforms taxanomic roll up for all attempts with subspecies/form designation and updates Species.Code.
 #'   \item if \code{FALSE}, retains original Species.Names and Species.Codes.
 #' }
-#' @param output character; An optional character vector to custom name the output dataframe
+#' @param output character; An optional character string to custom name the output dataframe
 #'
 #' @return a dataframe
 #' @import auk
