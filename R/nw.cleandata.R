@@ -205,14 +205,15 @@ nw.cleandata  <- function(data, mode, methods = NULL, output = NULL) {
     rm(temp)
 
     # J. Flag attempts where the #days between the first check and the last check are < 365 days (Snowy Albatross nets span)
-    data$Visit.Datetime <- as.POSIXct(data$Visit.Datetime)
-    temp <- data[complete.cases(data$Visit.Datetime), ]
-    temp$Visit.Datetime <- as.Date(temp$Visit.Datetime, format = "%Y/%m/%d")
-    temp <- temp %>% group_by(Attempt.ID)
-    temp <- temp %>% summarise(min_date = min(Visit.Datetime),
-                               max_date = max(Visit.Datetime))
+    temp <- data %>% select(c("Attempt.ID", "Visit.Datetime"))
+    temp$Visit.Datetime <- gsub(" .*", "", temp$Visit.Datetime)
+    temp <- temp %>% filter(!is.na(Visit.Datetime))
+    # Convert to unix dates
+    temp$Visit.Datetime <- as.numeric(as.Date(temp$Visit.Datetime))
+    temp <- group_by(temp, Attempt.ID)
+    temp <- temp %>% summarise(min_date = min(Visit.Datetime), max_date = max(Visit.Datetime))
     temp <- temp %>% mutate(date_diff = as.numeric(max_date - min_date))
-    toflag <- temp %>% filter(date_diff > 365) %>% pull(Attempt.ID) %>% unique()
+    toflag <- temp %>% filter(temp$date_diff > 365) %>% pull("Attempt.ID") %>% unique()
     rows <- which(data$Attempt.ID %in% toflag)
     data$Flagged.Attempt[rows] <- "FLAGGED"
 
