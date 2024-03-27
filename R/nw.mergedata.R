@@ -23,6 +23,12 @@
 #' }
 nw.mergedata <- function(attempts, checks, output = NULL) {
 
+  # Initiate column names for call later
+  Attempt.ID <- Species.Name <- Subnational.Code <- Year <- Species.Code <- Elevation.m <- Height.m <- NULL
+  Substrate.Relationship <- Substrate <- Predator.Guard <- Substrate.Other.Description <- Predator.Guard.Other <- NULL
+
+
+  # Join datatsets
   data <- left_join(x = attempts, y = checks, by = "Attempt.ID")
 
   # Remove ".x" or ".y" from column names, remove repeated data columns
@@ -32,14 +38,14 @@ nw.mergedata <- function(attempts, checks, output = NULL) {
   colnames(data) <- clean_col_names
 
   # Reorder columns in a logical manor
-  data <- data %>% relocate("Species.Name", .after = "Subnational.Code") %>%
-    relocate("Species.Code", .after = "Species.Name") %>%
-    relocate("Year", .after = "Species.Code") %>%
-    relocate("Elevation.m", .after = "Year") %>%
-    relocate("Height.m", .after = "Elevation.m") %>%
-    relocate("Substrate.Relationship", .after = "Substrate") %>%
-    relocate("Predator.Guard", .after = "Substrate.Other.Description") %>%
-    relocate("Predator.Guard.Other", .after = "Predator.Guard")
+  data <- data %>% relocate(Species.Name, .after = Subnational.Code) %>%
+    relocate(Species.Code, .after = Species.Name) %>%
+    relocate(Year, .after = Species.Code) %>%
+    relocate(Elevation.m, .after = Year) %>%
+    relocate(Height.m, .after = Elevation.m) %>%
+    relocate(Substrate.Relationship, .after = Substrate) %>%
+    relocate(Predator.Guard, .after = Substrate.Other.Description) %>%
+    relocate(Predator.Guard.Other, .after = Predator.Guard)
 
 
   # Prep for and output
