@@ -375,7 +375,7 @@ nw.cleandata  <- function(data, mode, methods = NULL, output = NULL) {
   # if mode was remove
   # Filter out any nest attempts that were flagged and remove column used to flag
     data <- data[!grepl("FLAGGED", data$Flagged.Attempt), ]
-    data <- data %>% select(-"Flagged.Attempt")
+    data <- data %>% select(-Flagged.Attempt)
 
     # Export resulting dataframe
     if (is.null(output)) {
