@@ -27,7 +27,8 @@ Imports:
     auk,
     dplyr,
     magrittr,
-    reticulate
+    reticulate,
+    stringr
 URL: https://github.com/kimsavides/nestwatchR
 BugReports: https://github.com/kimsavides/nestwatchR/issues
 Suggests: 
