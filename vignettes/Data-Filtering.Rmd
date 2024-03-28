@@ -28,7 +28,105 @@ Before analysis, users should consider conducting finer-scale filtering in order
 Limiting the dataset to just a few species can easily be done using the pipe (`%>%`). If you are unfamiliar with "piping", see the `migritrr` package. Below we will subset the `merged.data` dataframe produced in the Intro vignette to include only attempts for Carolina Wren ("carwre") and Bewick's Wren ("bewwre").
 
 ```{r filter to spp, eval = F, echo = T}
+# Filter data to include only carwr and bewwre
 wrens <- merged.data %>% filter(Species.Code %in% c("carwre", "bewwre"))
+
+# View what species are in the new dataset
+unique(wrens$Species.Name)
+> [1] "Carolina Wren" "Bewick's Wren"
 
 ```
 
+```{r load the data, eval = T, echo = F}
+wrens <- nestwatchR::wren_quickstart
+```
+
+
+## Filter Spatially
+
+Spatial filters are a flexible way to limit data to a predefined geographic area. A user may choose to limit an analysis to nesting attempts within a single [Bird Conservation Region](https://nabci-us.org/resources/bird-conservation-regions-map/) or a select number of states. Or one may choose to clean likely misidentified species by using a rangemap filter. If those identifying criteria are easily subset from the dataset, like states and countries (via `Subnational.Code`), a user may user subsetting rules to filter their data for analysis. If the criteria not already subsettable, a spatial filter can be used.
+
+As an example, we can first view a plot of where the nests in `wrens` are located by species. We can use `tmap` to produce an interactive map. **Note: When plotting any spatial data, please be careful to maintain the correct CRS (coordinate reference system) by projecting unprojected data**. We will be utilizing the `sf` package to help create and transform our spatial data. Here we will project the wrens data into the Lambert Conformal Conic Projection, which is well suited for mapping areas in the United States. 
+
+```{r wren nests, eval = T, echo = T}
+# Create a spatial object from nest data
+nest_points <- sf::st_as_sf(wrens, coords = c("Longitude", "Latitude"), crs = 4326)  # data is in WGS 84 (crs = 4326)
+
+# Define desired CRS to project data to
+proj <- "+proj=lcc +lon_0=-90 +lat_1=33 +lat_2=45"  # PROJ.4 sting defining the projection
+  
+# Project the nest points into LCC projection  
+nest_points <- sf::st_transform(nest_points, crs = proj)   # apply projection
+
+# Map nets locations
+library(tmap)
+tmap_mode("view")                                             # starts interactive plot
+map <- tm_basemap("Esri.WorldGrayCanvas") +                   # define basemap
+       tm_shape(nest_points) +                                # add nest point data
+          tm_dots(col = "Species.Name")                       # color nests by species
+# View the map
+map                                                           
+
+```
+
+By looking at this map, we can see that there are several suspicious nests identified as Bewick's Wrens in the eastern US as well as one nest in Great Britain! Bewick's Wrens are not typically recorded eat of the Mississippi River, so some of these records could be misidentified. We could decide on a subset of states/provinces to use to filter out-of-range nest attempts. But a better method might be to filter nest locations based on a range map.
+
+### eBird Range Polygons
+
+The eBird Status and Trends Products contain a wealth of information on bird populations. One of the available products are range maps of species for which Status and Trend Models have been run. These data are easily accessible in R through the `ebirdst` package. To access these eBird data, you will need to acquire a free access key. This key will give you access to Status and Trends Data within R. For more information and to aquire an access key, see the [documentation here](https://ebird.github.io/ebirdst/).
+
+We can use our unique access key to download the range map of Bewick's Wren and Carolina Wren. Note, you will need the species codes of those species you would like to download, not their alpha code or common name. By modifying the access key, species, and download location in the code below, you can download and open the range polygons to your global environment. This code also selects only the breeding range layer if available, and if not available selects the year-round range layer.
+
+```{r not run download range, eval = F, echo = T}
+# obtain and set an ebird access key
+set_ebirdst_access_key("pasteyourkeyhere")      # you only need to do this once, R will remember it
+
+# Define what species you want to download by their code
+spp <- c("bewwre", "carwre")
+
+# Specify where the data will be downloaded to
+# Here we will create a folder "spatial" in our working directory:
+spatialdata_path <- c("spatial")  
+
+# Download range maps by species
+for (i in spp) {
+  ebirdst_download_status(species = i, download_abundance = FALSE, 
+                          download_ranges = TRUE, pattern = "_smooth_27km_", 
+                          path = spatialdata_path)
+}
+
+# Read in the range files
+for (i in spp) {
+  # Generate the path to the .gpkg files
+  file_path <- paste0(spatialdata_path, "/2022/", i, "/ranges/", i, "_range_smooth_27km_2022.gpkg")
+  # Read in the .gpkg file
+  range_data <- st_read(file_path)
+  # Generate the name for the object
+  object_name <- paste0(i, "_range")
+  # Assign the value to the dynamically generated object name
+  assign(object_name, range_data)
+  rm(range_data)
+}
+
+# Select just breeding layer if available, else resident layer
+object_names <- paste(spp, "range", sep = "_")
+for (i in object_names) {
+  if (i %in% ls(envir = .GlobalEnv)) {
+    data <- get(i, envir = .GlobalEnv)
+    if (any(data$season %in% "breeding")) {
+      data <- data %>% filter(season == "breeding")
+      data <- data %>% st_transform(nest_points, crs = mollweide)
+      assign(paste0(i), data, envir = .GlobalEnv)
+    } else {
+      data <- data %>% filter(season == "resident")
+      data <- data %>% st_transform(nest_points, crs = mollweide)
+      assign(paste0(i), data, envir = .GlobalEnv)}
+    rm(data)
+  }
+}
+
+# Clean up intermediate objects
+rm(file_path, i, object_name, object_names, spatialdata_path)
+
+
+```
