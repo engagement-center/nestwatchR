@@ -41,7 +41,7 @@ nw.cleantaxa(
 Uses the current eBird taxonomy as in \code{\link[auk:ebird_taxonomy]{auk::ebird_taxonomy}}.
  \itemize{
   \item if \code{NULL}, the default, retains original Species.Names and Species.Codes.
-  \item if \code{TRUE}, preforms taxanomic roll up for all attempts with subspecies/form designation and updates Species.Code.
+  \item if \code{TRUE}, preforms taxonomic roll up for all attempts with subspecies/form designation and updates Species.Code.
   \item if \code{FALSE}, retains original Species.Names and Species.Codes.
 }}
 

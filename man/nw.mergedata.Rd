@@ -14,7 +14,7 @@ nw.mergedata(attempts, checks, output = NULL)
 \item{output}{character; An optional character vector to custom name the output dataframe}
 }
 \value{
-dataframe; A dataframe of merged nest attempts and checks unified on "Attemp.ID"
+dataframe; A dataframe of merged nest attempts and checks unified on "Attempt.ID"
 }
 \description{
 Merge NestWatch Datasets
