@@ -29,7 +29,7 @@ This repository is in early development with plans to add additional functions c
 - [X] Fix nw.taxaclean to update species codes
 - [ ] Complete code to estimate first lay date if not provided
 - [X] Create "intro" vignette
-- [ ] Create "clean" vignette
+- [X] Create "clean" vignette
 - [ ] Create "filter" vignette
 
 ## Overview :pushpin:
