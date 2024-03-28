@@ -2,7 +2,7 @@
 title: "Conduct Common NestWatch Data Cleaning Procedures"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Coduct Common NestWatch Data Cleaning Procedures}
+  %\VignetteIndexEntry{2. Coduct Common NestWatch Data Cleaning Procedures}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -119,14 +119,22 @@ a.  **Year errors in visits:**  Flag/remove attempts where the # days between th
 
 
 Depending on what cleaning procedures you choose to run, the sample size of nests may decrease to varying degrees. If your species has a small sample size after using `mode = "remove"` you may consider rerunning with `mode = "flag"` and inspecting which attempts were removed and if each cleaning method was appropriate for your analysis. 
-```{r cleandata ex, eval = T, echo = T}
-# Load example data
-wrens <- nestwatchR::wren_quickstart
-length(unique(wrens$Attempt.ID))
 
-# Remove impossibly long attempts
-nw.cleandata(data = wrens, mode = "remove", methods = "all")
-length(unique(wrens$Attempt.ID))
+```{r cleandata ex, eval = F, echo = T}
+# Load and merge version 2 of database
+nw.getdata(version = 2)
+nw.mergedata(attempts = NW.attempts, checks = NW.checks, output = "merged.data")
+length(unique(mergeddata$Attempt.ID))
+# > 572488    # Attempts in raw dataset
 
 
+# Remove attempts with 'Brown-headed Cowbird' as the species
+nw.cleandata(data = mergeddata, mode = "remove", methods = "a", output = "no_bnhcow")
+length(unique(no_bnhcow$Attempt.ID))
+# > 574263    # Attempts after cleaning
+
+# Remove attempts using "i" and "j"
+nw.cleandata(data = mergeddata, mode = "remove", methods = c("i", "j"), output = "no_longnests")
+length(unique(no_longnests$Attempt.ID))
+# > 572583    # Attempts after cleaning
 ```

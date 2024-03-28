@@ -3,7 +3,7 @@ title: "Introduction to NestWatch Data and Data Access"
 output: rmarkdown::html_document
 vignette: >
   %\VignetteEncoding{UTF-8}
-  %\VignetteIndexEntry{Introduction to NestWatch Data and Data Access}
+  %\VignetteIndexEntry{1. Introduction to NestWatch Data and Data Access}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
   chunk_output_type: console
