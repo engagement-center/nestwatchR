@@ -4,7 +4,7 @@
 #' @param checks dataframe; A dataframe containing NestWatch nest check data
 #' @param output character; An optional character vector to custom name the output dataframe
 #'
-#' @return dataframe; A dataframe of merged nest attempts and checks unified on "Attemp.ID"
+#' @return dataframe; A dataframe of merged nest attempts and checks unified on "Attempt.ID"
 #' @export
 #'
 #' @import dplyr
