@@ -18,7 +18,7 @@ functions create an R package to facilitate accessibility.
 - [x] Fix nw.taxaclean to update species codes
 - [ ] Complete code to estimate first lay date if not provided
 - [x] Create “intro” vignette
-- [ ] Create “clean” vignette
+- [x] Create “clean” vignette
 - [ ] Create “filter” vignette
 
 ## Overview :pushpin:
