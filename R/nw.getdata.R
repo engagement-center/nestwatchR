@@ -29,18 +29,19 @@ nw.getdata <- function(version = NULL) {                                        
     DOI <- paste("10.17632/wjf794z7gc", version, sep = ".")                   # add version to base DOI
   }
 
-  dir.create("data-raw/temp-dir")                                             # create temporary directory for data to download to
+  dir.create("temp-dir")                                             # create temporary directory for data to download to
 
   ### 2. Download the data using Reticulate and DataHugger
   reticulate::use_virtualenv()                                                # use a virtual instance of Python
   reticulate::virtualenv_install(packages = "datahugger", pip_options = character())  # virtually install DataHugger to retrieve Mendeley Data
+  reticulate::virtualenv_install(packages = "pandas", pip_options = character())  # virtually install pandas to help
   datahugger <- reticulate::import("datahugger")
-  datahugger$get(DOI, unzip = T, "data-raw/temp-dir")
+  datahugger$get(DOI, unzip = T, "temp-dir")
 
   ### 3. Unzip datafiles, add to global environment, remove temp directory
-  files <- list.files("data-raw/temp-dir")                                             # get list of files in the temporary directory
+  files <- list.files("temp-dir")                                             # get list of files in the temporary directory
   for (i in files) {                                                          # loop over files to unzip and store as .csv
-    unzip(paste("data-raw/temp-dir", i, sep = "/"), exdir = "data-raw/temp-dir")
+    unzip(paste("temp-dir", i, sep = "/"), exdir = "temp-dir")
   }
 
   message("... NestWatch data files are being unzipped and extracted to your Global Enviorment. This may take a minute ...")
@@ -49,11 +50,11 @@ nw.getdata <- function(version = NULL) {                                        
   pos <- 1
   envir = as.environment(pos)
 
-  files <- list.files("data-raw/temp-dir", pattern = "\\.csv$", full.names = TRUE)     # get list of .csv files
+  files <- list.files("temp-dir", pattern = "\\.csv$", full.names = TRUE)     # get list of .csv files
   NW.attempts <- read.csv(grep("attempt", files, value = TRUE))              # filter to get Attempt/Location dataset and move to Global Environment
   NW.checks   <- read.csv(grep("check",   files, value = TRUE))              # filter to get Nest Visits dataset and move to Global Environment
   assign("NW.attempts", NW.attempts, envir = envir)
   assign("NW.checks", NW.checks, envir = envir)
 
-  unlink("data-raw/temp-dir", recursive = TRUE)                              # remove the temporary directory
+  unlink("temp-dir", recursive = TRUE)                              # remove the temporary directory
 }
