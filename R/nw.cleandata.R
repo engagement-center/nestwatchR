@@ -66,7 +66,7 @@
 #' # Remove data not meeting procedures i or j.
 #' nw.cleandata(data = wrens, mode = "remove",
 #'              methods = c("i", "j"))
-nw.cleandata  <- function(data, mode, methods = NULL, output = NULL) {
+nw.cleandata  <- function(data, mode, methods, output = NULL) {
 
   #####################################                                         # Stops the function if the provided arguments are not correctly provided
   ###   Function Parameters Check   ###
@@ -80,22 +80,17 @@ nw.cleandata  <- function(data, mode, methods = NULL, output = NULL) {
   if (!mode %in% c("flag", "remove")) {
     stop("Invalid 'mode'. Please provide either 'flag' or 'remove'.")
   }
-  # If 'methods' is provided, check for proper inputs.
-  if (!missing(methods)) {
-    # Check to 'methods' is a character vector, if not stop the function.
-    if (!is.character(methods)) {
-      stop("Invalid 'method'. Method must be 'all' OR or a character vector containing only characters from 'a' to 'k' designating which cleaning procedure(s) to conduct. See ?nw.clean for procedure descriptions.")
-    }
-    # If 'methods' contains any invalid characters, stop the function.
-    valid_methods <- c("all", letters[1:11])
-    if (!all(methods %in% valid_methods)) {
-      stop("Invalid 'method'. Method must be 'all' OR or a character vector containing only characters from 'a' to 'k' designating which cleaning procedure(s) to conduct. See ?nw.clean for procedure descriptions.")
-    }
-    # If 'methods' contains "all", cannot contain other values, stop function.
-    if ("all" %in% methods && length(methods) > 1) {
-      stop("** Invalid 'method'. Method must be 'all' OR or a character vector containing only characters from 'a' to 'k' designating which cleaning procedure(s) to conduct. See ?nw.clean for procedure descriptions.")
-    }
+  # Stops Function if 'methods' is invalid.
+  if (missing(methods)) {
+    stop("Invalid 'methods'. See ?nw.cleandata for descriptions.")
+  }
+  # If 'methods' contains any invalid characters, stop the function.
+  valid_methods <- c(letters[1:10])
+  if (!all(methods %in% valid_methods)) {
+    stop("Invalid 'methods'. See ?nw.cleandata for descriptions.")
   }# end of parameter check
+
+
 
 
   #####################################
@@ -109,123 +104,18 @@ nw.cleandata  <- function(data, mode, methods = NULL, output = NULL) {
 
   # Prep dataframe
   data <- data %>% mutate(Flagged.Attempt = NA) %>%                           # Make new column to hold flag code
-                   relocate(Flagged.Attempt, .before = Attempt.ID)          # Reorder column to beginning
+    relocate(Flagged.Attempt, .before = Attempt.ID)          # Reorder column to beginning
   data$First.Lay.Date <- as.Date(data$First.Lay.Date)                           # Make all date-times proper formats
   data$Fledge.Date    <- as.Date(data$Fledge.Date)
   data$Hatch.Date     <- as.Date(data$Hatch.Date)
   data$Visit.Datetime <- as.POSIXct(data$Visit.Datetime, format = "%Y-%m-%d %H:%M:%S", tz = "")
 
-
   #####################################
-  ###        Method == "all"        ###
-  #####################################
-
-  # If methods == "all"
-  if ("all" %in% methods && length(methods) == 1){
-    message("... Beginning to identify nesting attempts that do not meet the criteria. This may take a minute ...")
-
-    # Run each flagging procedure.
-    # A. Flag BHCO "nests"
-      toflag <- data %>% filter(Species.Code == 'bnhcow') %>% pull(Attempt.ID) %>% unique()
-      rows <- which(data$Attempt.ID %in% toflag)
-    data$Flagged.Attempt[rows] <- "FLAGGED"
-
-    # B. Flag outcomes of "no breeding behavior observed" (u3), "inactive" (i), and "not monitored" (n).
-      toflag <- data %>% filter(Outcome %in% c("u3", "i", "n")) %>% pull(Attempt.ID) %>% unique()
-      rows <- which(data$Attempt.ID %in% toflag)
-    data$Flagged.Attempt[rows] <- "FLAGGED"
-
-    # C. Flag outcome "invasive spp management" (f5).
-      toflag <- data %>% filter(Outcome == "f5") %>% pull(Attempt.ID) %>% unique()
-      rows <- which(data$Attempt.ID %in% toflag)
-    data$Flagged.Attempt[rows] <- "FLAGGED"
-
-    # D. Flag attempt if outcome is fail (f, f1, f2, f3, f6, f7), but recorded fledged young > 0.
-      toflag <- data %>% filter(Outcome %in% c("f", "f1", "f2", "f3", "f6", "f7") & data$Young.Fledged > 0) %>% pull(Attempt.ID) %>% unique()
-      rows <- which(data$Attempt.ID %in% toflag)
-    data$Flagged.Attempt[rows] <- "FLAGGED"
-
-    # E. Flag attempt if outcome is success (s1), but recorded fledged young = 0.
-      toflag <- data %>% filter(Outcome == "s1" & data$Young.Fledged == "0") %>% pull(Attempt.ID) %>% unique()
-      rows <- which(data$Attempt.ID %in% toflag)
-    data$Flagged.Attempt[rows] <- "FLAGGED"
-
-    # F. Flag attempt if # hatched young > clutch size.
-      toflag <- data %>% filter(Young.Total > Clutch.Size) %>% pull(Attempt.ID) %>% unique()
-      rows <- which(data$Attempt.ID %in% toflag)
-    data$Flagged.Attempt[rows] <- "FLAGGED"
-
-    # G. Flag attempt if # fledged > # hatched.
-      toflag <- data %>% filter(Young.Fledged > Young.Total) %>% pull(Attempt.ID) %>% unique()
-      rows <- which(data$Attempt.ID %in% toflag)
-    data$Flagged.Attempt[rows] <- "FLAGGED"
-
-    # H. Flag attempts that occur in international waters (likely incorrect coords, Subnational code = XX-)
-      toflag <- data %>% filter(Subnational.Code == "XX-") %>% pull(Attempt.ID) %>% unique()
-      rows <- which(data$Attempt.ID %in% toflag)
-    data$Flagged.Attempt[rows] <- "FLAGGED"
-
-    # I. Flag attempts with nest periods > absolute max of any bird
-    #    Stepping through different nest stages looking for if any summary date data was provided to work off of
-    # Find attempts where Fledge - Lay > 365 (Snowy Albatross)
-      # Look for attempts with both Lay and Fledge dates
-      phen1 <- unlist(data[complete.cases(str_detect(data$First.Lay.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b")), "Attempt.ID"])
-      phen2 <- unlist(data[complete.cases(str_detect(data$Fledge.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b")), "Attempt.ID"])
-      shared <- intersect(phen1, phen2)
-      temp <- data %>% filter(Attempt.ID %in% shared)
-      # Calculate date diff, filter
-      temp <- temp %>% mutate(date_diff = (Fledge.Date - First.Lay.Date))
-    temp <- temp %>% filter(date_diff > 365)
-    toflag <- unique(temp$Attempt.ID)
-    # Find attempts where Hatch - Lay > 84 (Southern Brown Kiwi)
-      # Look for attempts with both Lay and Fledge dates
-      phen1 <- unlist(data[complete.cases(str_detect(data$First.Lay.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b")), "Attempt.ID"])
-      phen2 <- unlist(data[complete.cases(str_detect(data$Hatch.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b")), "Attempt.ID"])
-      shared <- intersect(phen1, phen2)
-      temp <- data %>% filter(Attempt.ID %in% shared)
-        # Calculate date diff, filter
-      temp <- temp %>% mutate(date_diff = (Hatch.Date - First.Lay.Date))
-    temp <- temp %>% filter(date_diff > 84)
-    toflag <- c(toflag, unique(temp$Attempt.ID))
-    toflag <- unique(toflag)
-    # Find attempts where Fledge - Hatch > 300 (Snowy Albatross)
-      # Look for attempts with both Lay and Fledge dates
-      phen1 <- unlist(data[complete.cases(str_detect(data$Hatch.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b")), "Attempt.ID"])
-      phen2 <- unlist(data[complete.cases(str_detect(data$Fledge.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b")), "Attempt.ID"])
-      shared <- intersect(phen1, phen2)
-      temp <- data %>% filter(Attempt.ID %in% shared)
-      # Calculate date diff, filter
-      temp <- temp %>% mutate(date_diff = (Fledge.Date - Hatch.Date))
-    temp <- temp %>% filter(date_diff > 300)
-    toflag <- c(toflag, unique(temp$Attempt.ID))
-    toflag <- unique(toflag)
-    # Run filter
-    rows <- which(data$Attempt.ID %in% toflag)
-    data$Flagged.Attempt[rows] <- "FLAGGED"
-    rm(temp)
-
-    # J. Flag attempts where the #days between the first check and the last check are < 365 days (Snowy Albatross nets span)
-    temp <- data %>% select(c("Attempt.ID", "Visit.Datetime"))
-    temp$Visit.Datetime <- gsub(" .*", "", temp$Visit.Datetime)
-    temp <- temp %>% filter(!is.na(Visit.Datetime))
-    # Convert to unix dates
-    temp$Visit.Datetime <- as.numeric(as.Date(temp$Visit.Datetime))
-    temp <- group_by(temp, Attempt.ID)
-    temp <- temp %>% summarise(min_date = min(Visit.Datetime), max_date = max(Visit.Datetime))
-    temp <- temp %>% mutate(date_diff = as.numeric(max_date - min_date))
-    toflag <- temp %>% filter(temp$date_diff > 365) %>% pull("Attempt.ID") %>% unique()
-    rows <- which(data$Attempt.ID %in% toflag)
-    data$Flagged.Attempt[rows] <- "FLAGGED"
-
-  } # end if methods = all
-
-
-  #####################################
-  ###        Method != "all"        ###
+  ###    Individual Methods         ###
   #####################################
 
   # If individual methods were specified, loop through each individual method.
-  if (all(methods %in% letters[1:11])) {
+  if (all(methods %in% letters[1:10])) {
     message("... Beginning to identify nesting attempts that do not meet the criteria. This may take a minute ...")
 
     # Start of methods loop:
@@ -239,7 +129,7 @@ nw.cleandata  <- function(data, mode, methods = NULL, output = NULL) {
 
       } else if (m == "b") {
         # Code block for method "b"
-        # B. Flag outcomes of "no breeding behavior observed" (u3), "inactive" (i), and "not monitored" (n), unk ().
+        # B. Flag outcomes of "no breeding behavior observed" (u3), "inactive" (i), and "not monitored" (n).
         toflag <- data %>% filter(Outcome %in% c("u3", "i", "n")) %>% pull(Attempt.ID) %>% unique()
         rows <- which(data$Attempt.ID %in% toflag)
         data$Flagged.Attempt[rows] <- "FLAGGED"
@@ -254,21 +144,25 @@ nw.cleandata  <- function(data, mode, methods = NULL, output = NULL) {
       } else if (m == "d") {
         # Code block for method "d"
         # D. Flag attempt if outcome is fail (f, f1, f2, f3, f6, f7), but recorded fledged young > 0.
-        toflag <- data %>% filter(Outcome %in% c("f", "f1", "f2", "f3", "f6", "f7") & data$Young.Fledged > 0) %>% pull(Attempt.ID) %>% unique()
+        toflag <- data %>% filter(Outcome %in% c("f", "f1", "f2", "f3", "f6", "f7")) %>%
+          filter(Young.Fledged > 0) %>%
+          pull(Attempt.ID) %>% unique()
         rows <- which(data$Attempt.ID %in% toflag)
         data$Flagged.Attempt[rows] <- "FLAGGED"
 
       } else if (m == "e") {
         # Code block for method "e"
         # E. Flag attempt if outcome is success (s1), but recorded fledged young = 0.
-        toflag <- data %>% filter(Outcome == "s1" & data$Young.Fledged == "0") %>% pull(Attempt.ID) %>% unique()
+        toflag <- data %>% filter(Outcome == "s1") %>%
+          filter(Young.Fledged == "0") %>%
+          pull(Attempt.ID) %>% unique()
         rows <- which(data$Attempt.ID %in% toflag)
         data$Flagged.Attempt[rows] <- "FLAGGED"
 
       } else if (m == "f") {
         # Code block for method "f"
         # F. Flag attempt if # hatched young > clutch size.
-        toflag <- data %>% filter(Young.Total > "Clutch.Size") %>% pull(Attempt.ID) %>% unique()
+        toflag <- data %>% filter(Young.Total > Clutch.Size) %>% pull(Attempt.ID) %>% unique()
         rows <- which(data$Attempt.ID %in% toflag)
         data$Flagged.Attempt[rows] <- "FLAGGED"
 
@@ -327,7 +221,6 @@ nw.cleandata  <- function(data, mode, methods = NULL, output = NULL) {
         data$Flagged.Attempt[rows] <- "FLAGGED"
         rm(temp)
 
-
       } else if (m == "j") {
         # J. Flag attempts where the #days between the first check and the last check are < 365 days (Snowy Albatross nets span)
         temp <- data %>% select(c("Attempt.ID", "Visit.Datetime"))
@@ -342,13 +235,17 @@ nw.cleandata  <- function(data, mode, methods = NULL, output = NULL) {
         rows <- which(data$Attempt.ID %in% toflag)
         data$Flagged.Attempt[rows] <- "FLAGGED"
       } # end last method code chunk
-    } # end of methods loop, all suspect attempts have been flagged
-  } # end of if methods !- all
 
 
-#####################################
-###        Mode == "flag"         ###
-#####################################
+
+
+
+
+    }
+  }
+  #####################################
+  ###        Mode == "flag"         ###
+  #####################################
 
 
   # Prep for and Export resulting dataframe
@@ -368,12 +265,12 @@ nw.cleandata  <- function(data, mode, methods = NULL, output = NULL) {
   } else {
 
 
-#####################################
-###       Mode == "remove"        ###
-#####################################
+    #####################################
+    ###       Mode == "remove"        ###
+    #####################################
 
-  # if mode was remove
-  # Filter out any nest attempts that were flagged and remove column used to flag
+    # if mode was remove
+    # Filter out any nest attempts that were flagged and remove column used to flag
     data <- data[!grepl("FLAGGED", data$Flagged.Attempt), ]
     data <- data %>% select(-Flagged.Attempt)
 
@@ -387,9 +284,4 @@ nw.cleandata  <- function(data, mode, methods = NULL, output = NULL) {
     message("... Identified nesting attempts have been removed from the new dataset.")
   }
 } ##### end whole function
-
-
-
-
-
 
