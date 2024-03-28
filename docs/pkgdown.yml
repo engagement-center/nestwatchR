@@ -3,6 +3,7 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   Data-Cleaning: Data-Cleaning.html
+  Data-Filtering: Data-Filtering.html
   Into-and-Data-Access: Into-and-Data-Access.html
-last_built: 2024-03-28T19:27Z
+last_built: 2024-03-28T19:58Z
 
