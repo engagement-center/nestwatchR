@@ -25,7 +25,7 @@ Before analysis, users should consider conducting finer-scale filtering in order
 
 ## Filter Species
 
-Limiting the dataset to just a few species can easily be done using the pipe (`%>%`). If you are unfamiliar with "piping", see the `migritrr` package. Below we will subset the `merged.data` dataframe produced in the Intro vignette to include only attempts for Carolina Wren ("carwre") and Bewick's Wren ("bewwre").
+Limiting the dataset to just a few species can easily be done using the pipe (`%>%`). If you are unfamiliar with "piping", see the `migritrr` package. Below we will subset the `merged.data` dataframe produced in the Intro vignette to include only attempts for Bewick's Wren ("bewwre", n = 15,339 atte ) and will further subset those nests to improve map rendering speed here.
 
 ```{r filter to spp, eval = F, echo = T}
 # Filter data to include only carwr and bewwre
@@ -35,10 +35,15 @@ wrens <- merged.data %>% filter(Species.Code %in% c("carwre", "bewwre"))
 unique(wrens$Species.Name)
 > [1] "Carolina Wren" "Bewick's Wren"
 
+# Subset dataframe to get just a few columns of interest
+
 ```
 
 ```{r load the data, eval = T, echo = F}
+library(dplyr)
 wrens <- nestwatchR::wren_quickstart
+wrens <- wrens %>% select(Attempt.ID, Species.Name, Species.Code, Year, Subnational.Code, Latitude, Longitude)
+wrens <- wrens %>% distinct()
 ```
 
 
@@ -46,12 +51,16 @@ wrens <- nestwatchR::wren_quickstart
 
 Spatial filters are a flexible way to limit data to a predefined geographic area. A user may choose to limit an analysis to nesting attempts within a single [Bird Conservation Region](https://nabci-us.org/resources/bird-conservation-regions-map/) or a select number of states. Or one may choose to clean likely misidentified species by using a rangemap filter. If those identifying criteria are easily subset from the dataset, like states and countries (via `Subnational.Code`), a user may user subsetting rules to filter their data for analysis. If the criteria not already subsettable, a spatial filter can be used.
 
-As an example, we can first view a plot of where the nests in `wrens` are located by species. We can use `tmap` to produce an interactive map. **Note: When plotting any spatial data, please be careful to maintain the correct CRS (coordinate reference system) by projecting unprojected data**. We will be utilizing the `sf` package to help create and transform our spatial data. Here we will project the wrens data into the Lambert Conformal Conic Projection, which is well suited for mapping areas in the United States. 
+As an example, we can first view a plot of where the nests in `wrens` are located by species. Here we will use `tmap` to produce an interactive map, but other packages including `mapview` also provide interactive mapping interfaces. Because these data are large, we will first select a random subset of nests so interactive plotting will render effectively. 
 
-```{r wren nests, eval = T, echo = T}
+
+
+We will be utilizing the `sf` package to help create and transform our spatial data. Here we will project the wrens data into the Lambert Conformal Conic Projection, which is well suited for mapping areas in the United States. 
+**Note: When plotting any spatial data, please be careful to maintain the correct CRS (coordinate reference system) by projecting unprojected data**
+
+```{r wren nests, eval = T, echo = F}
 # Create a spatial object from nest data
 nest_points <- sf::st_as_sf(wrens, coords = c("Longitude", "Latitude"), crs = 4326)  # data is in WGS 84 (crs = 4326)
-
 # Define desired CRS to project data to
 proj <- "+proj=lcc +lon_0=-90 +lat_1=33 +lat_2=45"  # PROJ.4 sting defining the projection
   
@@ -69,6 +78,15 @@ map
 
 ```
 
+
+```{r test, eval = T, echo=TRUE}
+library(mapview)
+mapview(nest_points, 
+        zcol = "Species.Name", 
+        alpha.regions = 0.4,
+        cex = 4,
+        legend = TRUE)
+```
 By looking at this map, we can see that there are several suspicious nests identified as Bewick's Wrens in the eastern US as well as one nest in Great Britain! Bewick's Wrens are not typically recorded eat of the Mississippi River, so some of these records could be misidentified. We could decide on a subset of states/provinces to use to filter out-of-range nest attempts. But a better method might be to filter nest locations based on a range map.
 
 ### eBird Range Polygons
