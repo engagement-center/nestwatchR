@@ -3,13 +3,13 @@
 ######################################
 
 test_that("Mode is properly input", {
-  expect_error(cleanv2(), "Invalid 'mode'. Please provide either 'flag' or 'remove'.")
-  expect_error(cleanv2(mode = "bad mode"), "Invalid 'mode'. Please provide either 'flag' or 'remove'.")
+  expect_error(nw.cleandata(), "Invalid 'mode'. Please provide either 'flag' or 'remove'.")
+  expect_error(nw.cleandata(mode = "bad mode"), "Invalid 'mode'. Please provide either 'flag' or 'remove'.")
 })
 
 test_that("Methods is properly input", {
-  expect_error(cleanv2(mode = "remove"), )
-  expect_error(cleanv2(mode = "flag", method = "bad"), )
+  expect_error(nw.cleandata(mode = "remove"), )
+  expect_error(nw.cleandata(mode = "flag", method = "bad"), )
 })
 
 ######################################
@@ -23,7 +23,7 @@ test_that("Method 'a'", {
                      Fledge.Date = rep("2024-01-01", 6),
                      Hatch.Date = rep("2024-01-01", 6),
                      Visit.Datetime = rep("2024-01-01 12:12:12", 6))
-  cleanv2(data = data, mode = "remove", methods = "a", output = "inspect")
+  nw.cleandata(data = data, mode = "remove", methods = "a", output = "inspect")
   expect_equal(length(unique(inspect$Attempt.ID)), 3)
 })
 
@@ -35,7 +35,7 @@ test_that("Method 'b'", {
                      Fledge.Date = rep("2024-01-01", 6),
                      Hatch.Date = rep("2024-01-01", 6),
                      Visit.Datetime = rep("2024-01-01 12:12:12", 6))
-  cleanv2(data = data, mode = "remove", methods = "b", output = "inspect")
+  nw.cleandata(data = data, mode = "remove", methods = "b", output = "inspect")
   expect_equal(length(unique(inspect$Attempt.ID)), 1)
 })
 
@@ -47,7 +47,7 @@ test_that("Method 'c'", {
                      Fledge.Date = rep("2024-01-01", 6),
                      Hatch.Date = rep("2024-01-01", 6),
                      Visit.Datetime = rep("2024-01-01 12:12:12", 6))
-  cleanv2(data = data, mode = "remove", methods = "c", output = "inspect")
+  nw.cleandata(data = data, mode = "remove", methods = "c", output = "inspect")
   expect_equal(length(unique(inspect$Attempt.ID)), 3)
 })
 
@@ -60,7 +60,7 @@ test_that("Method 'd'", {
                      Hatch.Date = rep("2024-01-01", 6),
                      Young.Fledged = c(0, 0, 3, 3, 0, 4),
                      Visit.Datetime = rep("2024-01-01 12:12:12", 6))
-  cleanv2(data = data, mode = "remove", methods = "d", output = "inspect")
+  nw.cleandata(data = data, mode = "remove", methods = "d", output = "inspect")
   expect_equal(length(unique(inspect$Attempt.ID)), 3)
 })
 
@@ -73,7 +73,7 @@ test_that("Method 'e'", {
                      Fledge.Date = rep("2024-01-01", 6),
                      Hatch.Date = rep("2024-01-01", 6),
                      Visit.Datetime = rep("2024-01-01 12:12:12", 6))
-  cleanv2(data = data, mode = "remove", methods = "e", output = "inspect")
+  nw.cleandata(data = data, mode = "remove", methods = "e", output = "inspect")
   expect_equal(length(unique(inspect$Attempt.ID)), 3)
 })
 
@@ -88,7 +88,7 @@ test_that("Method 'f'", {
                      Fledge.Date = rep("2024-01-01", 6),
                      Hatch.Date = rep("2024-01-01", 6),
                      Visit.Datetime = rep("2024-01-01 12:12:12", 6))
-  cleanv2(data = data, mode = "remove", methods = "f", output = "inspect")
+  nw.cleandata(data = data, mode = "remove", methods = "f", output = "inspect")
   expect_equal(length(unique(inspect$Attempt.ID)), 3)
 })
 
@@ -103,7 +103,7 @@ test_that("Method 'g'", {
                      Fledge.Date = rep("2024-01-01", 6),
                      Hatch.Date = rep("2024-01-01", 6),
                      Visit.Datetime = rep("2024-01-01 12:12:12", 6))
-  cleanv2(data = data, mode = "remove", methods = "g", output = "inspect")
+  nw.cleandata(data = data, mode = "remove", methods = "g", output = "inspect")
   expect_equal(length(unique(inspect$Attempt.ID)), 4)
 })
 
@@ -119,7 +119,7 @@ test_that("Method 'h'", {
                      Fledge.Date = rep("2024-01-01", 6),
                      Hatch.Date = rep("2024-01-01", 6),
                      Visit.Datetime = rep("2024-01-01 12:12:12", 6))
-  cleanv2(data = data, mode = "remove", methods = "h", output = "inspect")
+  nw.cleandata(data = data, mode = "remove", methods = "h", output = "inspect")
   expect_equal(length(unique(inspect$Attempt.ID)), 4)
 })
 
@@ -135,7 +135,7 @@ test_that("Method 'i'", {
                      Hatch.Date =     c("2024-05-10", "2024-05-10", NA,           "2025-05-10", "2024-05-10", "2024-05-10"),
                      Fledge.Date =    c("2024-05-20", "2024-05-20", "2025-05-20", "2024-05-20", "2025-05-20", "2024-05-20"),
                      Visit.Datetime = rep("2024-01-01 12:12:12", 6))
-  cleanv2(data = data, mode = "remove", methods = "i", output = "inspect")
+  nw.cleandata(data = data, mode = "remove", methods = "i", output = "inspect")
   expect_equal(length(unique(inspect$Attempt.ID)), 2)
 })
 
@@ -153,7 +153,7 @@ test_that("Method 'j'", {
                      Visit.Datetime = c("2024-05-01 12:12:12", "2022-05-10 12:12:12",
                                         "2024-05-01 12:12:12", "2024-05-10 12:12:12",
                                         "2024-05-01 12:12:12", "2024-05-12 12:12:12"))
-  cleanv2(data = data, mode = "remove", methods = "j", output = "inspect")
+  nw.cleandata(data = data, mode = "remove", methods = "j", output = "inspect")
   expect_equal(length(unique(inspect$Attempt.ID)), 2)
 })
 
@@ -168,7 +168,7 @@ test_that("Method 'a' and 'c'", {
                      Hatch.Date = rep("2024-05-01", 3),
                      Fledge.Date = rep("2024-05-01", 3),
                      Visit.Datetime = rep("2024-05-01 12:12:12", 3))
-  cleanv2(data = data, mode = "remove", methods = c("a", "c"), output = "inspect")
+  nw.cleandata(data = data, mode = "remove", methods = c("a", "c"), output = "inspect")
   expect_equal(length(unique(inspect$Attempt.ID)), 1)
 })
 
@@ -185,7 +185,7 @@ test_that("Method 'a'", {
                      Hatch.Date = rep("2024-01-01", 6),
                      Visit.Datetime = rep("2024-01-01 12:12:12", 6),
                      Flagged.Attempt = NA)
-  cleanv2(data = data, mode = "flag", methods = "a", output = "inspect")
+  nw.cleandata(data = data, mode = "flag", methods = "a", output = "inspect")
   expect_equal(nrow(filter(inspect, Flagged.Attempt == "FLAGGED")), 2)
 })
 

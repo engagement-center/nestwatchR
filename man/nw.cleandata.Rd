@@ -4,7 +4,7 @@
 \alias{nw.cleandata}
 \title{Preform Common Cleaning Procedures to NestWatch Data}
 \usage{
-nw.cleandata(data, mode, methods = NULL, output = NULL)
+nw.cleandata(data, mode, methods, output = NULL)
 }
 \arguments{
 \item{data}{dataframe; A dataframe containing NestWatch data.}

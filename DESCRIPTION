@@ -28,6 +28,7 @@ Imports:
     dplyr,
     magrittr,
     reticulate,
+    sf,
     stringr
 URL: https://github.com/kimsavides/nestwatchR
 BugReports: https://github.com/kimsavides/nestwatchR/issues
@@ -35,7 +36,8 @@ Suggests:
     DT,
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    tmap
 VignetteBuilder: knitr
 Depends: 
     R (>= 2.10)
