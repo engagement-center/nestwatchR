@@ -13,6 +13,15 @@
     <loc>/articles/03-Data-Filtering.html</loc>
   </url>
   <url>
+    <loc>/articles/a_Into-and-Data-Access.html</loc>
+  </url>
+  <url>
+    <loc>/articles/b_Data-Cleaning.html</loc>
+  </url>
+  <url>
+    <loc>/articles/c_Data-Filtering.html</loc>
+  </url>
+  <url>
     <loc>/articles/Data-Cleaning.html</loc>
   </url>
   <url>
@@ -50,6 +59,9 @@
   </url>
   <url>
     <loc>/reference/nw.estclutchsize.html</loc>
+  </url>
+  <url>
+    <loc>/reference/nw.estfirstlay.html</loc>
   </url>
   <url>
     <loc>/reference/nw.filterphenology.html</loc>
