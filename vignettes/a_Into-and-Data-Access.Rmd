@@ -1,0 +1,201 @@
+---
+title: "Introduction to NestWatch Data and Data Access"
+output: rmarkdown::html_document
+vignette: >
+  %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{1. Introduction to NestWatch Data and Data Access}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, 
+                      message = FALSE,
+                      collapse = TRUE,
+                      comment = "#>",
+                      out.width = "100%",
+                      fig.height = 4, 
+                      fig.width = 7, 
+                      fig.align = "center")
+# only build vignettes locally and not for R CMD check
+knitr::opts_chunk$set(eval = nzchar(Sys.getenv("BUILD_VIGNETTES")))
+library(nestwatchR)
+```
+
+
+# Background {#background}
+
+Our ability to allocate conservation efforts of the natural world depends on detailed information about the life histories, distributions, abundances, and population trends of species over time. The goal of the [NestWatch project](https://nestwatch.org), administered by [The Cornell Lab of Ornithology](https://www.birds.cornell.edu/home/), is to use data collected by members of the global participatory science community and researchers to archive nest location and phenology information for the world’s bird populations. NestWatch is designed to track status and trends in the reproductive biology of birds, including when nesting occurs, number of eggs laid, how many eggs hatch, and how many hatchlings survive. Our database is intended to be used to study the current condition of breeding bird populations and how they may be changing over time as a result of climate change, habitat degradation and loss, expansion of urban areas, and the introduction of non-native plants and animals.
+
+This vignette gives an overview of the NestWatch Data Products, which represent both nest-level parameters and individual nest checks. Knowledge of the structure of the database is critical for proper interpretation of the dataset. This example will discuss some of the 54 data fields, but we ask all users of the data to review the field explanations in the data paper [Bailey et al. 2024](https://doi.org/10.1002/ecy.4230).
+
+
+
+# Data Access {#access}
+
+The NestWatch database is freely accessible via a [Mendeley data repository](https://data.mendeley.com/datasets/wjf794z7gc), the [NestWatch website](https://nestwatch.org/explore/nestwatch-open-dataset-downloads/), or the `nestwatchR::nw.getdata()` function and is licensed under [CC BY-NC 4.0](http://creativecommons.org/licenses/by-nc/4.0/?ref=chooser-v1). Users are free to access and modify the data for non-commercial use with proper citation. By downloading the data, the user agrees to have read the below terms of use prior to use. 
+
+<blockquote>
+**Terms of Use:** The NestWatch raw data are provided “as is.” The Cornell Lab of Ornithology, NestWatch, their affiliated and related entities, and their content providers shall not be held responsible or liable to any person, firm, or corporation for any loss, damage, injury, claim, or liability of any kind or character based on or resulting from any use of any NestWatch data. Further, none of the aforementioned parties shall be held liable for improper or incorrect use of the data. 
+</blockquote>
+
+## Dowload NestWatch Data
+
+There are two data products available for download via the function `nestwatchR::nw.getdata()`. The only argument, `version = `, to this function defines the version of the database to be downloaded and if not provided will default to the latest version. This function will download, unzip, and import two dataframes to the global environment. Depending on your connection speed, this may take a few minutes. 
+
+
+```{=gfm}
+> [!NOTE]
+> This function depends on the library `reticulate` which requires `Python` to be installed on your machine. See the [installation instructions](https://github.com/engagement-center/2024-NestWatch-Package-Internal?tab=readme-ov-file#installation-computer) for more information.
+```
+
+
+```{r access, eval = F}
+library(reticulate)
+
+# Download the most current version of the NestWatch dataset 
+nw.getdata()
+
+# Download the first version
+nw.getdata(version = 1)
+
+```
+
+This function creates an virtual instance of Python within R to access the Mendeley data archive. Once run, two dataframes will be available in the global environment: `NW.attempts` and `NW.checks`. These dataframes are not saved to your machine--you may wish to use `write.csv()` to access again without the need to re-download the dataset. 
+
+# Data Structure
+
+For this example, we will inspect the sample datasets included within the package:
+
+```{r load example data, eval = T}
+# Read in sample datasets
+NW.attempts <- nestwatchR::exNWattempts
+NW.checks <- nestwatchR::exNWchecks
+
+```
+
+## Attempts Data
+`NW.attemps` contains nest-level parameters. These fields include data such as species, coordinates, nest substrate, presence fo predator guards, etc as well as summary data for the nest attempt such as success/failure, clutch size, first lay date, fledge date, etc.
+
+```{r inspect attempts, echo = F, eval= T}
+library(DT)
+datatable(NW.attempts, options = list(paging = F, scrollX = T, searching  = F))
+```
+
+<details>
+<summary>Click for Field Descriptions</summary>
+
+* **Attempt ID:** assigned; categorical; A unique identification assigned to individual nest attempts.
+* **Location ID:** assigned; categorical; A unique identification assigned to individual nest locations. May be repeated within and across years.
+* **Latitude:** participant provided; numeric; Nest coordinate in decimal degrees (NAD84).
+* **Longitude:** participant provided; numeric; Nest coordinate in decimal degrees (NAD84).
+* **Subnational Code:** categorical; assigned; The 2-letter country code joined with a hyphen to a 2-letter state/province code. Follows ISO 3166-2. Undefined represented as "XX-".
+* **Substrate Relationship:** participant provided; Position of the nest relative to the surface on which the nest is built. One of: in, on, under
+* **Substrate:** participant provided; categorical; The surface on which the nest is built.One of: nesbox (nest
+box/birdhouse), buildi (building or dwelling), poptow (post/pole or platform), cliled (cliff or rock), ltrcav (cavity in live tree branch), ssdtcv (cavity in snag/dead tree), ssdtre (dead tree branch), ltrbra (live tree branch), busshr (bush/shrub/cattails), ground (ground), floveg (floating vegetation), other.
+* **Substrate Other Description:** participant provided; text; Description (specified when Substrate is "other".
+* **Height m:** participant provided; numeric; Measurement of the height of the bottom of the nest from the ground (in meters).
+* **Cavity Entrance Diameter cm:** participant provided;Diameter of the entrance to the nest for cavity nests (in centimeters).
+* **Orientation:** participant provided; categorical; Compass direction that a nest hole entrance faces. One of: n, s, e, w, ne, se, sw, nw
+* **Elevation m:** participant provided; numeric; Elevation of nesting location above sea level as reported by the user (in meters).
+* **Habitat 1m:** participant provided; categorical; Habitat within 1 meter of the nest. One of the following high level descriptors: ag (agricultural area), for (woodland/forest), grass (natural grassland and prairie), chap (shrubland and chaparral), des (desert), fw (fresh water), sw (salt water), beach (beach), tun (tundra), oth (other), human (human modified landscape). Or, if "human" was chosen, the user may optionally store one of these more specific descriptors instead: ry (yard, residential area), park (public park/green space), road (roadside), golf (golf course), pit (land fill/gravel pit/strip mine), cem (cemetery), com-ind (industrial/commercial center), pwrln (powerline corridor), campus (campus/schoolyard/churc h/hospital), airprt (airport), cmpgrd (campground), xmas (Christmas tree farm), orch-vin (orchard/vineyard), clrcut (recently clear cut area), burn (recently burned area).
+* **Habitat 100m:** participant provided; categorical; Habitat within 100 meters of the nest. Same as Habitat 1m above
+* **Location Entry Technique:** assigned; Codes representing various methods for site creation with varying degrees of positional accuracy. These methods continue to evolve as online mapping technologies change. See [IV.B.4.e](https://doi.org/10.1002/ecy.4230) for descriptions and discussion of precision.
+* **Observer ID:** assigned; categorical; A unique code identifying the observer making the submission. Note that most observers will only have one Observer ID, but it is possible for one individual to create multiple accounts. It is not possible to identify participants with multiple Observer IDs.
+* **Species Code:** participant provided; categorical; Taxonomic code for the identity of the nesting species. See [eBird taxonomy](https://www.birds.cornell.edu/clementschecklist/download/) for more details. 
+* **Species Name:** participant provided; categorical; Common name (in English) for the identity of the nesting species. See [eBird taxonomy](https://www.birds.cornell.edu/clementschecklist/download/) for more details. 
+* **Year:** assigned; integer; Year in which the nest attempt started.
+* **Predator Guard:** participant provided; categorical; For nest attempts in boxes, this field indicates whether a device intended to prevent predation was attached to the nesting structure (i.e., a predator guard). If it contains "other" then Predator Guard Other should have a value. See [Bailey and Bonter 2017]( https://doi.org/10.1002/wsb.801) for more information on predator guard types. One or more of: baffle, cone,
+holeExtender, no, noelGuard, other.
+* **Predator Guard Other:**  participant provided; text; Free text entered when "other" predator guard type is selected.
+* **First Lay Date:** participant provided; date; Date when first egg was laid.
+* **First Lay Date Estimated:** participant provided;binary; Whether the first lay date is estimated (1) or observed (0).
+* **Visited During Egg Laying:** participant provided; binary; Response to "Was the nest site visited during the egg laying period?" (1 = yes, 0 = no). This variable was originally intended to gauge the quality of the first egg date estimate during a time period when nest check data was not being collected (e.g., The Birdhouse Network). It was retained later for continuity even after nest checks were enabled because some participants may choose not to enter all of their nest checks. See Cooper
+2014 for further detail.
+* **Hatch Date:** participant provided; date; Date when the first egg hatched.
+* **Hatch Date Estimated:** participant provided; binary; Whether the hatch date is estimated (1) or observed (0).
+* **Fledge Date:** participant provided; date; Date when the first young fledged (left the nest).
+* **Fledge Date Estimated:** participant provided; binary; Whether the fledge date is estimated (1) or observed (0).
+* **Young Fledged:** participant provided;integer; Total number of young that fledged. 
+* **Clutch Size:** participant provided; integer; Maximum number of host eggs in the nest (not including eggs of brood parasites).
+* **Young Total:** participant provided; integer; Maximum number of young (alive and dead) of host species in the nest (i.e., hatched young). Does not include young of brood parasites.
+* **Unhatched Eggs:** participant provided; integer; Maximum number of host eggs that failed to hatch for individual nest attempts (not including eggs of brood parasites).
+* **Outcome:** participant provided; categorical; Fate of the nest attempt. categorical one of: f (failure), f1 (all young found dead in or nearby nest), f2 (all young disappeared from nest before fledge date; reason unknown), f3 (predator known to cause nest failure), f4 (only young of brood parasites fledged), f5 (invasive species management), f6 (no eggs hatched), f7 (failure due to nest takeover by another bird), s1 (at least one host young fledged), u1 (unknown outcome), u2 (nest monitoring stopped prior to expected fledge date while nest was still active), u3 (no breeding behavior observed), i (inactive), n (not monitored).
+* **Attempt Entry Technique:** assigned; Indicates method of data entry used to initiate the nest attempt. As of 2022, the 3 modes of data entry include the NestWatch website (visits may have been entered via another method) value indicates various versions of "Web" entry), the mobile app (field value indicates various versions of "Mobile" entry), or bulk upload (field value indicates date of uploading
+into database).
+
+</details>
+
+## Checks Data
+
+`NW.checks` contains information about the status and contents of the the nest during each individual nest check, including number of eggs, you, or dead young of both the host and any brood parasites. 
+
+```{r inspect checks, echo = F, eval= T}
+datatable(NW.checks, options = list(paging = F, scrollX = T, searching  = F, scrollY = "300px"))
+
+```
+
+
+<details>
+<summary>Click for Field Descriptions</summary>
+
+* **Attempt ID:** assigned; categorical; See prior description.
+* **Visit ID:** assigned; categorical; Identifier assigned for individual visits to nest attempts. A nest attempt will have as many Visit ID values as there were nest checks reported for that attempt.
+* **Visit Datetime:** participant provided; datetime; The date and time that individual nests were visited. Time is stored for some entry modes but not all. Time may be to nearest hour for older data, or to the second for mobile-entered data. Time is stored in the user's local time zone (but time zone itself is not stored). See Visit Time Valid to determine if the time was stored during data entry. 
+* **Visit Time Valid:** assigned; binary; Whether the time portion of the Visit Datetime column was stored and should be treated as the actual
+time of the visit (1 = yes, 0 = no). 
+* **Nest Status:** participant provided; categorical; Condition of nest during each nest visit. One of: no (no nest), an (another bird nest, same
+site), cn (complete nest), dn (damaged nest), fn (flattened nest with fecal matter), in (incomplete nest), nn (non-avian nest), rn (nest removed, remover unknown).
+* **Adult Activity:** participant provided; categorical; Adult activity seen or heard near the nest during each nest visit. This can help determine if a nest was still active, particularly if the contents could not be seen directly. categorical One of: no (no adults seen
+or heard), aa (at/on, then flushed from nest), ba (building nest or carrying nest material), da (dead adult(s)), fa (feeding young at nest), ra
+(remained on the nest), va (vicinity of the nest).
+* **Young Status:** participant provided; categorical; Developmental stage of young during each nest visit. One of: no (no live young in nest), fy (fully feathered young), hy (hatching young), ny (naked young), py (partially feathered young), vy (vocal young, heard only), yy (young outside of box).
+* **Management Status:** participant provided; categorical; Management action taken by the nest monitor. One of: no (no management activity), am
+(avian competitor nest/eggs/young removed), bm (banded adults or young at nest), em (unhatched host eggs removed), nm (nest box management), pm (pest management [e.g., wasps, ants, mice, etc.]).
+* **Host Eggs Count:** participant provided; integer; Number of host eggs counted during a nest check. May be null if user did not provide information or was not able to count precisely. See also Host Eggs Present Uncounted.
+* **Host Eggs Present Uncounted:** participant provided; binary; The user may indicate that host eggs were present but the exact count is unknown. In this case, Host Eggs Present Uncounted will be set to 1. Nest checks where Host Eggs Count > 0 or Host Eggs Present Uncounted = 1 may both be
+considered to have host eggs.
+* **Live Host Young Count:** participant provided; integer; Number of live host young counted during a nest check. May be null if user did not provide information or was not able to count precisely. See also Live Host Young Present Uncounted.
+* **Live Host Young Present Uncounted:** participant provided; binary; The user may indicate that live host young were present but the exact
+count is unknown. In this case, Live Host Young Present Uncounted will be set to 1. Nest checks where Live Host Young Count > 0 or Live Host
+Young Present Uncounted = 1 may both be considered to have live host young.
+* **Dead Host Young Count:** participant provided; integer; Number of dead host young counted during a nest check. May be null if user did not provide information or was not able to count precisely. See also Dead Host Young Present Uncounted.
+* **Dead Host Young Present Uncounted:** participant provided; binary; The user may indicate that dead host young were present but the
+exact count is unknown. In this case, Dead Host Young Present Uncounted will be set to 1. Nest checks where Dead Host Young Count > 0 or Dead Host Young Present Uncounted = 1 may both be considered to have dead host young.
+* **Brood Parasite Eggs Count:** participant provided; integer; Number of brood parasite eggs counted during a nest check. May be null if user did not provide information or was not able to count precisely. See also Brood Parasite Eggs Present Uncounted.
+* **Brood Parasite Eggs Present Uncounted:** participant provided; binary; The user may indicate that brood parasite eggs were present but the
+exact count is unknown. In this case, Brood Parasite Eggs Present Uncounted will be set to 1. Nest checks where Brood Parasite Eggs Count > 0 or Brood Parasite Eggs Present Uncounted = 1 may both be considered to have brood parasite eggs.
+* **Brood Parasite Live Young Count:** participant provided; integer; Number of brood parasite live young counted during a nest check. May be null if user did not provide information or was not able to count precisely. See also Brood Parasite Live Young Present Uncounted.
+* **Brood Parasite Live Young Present Uncounted:** participant provided; binary; The user may indicate that brood parasite live young were present but the exact count is unknown. In this case, Brood Parasite Live Young Present Uncounted will be set to 1. Nest checks where Brood Parasite Live Young Count > 0 or Brood Parasite Live Young Present Uncounted = 1 may both be considered to have live brood parasite young. 
+* **Brood Parasite Dead Young Count:** participant provided; integer; Number of brood parasite dead young counted during a nest check. May be null if user did not provide information or was not able to count precisely. See also Brood Parasite Dead Young Present Uncounted.
+* **Brood Parasite Dead:** participant provided; binary; The user may indicate that brood parasite dead young were present. Young Present Uncounted but the exact count is unknown. In this case, Brood Parasite Dead Young Present Uncounted will be set to 1. Nest checks where Brood
+Parasite Dead Young Count > 0 or Brood Parasite Dead Young Present Uncounted = 1 may both be considered to have dead brood parasite young.
+* **Visit Entry Technique:** assigned; text; Method of data entry that created this visit. As of 2022, the 3 modes of data entry include the
+NestWatch website (field value indicates various versions of "Web" entry), the mobile app (field value indicates various versions of "Mobile" entry), or bulk upload (field value indicates date of uploading into database).
+
+</details>
+
+# Data Preparation
+
+Some analyses may only require use of data contained in `NW.attempts`. However, we suggest users merge the two dataframes on their shared `Attempt.ID` to have all the available data on-hand. Some of the suggested data cleaning processes require use of data in both dataframes, and having a single merged dataset more easily facilitates these cleanings. The two dataframes can be merged using `nestwatchR::nw.mergedata()`. This function has three arguments: `attempts =` and `checks =` are used to define the appropriate dataframe and the optional `output =` can be used to specify the name of the resulting merged dataframe.
+
+```{r merge data, eval = F}
+library(dplyr)
+
+# Merge Attempts and Checks
+nw.mergedata(attempts = NW.attempts, checks = NW.checks, output = "merged.data")
+head(merged.data, 20)
+```
+
+```{r merge, eval = t, echo = F}
+# Merge Attempts and Checks
+nw.mergedata(attempts = NW.attempts, checks = NW.checks, output = "merged.data")
+data <- head(merged.data, 20)
+
+#kable(data, "html") %>% kable_styling("striped") %>% scroll_box(width = "100%", height = "300px")
+datatable(data, options = list(paging = F, scrollX = T, searching  = F, scrollY = "300px"))
+
+```

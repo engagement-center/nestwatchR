@@ -1,0 +1,214 @@
+---
+title: "Filter NestWatch Data on Finer Scales"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Filter NestWatch Data on Finer Scales}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, 
+                      message = FALSE,
+                      collapse = TRUE,
+                      comment = "#>",
+                      out.width = "100%",
+                      fig.height = 4, 
+                      fig.width = 7, 
+                      fig.align = "center")
+# only build vignettes locally and not for R CMD check
+knitr::opts_chunk$set(eval = nzchar(Sys.getenv("BUILD_VIGNETTES")))
+library(nestwatchR)
+```
+
+Before analysis, users should consider conducting finer-scale filtering in order to clean the NestWatch dataset after running `nw.cleandata`. This may include selecting certain species, identifying specific nest phenology dates (ie. incubation should not last longer than X days for species Y), or limiting nest attempts to a certain geographic area. 
+
+## Filter Species
+
+Limiting the dataset to just a few species can easily be done using the pipe (`%>%`). If you are unfamiliar with "piping", see the `migritrr` package. Below we will subset the `merged.data` dataframe produced in the Intro vignette to include only attempts for Bewick's Wren ("bewwre") and Carolina Wren ("carwre").
+
+```{r filter to spp, eval = F, echo = T}
+# Filter data to include only carwr and bewwre
+wrens <- merged.data %>% filter(Species.Code %in% c("carwre", "bewwre"))
+
+# View what species are in the new dataset
+unique(wrens$Species.Name)
+> [1] "Carolina Wren" "Bewick's Wren"
+
+# Subset dataframe to get just a few columns of interest
+wrens <- wrens %>% select(Attempt.ID, Species.Name, Species.Code, Year, 
+                          Subnational.Code, Latitude, Longitude)
+wrens <- wrens %>% distinct()  # Removes duplicate rows (representing individual visits)
+
+```
+
+```{r load the data, eval = T, echo = F, message=FALSE, }
+library(dplyr)
+wrens <- nestwatchR::wren_quickstart
+wrens <- wrens %>% select(Attempt.ID, Species.Name, Species.Code, Year, Subnational.Code, Latitude, Longitude)
+wrens <- wrens %>% distinct()
+```
+
+
+## Filter Spatially
+
+Spatial filters are a flexible way to limit data to a predefined geographic area. A user may choose to limit an analysis to nesting attempts within a certain area, like a single [Bird Conservation Region](https://nabci-us.org/resources/bird-conservation-regions-map/) or a select number of states. Or one may choose to clean potentially misidentified species by using a range map to filter out nesting attempts. If those filtering criteria are easily subset from the dataset, like states and countries (via `Subnational.Code`), a user can quickly use subsetting rules to filter their data for analysis. But, if those criteria not already easily subsettable, a spatial filter can be a good option.
+
+As an example, we can first view a plot of where the nests in `wrens` are located by species. Here we will use `tmap` to produce an interactive map. We will also be utilizing the `sf` package to help create and transform our tabular data into spatial data. Here we will project the wrens data into the Lambert Conformal Conic Projection, which is well suited for mapping areas in the United States. But you can change the object `prj` to any appropriate PROJ.4 string for the area you are mapping.
+
+[!Note]
+If you are unfamiliar with working with spatial data, [this is a good resources](https://bookdown.org/mcwimberly/gdswr-book/coordinate-reference-systems.html) on CRS and projections within R. 
+
+```{r wren nests, eval = T, echo = F}
+# Create a spatial object from nest data
+nest_points <- sf::st_as_sf(wrens, coords = c("Longitude", "Latitude"), crs = 4326)  # data is in WGS 84 (crs = 4326)
+
+# Define desired CRS to project data to
+proj <- "+proj=lcc +lon_0=-90 +lat_1=33 +lat_2=45"  # PROJ.4 sting defining the projection
+  
+
+# Project the nest points into LCC projection  
+nest_points <- sf::st_transform(nest_points, crs = proj)   # apply projection
+
+# Map nets locations
+library(tmap)
+tmap_mode("view")                                             # starts interactive plot
+map <- tm_basemap("Esri.WorldGrayCanvas") +                   # define basemap
+       tm_shape(nest_points) +                                # add nest point data
+          tm_dots(col = "Species.Name")                       # color nests by species
+# View the map
+map                                                           
+
+```
+
+
+By looking at this map, we can see that there are several suspicious nests identified as Bewick's Wrens in the eastern US as well as one nest in Great Britain! Bewick's Wrens are not typically recorded eat of the Mississippi River, so some of these records could be misidentified. We could decide on a subset of states/provinces to filter out-of-range nest attempts. But a better method might be to filter nest locations based on a range map.
+
+### eBird Range Polygons
+
+The [eBird Status and Trends Products](https://science.ebird.org/en/status-and-trends) contain a wealth of information on bird populations. One of the available products are range maps of species for which Status and Trend Models have been run. These data are easily accessible in R through the `ebirdst` package. To access these eBird data, you will need to acquire a free access key. This key will give you access to Status and Trends Data within R. For more information and to acquire an access key, see the [documentation here](https://ebird.github.io/ebirdst/).
+
+We can use our unique access key to download the range map of Bewick's Wren and Carolina Wren. Note, you will need the species codes of those species you would like to download, not their alpha code or common name. By modifying the access key, species, and download location in the code below, you can download and open the range polygons to your global environment. This code also selects only the breeding range layer if available, and if not available selects the resident range layer. Note: You only need to input your access key once (R will store it for you!) and you only need to download the range maps once (you may get an error if you rerun `ebirdst_download_status()` when the data already exists in the `spatialdata_path` location). You may also need to modify the year as noted in the code below.
+
+```{r not run download range, eval = F, echo = T}
+# obtain and set an ebird access key
+set_ebirdst_access_key("pasteyourkeyhere")      # you only need to do this once, R will remember it
+
+# Define what species you want to download by their code
+spp <- c("bewwre", "carwre")
+
+# Specify where the data will be downloaded to
+# Here we will create a folder "spatial" in our working directory:
+spatialdata_path <- c("spatial")  
+
+# Download range maps by species
+for (i in spp) {
+  ebirdst_download_status(species = i, download_abundance = FALSE, 
+                          download_ranges = TRUE, pattern = "_smooth_27km_", 
+                          path = spatialdata_path)
+}
+
+# You may need to modify the year below to reflect the appropriate eBird product that downloaded
+# Read in the range files
+for (i in spp) {
+  # Generate the path to the .gpkg files
+  file_path <- paste0(spatialdata_path, "/2022/", i, "/ranges/", i, "_range_smooth_27km_2022.gpkg")
+  # Read in the .gpkg file
+  range_data <- st_read(file_path)
+  # Generate the name for the object
+  object_name <- paste0(i, "_range")
+  # Assign the value to the dynamically generated object name
+  assign(object_name, range_data)
+  rm(range_data)
+}
+
+# Select just breeding layer if available, else resident layer
+object_names <- paste(spp, "range", sep = "_")
+for (i in object_names) {
+  if (i %in% ls(envir = .GlobalEnv)) {
+    data <- get(i, envir = .GlobalEnv)
+    if (any(data$season %in% "breeding")) {
+      data <- data %>% filter(season == "breeding")
+      data <- data %>% st_transform(nest_points, crs = prj)
+      assign(paste0(i), data, envir = .GlobalEnv)
+    } else {
+      data <- data %>% filter(season == "resident")
+      data <- data %>% st_transform(nest_points, crs = prj)
+      assign(paste0(i), data, envir = .GlobalEnv)}
+    rm(data)
+  }
+}
+
+# Clean up intermediate objects
+rm(file_path, i, object_name, object_names, spatialdata_path)
+
+
+```
+
+Now that we have range polygons for Bewick's and Carolina Wrens, we can add them to our map and investigate our nest locations a bit further. Let's plot just the Bewick's Wren data.
+
+```{r read in range polygon from package, eval = T, echo = F, results='hide'}
+path <- invisible(system.file("exdata", "bewwre_range.shp", package = "nestwatchR"))
+bewwre_range <- sf::st_read(path)
+
+```
+
+
+```{r plot bewwre data, eval = T, echo = T}
+# Subset nest locations to Bewick's Wrens
+bewwre <- nest_points %>% filter(Species.Code == "bewwre")
+
+# Map the nests overtop the range polygon
+tmap_mode("view")                                           # starts interactive plot
+map <- tm_basemap("Esri.WorldGrayCanvas") +                 # define basemap
+  tm_shape(shp = bewwre_range, name = "Bewick's Wren") +    # add range polygon, define color
+  tm_polygons(alpha = 0.5, col = "#a1d1cbff") +                         
+  tm_shape(bewwre) +  tm_dots(col = "Species.Name")    # add nest points
+map
+
+```
+
+
+We can now see that there are more than a few nests outside fo the typical Bewick's Wren range. But a few of these nests are also close to the range border, and *may* truly belong to a Bewick's Wren. We can use `nw.filterspatial` to help us identify and/or remove nest attempts outside of the range polygon (or any other shapefile you may want to filter by).
+
+`nw.filterspatial` requires the input of `sf` objects for `points =` and `polygon =`, representing the nest points to be filtered and the shapefile to filter on, respectively. The `mode =` argument is used to define if points identified outside the polygon should be flagged for review ("flagged") or removed from the dataset ("remove"). This function also has an optional buffer argument `buffer =` where the user may define a distance outside the polygon for which nest locations will be allowed. This distance can be either in kilometers of miles and should be defined using `buffer_units = "km"` or `"mi"`. The resulting buffer polygon may be optionally exported to the global environment for saving ro plotting using the logical `buffer_output = T`. The user may also define their desired projection using `proj = ` and inputting a PROJ.4 string, if not provided the function will default to The Lambert Conformal Conic which is well suited for plotting the majority of NestWatch data. Finally, the optional `output = ` argument can be used to name the resulting spatially cleaned spatial dataframe. 
+
+If we zoom in to central Colorado, we can see there are a few Bewick's Wren nests just outside the range border. We might choose to keep nests like these in our analysis, because they could be correctly identified and just a bit outside the typical range. So, we can define a buffer zone to keep such nests but exclude those well outside the expected range:
+
+```{r run spatial filter, eval = T, echo = T}
+nw.filterspatial(points = bewwre,                    # Bewick's Wren nest points 
+                 polygon = bewwre_range,             # Bewick's Wren range shapefile
+                 mode = "flag",                      # flag points outside 
+                 buffer = 50,                        # add a 50km buffer zone
+                 buffer_units = "km",                # units = km
+                 buffer_output = T,                  # yes, output the buffer polygon
+                 proj = "+proj=lcc +lon_0=-90 +lat_1=33 +lat_2=45",   # LLC from above
+                 output = "flagged_nests")           # define the output name
+
+```
+
+
+We can plot the results to see what points were flagged for out review (and would be removed if mode was "remove"):
+
+```{r plot buffered, eval = T, echo = T}
+# Relabel nests within range for nice map symbology
+flagged_nests$Flagged.Location[is.na(flagged_nests$Flagged.Location)] <- "In-Range"
+
+map <- tm_basemap("Esri.WorldGrayCanvas") +                 # define basemap
+  tm_shape(shp = polygon_buffered, name = "50km Buffer") +  # add buffered polygon, define color
+    tm_polygons(alpha = 0.5, col = "lightgoldenrod2") +                         
+  tm_shape(shp = bewwre_range, name = "Bewick's Wren Range") +  # add range polygon, define color
+    tm_polygons(alpha = 0.5, col = "#a1d1cbff") +                         
+  tm_shape(flagged_nests) +                                 # add nest points, color by "Flagged.Attempt"
+    tm_dots(col = "Flagged.Location", 
+            #style = "cat",
+            palette = c("grey60", "green2"))    
+map
+
+```
+
+## Filter Using Nest Phenology
+
+A user may also choose to refine the coarse phenologic filtering done in the cleaning phase. NestWatch data are known to have some errors where participants either enter dates incorrectly (ie. enter the year portion of a date as 2021 in one field and 2020 in the next) or incorrectly continue a nest attempt when it should be a new nest. For the latter, if a bluebird nest fails due to nest parasitism and the pair renests in the same box again, this should be entered as two different attempts at the same location. But records of "run-on nests" where the first attempt was not ended do exist in the dataset. One way a user might choose to identify or remove such nesting attempts, or ones which are outside of the expected nest timeframe for a given species, is to use phenologic filtering.
+
+Phenologic filtering allows the user to define expected (or allowable), date spans for different periods in the nesting cycle. The function `nw.filterphenology()` uses both the data in the attempt summary info (data originating from the "Attempts" dataset) and the individual visits data (originating from the "Visits" dataset). 
