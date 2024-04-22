@@ -3,6 +3,8 @@
 export("%>%")
 export(nw.cleandata)
 export(nw.cleantaxa)
+export(nw.estclutchsize)
+export(nw.filterphenology)
 export(nw.filterspatial)
 export(nw.getdata)
 export(nw.mergedata)

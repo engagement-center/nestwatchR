@@ -41,4 +41,14 @@ option buffer argument which can be used to add a specific distance buffer aroun
 }
 \examples{
 test <- 1 + 2
+\dontrun{
+set.seed(123)
+Generate random points and polygon
+points <- st_sfc(st_multipoint(matrix(runif(20, -10, 10), ncol = 2, byrow = TRUE)))
+polygon <- st_polygon(list(rbind(c(-5,-5), c(5,-5), c(5,5), c(-5,5), c(-5,-5))))
+
+nw.filterspatial(points, polygon, mode = "remove")
+
+
+}
 }
