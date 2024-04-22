@@ -124,17 +124,17 @@ Depending on what cleaning procedures you choose to run, the sample size of nest
 # Load and merge version 2 of database
 nw.getdata(version = 2)
 nw.mergedata(attempts = NW.attempts, checks = NW.checks, output = "merged.data")
-length(unique(mergeddata$Attempt.ID))
-# > 572488    # Attempts in raw dataset
+length(unique(merged.data$Attempt.ID))
+# > 648569    # Attempts in raw dataset
 
 
 # Remove attempts with 'Brown-headed Cowbird' as the species
-nw.cleandata(data = mergeddata, mode = "remove", methods = "a", output = "no_bnhcow")
+nw.cleandata(data = merged.data, mode = "remove", methods = "a", output = "no_bnhcow")
 length(unique(no_bnhcow$Attempt.ID))
-# > 574263    # Attempts after cleaning
+# > 648540    # Attempts after cleaning
 
 # Remove attempts using "i" and "j"
-nw.cleandata(data = mergeddata, mode = "remove", methods = c("i", "j"), output = "no_longnests")
+nw.cleandata(data = merged.data, mode = "remove", methods = c("i", "j"), output = "no_longnests")
 length(unique(no_longnests$Attempt.ID))
-# > 572583    # Attempts after cleaning
+# > 646753    # Attempts after cleaning
 ```
