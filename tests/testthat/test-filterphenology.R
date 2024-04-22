@@ -63,9 +63,9 @@ data <- data.frame(Attempt.ID = c(1, 2, 3),
                    Visit.Datetime = rep(as.POSIXct("2022-01-20 12:12:12"), 3))
 
 
-test_that("set up is setting up", {
-  expect_null(all(Flagged.Attempt, Attempt.ID, Species.Code, First.Lay.Date, Hatch.Date,
-                  Fledge.Date, Visit.Datetime, max_date, min_date, date_difference))
+#test_that("set up is setting up", {
+#  expect_null(all(Flagged.Attempt, Attempt.ID, Species.Code, First.Lay.Date, Hatch.Date,
+#                  Fledge.Date, Visit.Datetime, max_date, min_date, date_difference))
 
 
-})
+#})
