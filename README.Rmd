@@ -26,11 +26,9 @@ knitr::opts_chunk$set(
 ## Development Tasks :construction: 
 This repository is in early development with plans to add additional functions create an R package to facilitate accessibility. 
 
-- [X] Fix nw.taxaclean to update species codes
-- [ ] Complete code to estimate first lay date if not provided
-- [X] Create "intro" vignette
-- [X] Create "clean" vignette
-- [ ] Create "filter" vignette
+- [ ] Finish code to estimate first lay date if not provided
+- [ ] Start code to estimate fledge date if not provided
+- [ ] Update "filter" vignette
 
 ## Overview :pushpin:
 
