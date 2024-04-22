@@ -1,9 +1,9 @@
 pandoc: 3.1.1
-pkgdown: 2.0.7
+pkgdown: 2.0.8
 pkgdown_sha: ~
 articles:
-  Data-Cleaning: Data-Cleaning.html
-  Data-Filtering: Data-Filtering.html
-  Into-and-Data-Access: Into-and-Data-Access.html
-last_built: 2024-04-05T21:04Z
+  01-Into-and-Data-Access: 01-Into-and-Data-Access.html
+  02-Data-Cleaning: 02-Data-Cleaning.html
+  03-Data-Filtering: 03-Data-Filtering.html
+last_built: 2024-04-22T15:03Z
 
