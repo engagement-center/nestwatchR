@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 # NestWatch Data Products
 
 <!-- badges: start -->
-![Static Badge](https://img.shields.io/badge/Dataset%20License-CC%20BY--NC%204.0-blue)
+![Static Badge](https://img.shields.io/badge/Dataset%20License-CC%20BY--NC%204.0-blue)     
 ![Static Badge](https://img.shields.io/badge/Code%20License-GPL%20v3-blue)
 
 <!-- badges: end   -->
@@ -26,8 +26,9 @@ knitr::opts_chunk$set(
 ## Development Tasks :construction: 
 This repository is in early development with plans to add additional functions create an R package to facilitate accessibility. 
 
-- [ ] Finish code to estimate first lay date if not provided
+- [X] Finish code to estimate first lay date if not provided
 - [ ] Start code to estimate fledge date if not provided
+- [ ] Start code to estimate hatch date if not provided
 - [ ] Update "filter" vignette
 
 ## Overview :pushpin:
@@ -98,7 +99,7 @@ Bailey, R., L. Larson, D. Bonter. 2023. “NestWatch Open Dataset." Mendeley Dat
 **Data Paper:**</br>
 Bailey, R. L., L. Larson, and D. N. Bonter. 2024. “NestWatch: An Open-Access, Long-Term Data Set on Avian Reproductive Success.” Ecology 105(2): e4230. https://doi.org/10.1002/ecy.4230</a>
 
-**NestWatch R Code:**</br>
+**NestWatch R Code:**<br>
 Savides, K., R. Bailey, & D. Bonter. NestWatch Data Products (Version 0.00.00) [Computer software]. https://github.com/engagement-center/2024-NestWatch-Package-Internal
 </blockquote>
 
@@ -151,7 +152,6 @@ head(wrens, 5)
 #> 4	A1000271	  L126818	30.61476	-76.87363	         US-TX	Bewick's Wren	    bewwre	2006	    316.4	 1.6154	   nesbox	                  in		                              baffle	                                           3.81	                  sw 	               	                 PointMaker1.0_2    obsr10027		                                NA	                       NA		                        NA				                   NA	         NA	         NA          NA	            NA	     f6	                          S2494113	2006-03-13 00:00:00	                0	        cn                                                              NA                           0                    NA                                 0                    NA                                 0                        NA                                     0                              NA                                           0                              NA                                           0   
 #> 5	A1000271	  L126818	30.61476	-76.87363	         US-TX	Bewick's Wren	    bewwre	2006	    316.4	 1.6154	   nesbox	                  in		                              baffle	                                           3.81	                  sw 	               	                 PointMaker1.0_2    obsr10027		                                NA	                       NA		                        NA				                   NA	         NA	         NA          NA	            NA	     f6	                          S2494114	2006-04-12 00:00:00	                0	                                                                         4                           0                    NA                                 0                    NA                                 0                        NA                                     0                              NA                                           0                              NA                                           0   
 ```
-
 
 
 ```{r plot, eval =TRUE}

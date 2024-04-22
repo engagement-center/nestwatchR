@@ -4,7 +4,7 @@
 <!-- badges: start -->
 
 ![Static
-Badge](https://img.shields.io/badge/Dataset%20License-CC%20BY--NC%204.0-blue)
+Badge](https://img.shields.io/badge/Dataset%20License-CC%20BY--NC%204.0-blue)  
 ![Static
 Badge](https://img.shields.io/badge/Code%20License-GPL%20v3-blue)
 
@@ -15,11 +15,10 @@ Badge](https://img.shields.io/badge/Code%20License-GPL%20v3-blue)
 This repository is in early development with plans to add additional
 functions create an R package to facilitate accessibility.
 
-- [x] Fix nw.taxaclean to update species codes
-- [ ] Complete code to estimate first lay date if not provided
-- [x] Create “intro” vignette
-- [x] Create “clean” vignette
-- [ ] Create “filter” vignette
+- [x] Finish code to estimate first lay date if not provided
+- [ ] Start code to estimate fledge date if not provided
+- [ ] Start code to estimate hatch date if not provided
+- [ ] Update “filter” vignette
 
 ## Overview :pushpin:
 
@@ -135,8 +134,8 @@ doi: 10.17632/wjf794z7gc</a>
 “NestWatch: An Open-Access, Long-Term Data Set on Avian Reproductive
 Success.” Ecology 105(2): e4230. https://doi.org/10.1002/ecy.4230</a>
 
-**NestWatch R Code:**</br> Savides, K., R. Bailey, & D. Bonter.
-NestWatch Data Products (Version 0.00.00) \[Computer software\].
+**NestWatch R Code:**<br> Savides, K., R. Bailey, & D. Bonter. NestWatch
+Data Products (Version 0.00.00) \[Computer software\].
 <https://github.com/engagement-center/2024-NestWatch-Package-Internal>
 </blockquote>
 
