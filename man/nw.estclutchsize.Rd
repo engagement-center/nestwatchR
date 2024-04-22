@@ -46,5 +46,5 @@ data <- data.frame(Attempt.ID = c(1, 2, 3, 4, 5, 6),
 nw.estclutchsize(data = data, output = "out")
 
 out$Clutch.Size   # estimated values
-out$Clutch.Size.Estimated   # estaimte binary indicator
+out$Clutch.Size.Estimated   # estimated binary indicator
 }
