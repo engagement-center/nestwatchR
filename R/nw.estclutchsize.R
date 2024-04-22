@@ -1,0 +1,130 @@
+#' Estimate Missing Summary Clutch Size Values in NestWatch Data
+#'
+#' @description Clutch size is an important value for estimating nest dates and determining the successfulness of a nest.
+#' NestWatch participants may forget to enter clutch size into the nest attempt's summary data. But clutch size information may be estimated
+#' from the data of individual nest visits. This function used available data from any entered nest visits to estimate maximum host egg count
+#' (clutch size).
+#'
+#' @details This function looks for data contained in several columns to estimate what the clutch size of the nest was. Because NestWatch
+#' participants do not necessarily visit each nest everyday or record all data fields on every visit the data needed to estimate clutch size
+#' may be spread over many columns. Depending on the data available, the certainty of the clutch size estimate may vary, or in some cases,
+#' may not be estimable. For instance, a successful nest with 4 eggs recorded on several checks and 4 fledged young observed would have high
+#' certainty that the clutch size was 4. However, if a nest was observed with 2 eggs on one check and a week later was found predated, the
+#' certainty of the clutch size is not known. In this case the clutch size would be estimated as 2 but may have been higher depending on the
+#' exact (unobserved) failure date.
+#'
+#'
+#' @param data dataframe; A dataframe containing merged NestWatch attempts and visits data.
+#' @param output character; An optional character vector to rename the resulting output.
+#'
+#' @return dataframe; A dataframe with an additional binary column \code{Clutch.Szie.Estimated} where \code{1} denotes the clutch size was
+#' estimated by the function and \code{0} denotes the clutch size was provided by the participant.
+#' @export
+#'
+#' @examples
+#' # Example simplified NestWatch dataset with only single nest visits:
+#' data <- data.frame(Attempt.ID = c(1, 2, 3, 4, 5, 6),
+#'                    Visit.ID = c(1, 2, 3, 4, 5, 6),
+#'                    Clutch.Size = c(1, NA, NA, NA, NA, NA),
+#'                    Host.Eggs.Count = c(1, 2,  NA, NA, NA, 3),
+#'                    Young.Total = c(1, 2, 3, 3, 4, NA),
+#'                    Live.Host.Young.Count = c(1, 1, 2, 3, 1, 1),
+#'                    Unhatched.Eggs = c(0, 0, NA, NA, 1, 3),
+#'                    Young.Fledged = c(1, 0, NA, NA, 1, 3),
+#'                    Dead.Host.Young.Count = c(0, NA, NA, 1, 0,1))
+#'
+#' # Estimate Clutch Sizes if NA
+#' nw.estclutchsize(data = data, output = "out")
+#'
+#' out$Clutch.Size   # estimated values
+#' out$Clutch.Size.Estimated   # estimated binary indicator
+nw.estclutchsize <- function(data, output = NULL){
+
+  ###########################
+  ####  Check arguments  ####
+  ###########################
+
+  # Check the dataframe is merged NW data
+  if (missing(data)){
+    stop("Augument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
+  }
+  if (all(!(c("Species.Code", "Visit.ID") %in% names(data)))){
+        stop("Augument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
+  }
+  # Check output is character vector
+  if(!inherits(output, "character"))
+    stop("Augument 'output' must be a character vector.")
+
+  ###########################
+  ####       Setup       ####
+  ###########################
+
+  # Initiate Column Names
+  Clutch.Size <- Attempt.ID <- Host.Eggs.Count <- Unhatched.Eggs <- Young.Total <- Live.Host.Young.Count <- NA
+  Dead.Host.Young.Count <- Young.Fledged <- Clutch.Size.Estimated <- Clutch.Size.x <- Clutch.Size.y <- NA
+  Young.in.Nest <- est1 <- est2 <- est3 <- NA
+
+  # If clutch size is reported give estimated column a 0
+  data <- data %>% mutate(Clutch.Size.Estimated = ifelse(!is.na(Clutch.Size), 0, NA)) %>%
+                   relocate(Clutch.Size.Estimated, .after = Clutch.Size)
+  df <- data
+
+  ##################################
+  ####   Estimate Clutch Size   ####
+  ##################################
+
+
+  # For blank clutches, estimates clutch size from checks data
+  # Some prep, remove all NA rows, calc sum of live+dead young during each visit for later
+  df <- df %>% filter(is.na(Clutch.Size))
+  df$Young.in.Nest <- rowSums(df[ , c("Live.Host.Young.Count", "Dead.Host.Young.Count")], na.rm = TRUE)
+  # Summarize by attempt: (1) max egg count, (2) min unhatched eggs, (3) max young in the nest (dead + alive), (4) max fledges
+  df <- df %>% group_by(Attempt.ID) %>%
+               summarise(Host.Eggs.Count = max(Host.Eggs.Count),
+                         Unhatched.Eggs = min(Unhatched.Eggs),
+                         Young.Total = max(Young.Total, Young.in.Nest, na.rm = T),
+                         Young.Fledged = max(Young.Fledged))
+  # Remove attempts that have all NA values
+  df <- df[rowSums(is.na(df[, -1])) != 4, ]
+
+  # Find the max nest contents between (1) number of observed host eggs, (2) young (alive/dead) + unhatched eggs, (3) fledged + unhatched eggs
+  df <- df %>% mutate(est1 = Host.Eggs.Count,
+                      est2 = rowSums(df[c("Young.Total", "Unhatched.Eggs")], na.rm = T),
+                      est3 = rowSums(df[c("Young.Fledged", "Unhatched.Eggs")], na.rm = T))
+
+  df <- df %>% mutate(Clutch.Size = pmax(est1, est2, est3, na.rm = T))
+  df <- df %>% select(c("Attempt.ID", "Clutch.Size"))
+
+
+  ##################################
+  ####   Update Field in data   ####
+  ##################################
+
+  # Replace NA clutches with data if we were able to estimate it, cleanup columns
+  out <- data %>% left_join(df, by = c("Attempt.ID")) %>%
+                  mutate(Clutch.Size = coalesce(Clutch.Size.x, Clutch.Size.y)) %>%
+                  select(-Clutch.Size.x,-Clutch.Size.y) %>%
+                  relocate(Clutch.Size, .after = Young.Fledged) %>%
+                  relocate(Clutch.Size.Estimated, .after = Clutch.Size)
+
+  # Add `1` to Clutch.Size.Estimated if value was estimated
+  estIDs <- unique(df$Attempt.ID)
+  out$Clutch.Size.Estimated <- ifelse(out$Attempt.ID %in% estIDs, 1, out$Clutch.Size.Estimated)
+
+
+  ##################################
+  ####        Output data       ####
+  ##################################
+
+  # Prep for and Export resulting dataframe
+  pos <- 1
+  envir = as.environment(pos)
+
+  if (is.null(output)) {
+    estimated.data <- NULL
+    assign("estimated.data", out, envir = envir)
+  } else {
+    assign(paste0(output), out, envir = envir)
+  }
+
+}
