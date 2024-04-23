@@ -372,19 +372,19 @@ your analysis.</p>
 <code class="sourceCode R"><span><span class="co"># Load and merge version 2 of database</span></span>
 <span><span class="fu"><a href="../reference/nw.getdata.html">nw.getdata</a></span><span class="op">(</span>version <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/nw.mergedata.html">nw.mergedata</a></span><span class="op">(</span>attempts <span class="op">=</span> <span class="va">NW.attempts</span>, checks <span class="op">=</span> <span class="va">NW.checks</span>, output <span class="op">=</span> <span class="st">"merged.data"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">mergeddata</span><span class="op">$</span><span class="va">Attempt.ID</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co"># &gt; 572488    # Attempts in raw dataset</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">merged.data</span><span class="op">$</span><span class="va">Attempt.ID</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># &gt; 648569    # Attempts in raw dataset</span></span>
 <span></span>
 <span></span>
 <span><span class="co"># Remove attempts with 'Brown-headed Cowbird' as the species</span></span>
-<span><span class="fu"><a href="../reference/nw.cleandata.html">nw.cleandata</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">mergeddata</span>, mode <span class="op">=</span> <span class="st">"remove"</span>, methods <span class="op">=</span> <span class="st">"a"</span>, output <span class="op">=</span> <span class="st">"no_bnhcow"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/nw.cleandata.html">nw.cleandata</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">merged.data</span>, mode <span class="op">=</span> <span class="st">"remove"</span>, methods <span class="op">=</span> <span class="st">"a"</span>, output <span class="op">=</span> <span class="st">"no_bnhcow"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">no_bnhcow</span><span class="op">$</span><span class="va">Attempt.ID</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co"># &gt; 574263    # Attempts after cleaning</span></span>
+<span><span class="co"># &gt; 648540    # Attempts after cleaning</span></span>
 <span></span>
 <span><span class="co"># Remove attempts using "i" and "j"</span></span>
-<span><span class="fu"><a href="../reference/nw.cleandata.html">nw.cleandata</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">mergeddata</span>, mode <span class="op">=</span> <span class="st">"remove"</span>, methods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"i"</span>, <span class="st">"j"</span><span class="op">)</span>, output <span class="op">=</span> <span class="st">"no_longnests"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/nw.cleandata.html">nw.cleandata</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">merged.data</span>, mode <span class="op">=</span> <span class="st">"remove"</span>, methods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"i"</span>, <span class="st">"j"</span><span class="op">)</span>, output <span class="op">=</span> <span class="st">"no_longnests"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">no_longnests</span><span class="op">$</span><span class="va">Attempt.ID</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co"># &gt; 572583    # Attempts after cleaning</span></span></code></pre></div>
+<span><span class="co"># &gt; 646753    # Attempts after cleaning</span></span></code></pre></div>
 </div>
 </div>
   </div>
