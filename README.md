@@ -17,7 +17,7 @@ functions create an R package to facilitate accessibility.
 
 - [x] Finish code to estimate first lay date if not provided
 - [ ] Start code to estimate fledge date if not provided
-- [ ] Start code to estimate hatch date if not provided
+- [x] Start code to estimate hatch date if not provided
 - [ ] Update “filter” vignette
 
 ## Overview :pushpin:

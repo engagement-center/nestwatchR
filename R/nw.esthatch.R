@@ -1,0 +1,181 @@
+#' Estimate Hatch Date for NestWatch Data
+#'
+#' @description Hatch Date data, like first lay date is important for investigating changes in nesting phenology and success over time. These data
+#' in the NestWatch dataset are provided by participants, and the input of these dates may be overlooked by the participants. If not explicitly
+#' provided by the participant, hatch date may be estimated based off first lay date or fledge Date. This function checks, in order, if the
+#' Young.Total were recorded or if the nest fledged (positive indication of hatching), then if a hatch date is available, and finally if a
+#' known (non-estimated) fledge date is available. If these requirements are met, the function uses user-input nest phenology timeframes to
+#' estimate hatch date date. Estimated dates are denoted with a \code{1} in \code{data$Hatch.Date.Estimated}.
+#'
+#' @details Precision of the hatch date estimates depend on what data is used to estimate the values from (and if those values are estimated). Users
+#' should consider if they want to estimate hatch dates based on estimated lay dates. The function estimates based off of first lay date if available,
+#' and calculates the number of egg-laying-days based on clutch size (if available, or user-provided average clutch size) and eggs-per-day of the
+#' species. If lay dates are not available, the function estimates hatch from known fledge dates (Fledge.Date.Estimated == 0) by subtracting the
+#' user-provided nestling period length. Due to the uncertainly of sighting and aging fledged young, this function does not estimate hatch date
+#' from estimated fledge dates.
+#'
+#'
+#' @param data dataframe; A dataframe containing merged NestWatch attempts and visits data.
+#' @param phenology dataframe; A dataframe one row of phenological data for each species to be estimated. Data columns as follows:
+#'    \itemize{
+#'     \item \code{Species}: Species Codes for each species to be estimated.
+#'     \item \code{Clutch.Size}: Average clutch size for each species.
+#'     \item \code{Eggs.per.Day}: Average number of eggs laid per day by each species.
+#'     \item \code{Incubation}: Average number of days spent in incubation (days between clutch complete and hatch).
+#'     \item \code{Nestling}: Average number of days spent in nestling period (days between hatch and fledge).
+#'     \item \code{Total.Nesting.Period}: Average number of days between first lay date and fledge date.
+#'     }
+#' @param output character; An optional character string to custom name the output dataframe
+#'
+#' @return dataframe
+#' @export
+#'
+#' @examples
+#' # Simplified NestWatch data with missing data
+#' # All hatch dates should be 2024-05-20
+#' data <- data.frame(Attempt.ID = c("1", "2", "3"),
+#'                    Species.Code = rep("carwre", 3),
+#'                    First.Lay.Date = as.Date(c("2024-05-01", "2024-05-02", NA)),
+#'                    Hatch.Date = as.Date(rep(NA, 3)),
+#'                    Fledge.Date = as.Date(c(NA, NA, "2024-06-02")),
+#'                    Fledge.Date.Estimated = c(NA, NA, 0),
+#'                    Clutch.Size = c(NA, 3, NA),
+#'                    Young.Total = c(4, 3, 4),
+#'                    Outcome = c("s1", "s1", "s1"))
+#'
+#' # Create phenology dataframe
+#' phenology <- data.frame(Species = c("bewwre", "carwre"),
+#'                         Clutch.Size  = c(5, 4),
+#'                         Eggs.per.Day = c(1, 1),
+#'                         Incubation   = c(16, 16),
+#'                         Nestling     = c(16, 13),
+#'                         Total.Nesting.Period = c(50, 40))
+#'
+#' # Run function
+#' nw.esthatch(data = data, phenology = phenology)
+nw.esthatch <- function(data, phenology, output = NULL) {
+
+  ###########################
+  ####  Check arguments  ####
+  ###########################
+
+  # Check the dataframe is merged NW data
+  if (missing(data)){
+    stop("Augument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
+  }
+  if (all(!(c("Species.Code", "Visit.ID") %in% names(data)))){
+    stop("Augument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
+  }
+  # Check phenology is a dataframe, has correct column names
+  if(!is.data.frame(phenology)){
+    stop("Augument 'phenology' must be a dataframe, see ?nw.estfirstlay() for details.")
+  }
+  needed_columns <- c("Species", "Clutch.Size", "Eggs.per.Day", "Incubation", "Nestling", "Total.Nesting.Period")
+  if (!all(needed_columns %in% colnames(phenology))) {
+    stop("Augument 'phenology' must be a dataframe, see ?nw.estfirstlay() for details.")
+  }
+
+  ###########################
+  ####  Setup            ####
+  ###########################
+  # Initiate column names
+  Species <- Species.Code <- Attempt.ID <- Eggs.per.Day <- Incubation <- Netsling <- Clutch.Size <- NULL
+  Hatch.Date <- Fledge.Date <- Species <- Days.of.Lay <- First.Lay.Date <- Young.Total <- Outcome <- NULL
+  First.Lay <- Clutch <- Hatch <- Fledge <- Fledge.Date.Estimated <- NULL
+
+
+  ###########################
+  ####  Function         ####
+  ###########################
+
+  for (s in phenology$Species) {
+    # Filter to a single species
+    sp_data <- data %>% filter(Species.Code == s & is.na(Hatch.Date))
+    # Subset to Attempts that had # young >0 or if it fledged
+    subset <- sp_data %>% filter(Young.Total > 0 | Outcome == "s1")
+
+
+    ########################################
+    ##    No Hatch Date, Yes 1st Lay      ##
+    ########################################
+
+    # For attempts with clutch sizes
+    temp <- subset %>% filter(!is.na(First.Lay.Date) & !is.na(Clutch.Size))       # filter to having first lay dates and clutch size
+    temp <- temp %>% group_by(Attempt.ID) %>%                                     # group by attempt id
+      summarise(First.Lay = mean(First.Lay.Date),                  # get the first lay date and clutch size for each attempt
+                Clutch = mean(Clutch.Size)) %>%
+      mutate(Hatch = (First.Lay +                                  # hatch = first lay + clutch*egg/day + avg inc
+                        (Clutch * phenology$Eggs.per.Day[phenology$Species == s]) +
+                        phenology$Incubation[phenology$Species == s] -1))
+
+    # For attempts with no clutch size
+    temp1 <- subset %>% filter(!is.na(First.Lay.Date) & is.na(Clutch.Size))       # filter to having first lay dates but no clutch size
+    # If this subset contains data, continue (there may not be these cases)
+    if (nrow(temp1) > 0) {
+      temp1 <- temp1 %>% group_by(Attempt.ID) %>%                               # group by attempt id
+                         summarise(First.Lay = mean(First.Lay.Date)) %>%        # get the first lay date and clutch size for each attempt
+                         mutate(Hatch = (First.Lay +                            # hatch = first lay + avg clutch*egg/day + avg inc
+                                        (phenology$Clutch.Size[phenology$Species == s] *
+                                           phenology$Eggs.per.Day[phenology$Species == s]) +
+                                        phenology$Incubation[phenology$Species == s] -1))
+      # bind rows of temp and temp1
+      temp <- temp %>% select(Attempt.ID, Hatch)
+      temp1 <- temp1 %>% select(-(First.Lay))
+      temp <- rbind(temp, temp1)
+    } # end if temp1 > 0
+
+    # If temp1 == 0, just reduce columns of temp
+    if (nrow(temp1) == 0) { temp <- temp %>% select(Attempt.ID, Hatch)}
+
+    # loop over each attempt to add data to the original df
+    for (i in temp$Attempt.ID) {
+      subset_data <- data[data$Attempt.ID == i, ]
+      temp_row <- temp[temp$Attempt.ID == i, ]
+
+      data$Hatch.Date[data$Attempt.ID == i] <- temp_row$Hatch
+      data$Hatch.Date.Estimated[data$Attempt.ID == i] <- 1
+    }
+
+
+    #################################################
+    ##    No Hatch Date, No Lay, Fledge Known      ##
+    #################################################
+
+    # filter subset to no lay, but fledge date known (not estimated)
+    temp <- subset %>% filter(is.na(First.Lay.Date))
+    temp <- temp %>% filter(Fledge.Date.Estimated < 1)
+
+    temp <- temp %>% filter(!is.na(Fledge.Date)) %>%                              # filter to fledge dates provided
+      group_by(Attempt.ID) %>%                                     # group by attempt id
+      summarise(Fledge = mean(Fledge.Date)) %>%                    # get the fledge date date and clutch size for each attempt
+      mutate(Hatch = (Fledge -                                     # hatch = fledge - avg nestling
+                        (phenology$Nestling[phenology$Species == s])))
+
+    # loop over each attempt to add data to the original df
+    for (i in temp$Attempt.ID) {
+      indicies <- which(data$Attempt.ID == i)                                       # get index in whole datatframe where Attempt is i
+      data$Hatch.Date[indicies] <- as.Date(as.numeric(temp[which(temp$Attempt.ID == i), 3]))  # move date from temp into whole dataframe's First.Lay.Date
+      data$Hatch.Date.Estimated[indicies] <- 1                                  # add 1 to that Attempt.ID's Lay Estimation column
+    }
+
+
+  } #end loop over s in species
+
+  ##################################
+  ####        Output data       ####
+  ##################################
+
+  # Prep for and Export resulting dataframe
+  pos <- 1
+  envir = as.environment(pos)
+
+  if (is.null(output)) {
+    estimated.hatch <- NULL
+    assign("estimated.hatch", data, envir = envir)
+  } else {
+    assign(paste0(output), data, envir = envir)
+  }
+
+} # end func
+
+
