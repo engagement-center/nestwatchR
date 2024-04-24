@@ -106,18 +106,22 @@ nw.estclutchsize <- function(data, output = NULL){
   # Find the max nest contents between (1) number of observed host eggs, (2) young (alive/dead) + unhatched eggs, (3) fledged + unhatched eggs
   df$est1 <- df$Host.Eggs.Count
   df$est2 <- apply(df[, c("Young.Total", "Unhatched.Eggs")], 1, function(row) {   # sum = NA if all NA
-    if (all(row == -999)) {
+    if (all(row == -999)) {                                  # if both are NA return NA
       return(-999)
-    } else {
-      return(sum(row, na.rm = TRUE))
+    } else if ((sum(row) > (-999*2)) & (sum(row) < 0)){      # if one is NA, return the value
+      return(sum(row) - -999)
+    } else {                                                 # if both have values, return sum
+      return(sum(row))
     }
   })
 
   df$est3 <- apply(df[, c("Young.Fledged", "Unhatched.Eggs")], 1, function(row) {   # sum = NA if all NA
-    if (all(row == -999)) {
+    if (all(row == -999)) {                                  # if both are NA return NA
       return(-999)
-    } else {
-      return(sum(row, na.rm = TRUE))
+    } else if ((sum(row) > (-999*2)) & (sum(row) < 0)){      # if one is NA, return the value
+      return(sum(row) - -999)
+    } else {                                                 # if both have values, return sum
+      return(sum(row))
     }
   })
 
