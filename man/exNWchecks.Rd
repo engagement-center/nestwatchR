@@ -11,6 +11,6 @@ A dataframe with 79 observations of 21 variables. See <https://doi.org/10.1002/e
 exNWchecks
 }
 \description{
-A random set of 10 nesting attempts from the NewstWatch database to use used in running R documentation examples.
+A random set of 10 nesting attempts from the NewstWatch database to use in running R documentation examples.
 }
 \keyword{datasets}
