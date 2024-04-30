@@ -59,7 +59,7 @@ As an example, we can first view a plot of where the nests in `wrens` are locate
 [!Note]
 If you are unfamiliar with working with spatial data, [this is a good resources](https://bookdown.org/mcwimberly/gdswr-book/coordinate-reference-systems.html) on CRS and projections within R. 
 
-```{r wren nests, eval = T, echo = F}
+```{r wren nests, eval = T, echo = T}
 # Create a spatial object from nest data
 nest_points <- sf::st_as_sf(wrens, coords = c("Longitude", "Latitude"), crs = 4326)  # data is in WGS 84 (crs = 4326)
 
