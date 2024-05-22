@@ -97,7 +97,7 @@ nw.estfirstlay <- function(data, phenology, output = NULL) {
   #################
 
   # Determine if nests were visited during egg lay (and was not marked as such)
-  temp <- data %>%
+  temp <- sp_data %>%
     arrange(Attempt.ID, Visit.Datetime) %>%                                # Sort the dataframe by Attempt.ID and Visit.Datetime
     group_by(Attempt.ID) %>%
     mutate(Host.Eggs.Increases = c(FALSE, diff(Host.Eggs.Count) > 0)) %>%  # for each timestep, did eggs increase (ie. visited during lay)
@@ -106,7 +106,7 @@ nw.estfirstlay <- function(data, phenology, output = NULL) {
   # Update sp_data$Visited.During.Egg.Laying (not raw data)
   matching_ids <- sp_data$Attempt.ID %in% temp$Attempt.ID
   sp_data$Visited.During.Egg.Laying[matching_ids] <- ifelse(is.na(sp_data$Visited.During.Egg.Laying[matching_ids]) |  # if visited is NA OR
-                                                              sp_data$Visited.During.Egg.Laying[matching_ids] == 0,     # if visited is 0
+                                                              sp_data$Visited.During.Egg.Laying[matching_ids] == 0,   # if visited is 0
                                                             1,                                                     # then update with 1
                                                             sp_data$Visited.During.Egg.Laying[matching_ids])          # if not, keep original
 
@@ -157,7 +157,7 @@ nw.estfirstlay <- function(data, phenology, output = NULL) {
 
   # If clutch size is NA or 0:
   #   Count back provided avg clutch size*egg/d +1
-  temp1 <- subset %>% filter(!(Clutch.Size > 0))
+  temp1 <- subset %>% filter(!(Clutch.Size > 0) | is.na(Clutch.Size))
   temp1 <- temp1 %>% mutate(First.Lay.Date = (Hatch.Date -
                                                 phenology$Incubation[phenology$Species == s] -
                                                 (phenology$Clutch.Size[phenology$Species == s] * phenology$Eggs.per.Day[phenology$Species == s]) + 1))
@@ -184,7 +184,7 @@ nw.estfirstlay <- function(data, phenology, output = NULL) {
     filter(is.na(First.Lay.Date)) %>%
     filter(is.na(Hatch.Date)) %>%
     filter(!is.na(Fledge.Date))
-  subset <- subset %>% group_by(Attempt.ID) %>%                    # make small dataframe, max() used but only one value exists for each
+  subset <- subset %>% group_by(Attempt.ID) %>%                    # make small dataframe, mean() hack used but only one value exists for each
     summarise(Clutch.Size = mean(Clutch.Size),
               Fledge.Date = mean(Fledge.Date),
               First.Lay.Date = mean(First.Lay.Date))
@@ -199,7 +199,7 @@ nw.estfirstlay <- function(data, phenology, output = NULL) {
 
   # If clutch size is NA or 0:
   #   Count back provided avg clutch size +1
-  temp1 <- subset %>% filter(!(Clutch.Size > 0))
+  temp1 <- subset %>% filter(!(Clutch.Size > 0) | is.na(Clutch.Size))
   temp1 <- temp1 %>% mutate(First.Lay.Date = (Fledge.Date -
                                                 phenology$Incubation[phenology$Species == s] -
                                                 (phenology$Clutch.Size[phenology$Species == s] * phenology$Eggs.per.Day[phenology$Species == s]) + 1))
@@ -213,12 +213,6 @@ nw.estfirstlay <- function(data, phenology, output = NULL) {
     data$First.Lay.Date.Estimated[indicies] <- 1                                  # add 1 to that Attempt.ID's Lay Estimation column
   }
 
-
-  #############################################
-  ##    No Lay, No Hatch, no Fledge Dates    ##
-  #############################################
-
-  # ?????????????????????????????????????????????
 
   } #end loop over s in species
 
