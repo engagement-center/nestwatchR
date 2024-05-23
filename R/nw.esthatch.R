@@ -91,8 +91,15 @@ nw.esthatch <- function(data, phenology, output = NULL) {
   for (s in phenology$Species) {
     # Filter to a single species
     sp_data <- data %>% filter(Species.Code == s & is.na(Hatch.Date))
+    # If this subset contains data, continue (there may not be these cases), if not skip and display message
+    if (nrow(sp_data) == 0) {message(paste0("Output Note: Either no Attempts exist for species ", shQuote(s, type = "cmd"), ", or all Attempts already contain values for 'Hatch.Date'."))}
+    if (nrow(sp_data) > 0) {
+
     # Subset to Attempts that had # young >0 or if it fledged
     subset <- sp_data %>% filter(Young.Total > 0 | Outcome == "s1")
+    # If this subset contains data, continue (there may not be these cases), if not skip and display message
+    if (nrow(subset) == 0) {message(paste0("Output Note: No Hatch Dates were estimated for species ", shQuote(s, type = "cmd"), " as no attempts were successful or had recorded young."))}
+    if (nrow(subset) > 0) {
 
 
     ########################################
@@ -101,12 +108,15 @@ nw.esthatch <- function(data, phenology, output = NULL) {
 
     # For attempts with clutch sizes
     temp <- subset %>% filter(!is.na(First.Lay.Date) & !is.na(Clutch.Size))       # filter to having first lay dates and clutch size
+    if (nrow(temp) > 0) {                                          # If this subset contains data - continue, if not skip
     temp <- temp %>% group_by(Attempt.ID) %>%                                     # group by attempt id
       summarise(First.Lay = mean(First.Lay.Date),                  # get the first lay date and clutch size for each attempt
                 Clutch = mean(Clutch.Size)) %>%
       mutate(Hatch = (First.Lay +                                  # hatch = first lay + clutch*egg/day + avg inc
                         (Clutch * phenology$Eggs.per.Day[phenology$Species == s]) +
                         phenology$Incubation[phenology$Species == s] -1))
+    temp <- temp %>% select(Attempt.ID, Hatch)
+    }
 
     # For attempts with no clutch size
     temp1 <- subset %>% filter(!is.na(First.Lay.Date) & is.na(Clutch.Size))       # filter to having first lay dates but no clutch size
@@ -118,16 +128,41 @@ nw.esthatch <- function(data, phenology, output = NULL) {
                                         (phenology$Clutch.Size[phenology$Species == s] *
                                            phenology$Eggs.per.Day[phenology$Species == s]) +
                                         phenology$Incubation[phenology$Species == s] -1))
-      # bind rows of temp and temp1
-      temp <- temp %>% select(Attempt.ID, Hatch)
-      temp1 <- temp1 %>% select(-(First.Lay))
-      temp <- rbind(temp, temp1)
-    } # end if temp1 > 0
+      temp1 <- temp1 %>% select(Attempt.ID, Hatch)
+    }
 
-    # If temp1 == 0, just reduce columns of temp
-    if (nrow(temp1) == 0) { temp <- temp %>% select(Attempt.ID, Hatch)}
 
-    # loop over each attempt to add data to the original df
+    #################################################
+    ##    No Hatch Date, No Lay, Fledge Known      ##
+    #################################################
+
+    # filter subset to no lay, but fledge date known (not estimated)
+    temp2 <- subset %>% filter(is.na(First.Lay.Date) & Fledge.Date.Estimated == 0)
+    if (nrow(temp2) > 0) {
+
+    temp2 <- temp2 %>% filter(!is.na(Fledge.Date)) %>%                              # filter to fledge dates provided
+      group_by(Attempt.ID) %>%                                     # group by attempt id
+      summarise(Fledge = mean(Fledge.Date)) %>%                    # get the fledge date date and clutch size for each attempt
+      mutate(Hatch = (Fledge -                                     # hatch = fledge - avg nestling
+                        (phenology$Nestling[phenology$Species == s])))
+    temp2 <- temp2 %>% select(Attempt.ID, Hatch)
+    }
+
+
+    ##################################################
+    ##    Bind Data and update original df          ##
+    ##################################################
+
+    # Check if each temp was created
+    df_list <- list()
+    if (exists("temp")) df_list <- c(df_list, list(temp))
+    if (exists("temp1")) df_list <- c(df_list, list(temp1))
+    if (exists("temp2")) df_list <- c(df_list, list(temp2))
+
+    # Bind any temp data into one df
+    temp <- do.call(rbind, df_list)
+
+    # Loop over each attempt to add data to the original df
     for (i in temp$Attempt.ID) {
       subset_data <- data[data$Attempt.ID == i, ]
       temp_row <- temp[temp$Attempt.ID == i, ]
@@ -137,27 +172,15 @@ nw.esthatch <- function(data, phenology, output = NULL) {
     }
 
 
-    #################################################
-    ##    No Hatch Date, No Lay, Fledge Known      ##
-    #################################################
-
-    # filter subset to no lay, but fledge date known (not estimated)
-    temp <- subset %>% filter(is.na(First.Lay.Date))
-    temp <- temp %>% filter(Fledge.Date.Estimated < 1)
-
-    temp <- temp %>% filter(!is.na(Fledge.Date)) %>%                              # filter to fledge dates provided
-      group_by(Attempt.ID) %>%                                     # group by attempt id
-      summarise(Fledge = mean(Fledge.Date)) %>%                    # get the fledge date date and clutch size for each attempt
-      mutate(Hatch = (Fledge -                                     # hatch = fledge - avg nestling
-                        (phenology$Nestling[phenology$Species == s])))
-
     # loop over each attempt to add data to the original df
     for (i in temp$Attempt.ID) {
-      indicies <- which(data$Attempt.ID == i)                                       # get index in whole datatframe where Attempt is i
-      data$Hatch.Date[indicies] <- as.Date(as.numeric(temp[which(temp$Attempt.ID == i), 3]))  # move date from temp into whole dataframe's First.Lay.Date
+      indicies <- which(data$Attempt.ID == i)                                   # get index in whole datatframe where Attempt is i
+      data$Hatch.Date[indicies] <- as.Date(as.numeric(                          # move date from temp into whole dataframe's Hatch.Date
+                                            temp[which(temp$Attempt.ID == i), 2]))
       data$Hatch.Date.Estimated[indicies] <- 1                                  # add 1 to that Attempt.ID's Lay Estimation column
     }
-
+    } # end if subset > 0
+    } # end if species > 0
 
   } #end loop over s in species
 
