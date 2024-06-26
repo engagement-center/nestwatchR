@@ -27,9 +27,11 @@ knitr::opts_chunk$set(
 This repository is in early development with plans to add additional functions create an R package to facilitate accessibility. 
 
 - [X] Finish code to estimate first lay date if not provided
-- [ ] Start code to estimate fledge date if not provided
+- [X] Start code to estimate fledge date if not provided
 - [X] Start code to estimate hatch date if not provided
-- [ ] Update "filter" vignette
+- [X] Update "filter" vignette
+- [ ] Debug nw.estfirstlay() and nw.estclutchsize(). Fix handling of no data subsets to bind.
+- [ ] Update "estimate" vignette
 
 ## Overview :pushpin:
 
@@ -39,9 +41,14 @@ This repository is in early development with plans to add additional functions c
 
 ## Installation :computer:
 
-Presently, these functions exist in the private `engagement-center/2024-NestWatch-Package-Internal` GitHub repository. If you have access, clone the repository to your local machine to begin testing. If you do not have access, create a new R Project from the .zip folder provided to you to explore and test the data. We hope to migrate these functions into a package in the future to improve accessibility.
+This package is under active development and is likely to have bugs and unexpected issues. Presently, the package exist off-CRAN in the public `engagement-center/nestwatchR` GitHub repository. To install the package on your local machine, either run the following code, or to clone the repository to your local machine and use the "build" tab of the environments pane to install the package, for testing.
 
-This group of functions primarily uses the `R` programming language, and some knowledge of R is necessary for using these products. A function in this collection also depends on the program `Python`, which needs to be [installed](https://www.python.org/downloads/) on your machine prior to use of the function. No prior knowledge of Python or manual setup of the program is needed. Use the following code chunk to check if Python is already installed on your machine:
+```{r install remotes, eval=FALSE, meaasge=F}
+# Install nestwatchR package in R
+remotes::install_github("engagement-center/nestwatchR")
+```
+
+This package primarily uses the `R` programming language and some knowledge of R is necessary for using these products. A function in this collection also depends on the program `Python`, which needs to be [installed](https://www.python.org/downloads/) on your machine prior to use of the function. No prior knowledge of Python or manual setup of the program is needed. Use the following code chunk to check if Python is already installed on your machine and follow the resulting link if not already installed:
 
 
 ```{r gh-installation, eval = FALSE}
@@ -58,7 +65,7 @@ check_python_installation <- function() {
 check_python_installation()
 ```
 
-These functions also depend on several `R` libraries.
+These functions also depend on several `R` libraries. If you do not already have these packages installed, we suggest installing them during the `nestwatchR` installation process. 
 
 ```{r package dependencies, evel = FALSE}
 # List of packages used in NewstWatch code
