@@ -30,8 +30,8 @@ Imports:
     reticulate,
     sf,
     stringr
-URL: https://github.com/kimsavides/nestwatchR
-BugReports: https://github.com/kimsavides/nestwatchR/issues
+URL: https://github.com/engagement-center/nestwatchR
+BugReports: https://github.com/engagement-center/nestwatchR/issues
 Suggests: 
     DT,
     knitr,
