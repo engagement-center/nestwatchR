@@ -95,14 +95,12 @@
 </h2>
 <p>This repository is in early development with plans to add additional functions create an R package to facilitate accessibility.</p>
 <ul class="task-list">
-<li>
-<input type="checkbox" checked>Finish code to estimate first lay date if not provided</li>
-<li>
-<input type="checkbox">Start code to estimate fledge date if not provided</li>
-<li>
-<input type="checkbox" checked>Start code to estimate hatch date if not provided</li>
-<li>
-<input type="checkbox">Update “filter” vignette</li>
+<li><label><input type="checkbox" checked>Finish code to estimate first lay date if not provided</label></li>
+<li><label><input type="checkbox" checked>Start code to estimate fledge date if not provided</label></li>
+<li><label><input type="checkbox" checked>Start code to estimate hatch date if not provided</label></li>
+<li><label><input type="checkbox" checked>Update “filter” vignette</label></li>
+<li><label><input type="checkbox">Debug nw.estfirstlay() and nw.estclutchsize(). Fix handling of no data subsets to bind.</label></li>
+<li><label><input type="checkbox">Update “estimate” vignette</label></li>
 </ul>
 </div>
 <div class="section level2">
@@ -116,9 +114,12 @@
 <h2 id="installation-computer">Installation <span class="emoji" data-emoji="computer">💻</span>
 <a class="anchor" aria-label="anchor" href="#installation-computer"></a>
 </h2>
-<p>Presently, these functions exist in the private <code>engagement-center/2024-NestWatch-Package-Internal</code> GitHub repository. If you have access, clone the repository to your local machine to begin testing. If you do not have access, create a new R Project from the .zip folder provided to you to explore and test the data. We hope to migrate these functions into a package in the future to improve accessibility.</p>
-<p>This group of functions primarily uses the <code>R</code> programming language, and some knowledge of R is necessary for using these products. A function in this collection also depends on the program <code>Python</code>, which needs to be <a href="https://www.python.org/downloads/" class="external-link">installed</a> on your machine prior to use of the function. No prior knowledge of Python or manual setup of the program is needed. Use the following code chunk to check if Python is already installed on your machine:</p>
+<p>This package is under active development and is likely to have bugs and unexpected issues. Presently, the package exist off-CRAN in the public <code>engagement-center/nestwatchR</code> GitHub repository. To install the package on your local machine, either run the following code, or to clone the repository to your local machine and use the “build” tab of the environments pane to install the package, for testing.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Install nestwatchR package in R</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"engagement-center/nestwatchR"</span><span class="op">)</span></span></code></pre></div>
+<p>This package primarily uses the <code>R</code> programming language and some knowledge of R is necessary for using these products. A function in this collection also depends on the program <code>Python</code>, which needs to be <a href="https://www.python.org/downloads/" class="external-link">installed</a> on your machine prior to use of the function. No prior knowledge of Python or manual setup of the program is needed. Use the following code chunk to check if Python is already installed on your machine and follow the resulting link if not already installed:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Check to see if you already have Python installed</span></span>
 <span><span class="va">check_python_installation</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">python_installed</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.html" class="external-link">system</a></span><span class="op">(</span><span class="st">"python --version"</span>, intern <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -130,8 +131,8 @@
 <span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span>
 <span><span class="fu">check_python_installation</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>These functions also depend on several <code>R</code> libraries.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<p>These functions also depend on several <code>R</code> libraries. If you do not already have these packages installed, we suggest installing them during the <code>nestwatchR</code> installation process.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># List of packages used in NewstWatch code</span></span>
 <span><span class="va">packages</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"reticulate"</span>, <span class="st">"dplyr"</span>, <span class="st">"stringr"</span>, <span class="st">"lubridate"</span>, <span class="st">"ebirdst"</span>, <span class="st">"sf"</span><span class="op">)</span></span>
 <span></span>
@@ -188,7 +189,7 @@
 <a class="anchor" aria-label="anchor" href="#quick-start-ledger"></a>
 </h2>
 <p>This quick start guide shows demonstrates how to download data and plot the first lay dates of two species. In this guide, and throughout all package documentation, a simplified example dataset is used consisting of Carolina and Bewrick’s wrens.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load NestWatch Package</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/kimsavides/nestwatchR" class="external-link">nestwatchR</a></span><span class="op">)</span></span>
 <span></span>
@@ -206,14 +207,14 @@
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">wrens</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] 40290</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">wrens</span>, <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#&gt; X  Attempt.ID  Location.ID   Latitude    Longitude Subnational.Code  Species.Name  Species.Code  Year  Elevation.m  Height.m Substrate Substrate.Relationship  Substrate.Other.Description Predator.Guard  Predator.Guard.Other  Cavity.Entrance.Diameter.cm Entrance.Orientation  Habitat.1m  Habitat.100m  Location.Entry.Technique  Observer.ID First.Lay.Date  First.Lay.Date.Estimated  Visited.During.Egg.Laying Hatch.Date  Hatch.Date.Estimated  Fledge.Date Fledge.Date.Estimated Young.Fledged Clutch.Size Young.Total Unhatched.Eggs  Outcome Attempt.Entry.Technique   Visit.ID       Visit.Datetime  Visit.Time.Valid  Nest.Status Adult.Activity  Young.Status  Management.Status Host.Eggs.Count Host.Eggs.Present.Uncounted Live.Host.Young.Count Live.Host.Young.Present.Uncounted Dead.Host.Young.Count Dead.Host.Young.Present.Uncounted Brood.Parasite.Eggs.Count Brood.Parasite.Eggs.Present.Uncounted Brood.Parasite.Live.Young.Count Brood.Parasite.Live.Young.Present.Uncounted Brood.Parasite.Dead.Young.Count Brood.Parasite.Dead.Young.Present.Uncounted Visit.Entry.Technique </span></span>
 <span><span class="co">#&gt; 1    A1000045       L56654   34.68472    -98.40583            US-OK  Carolina Wren       carwre  2006        344.7    1.6002    nesbox                     in                                                                                           3.81                   ne                                 BIRDHOUSE_HIST:SELF     obsr1309                                       NA                         NA                               NA                                 NA            NA          NA          NA             NA        f                           S2489482  2006-07-10 00:00:00                 0                                                                            5                           0                    NA                                 0                    NA                                 0                        NA                                     0                              NA                                           0                              NA                                           0</span></span>
 <span><span class="co">#&gt; 2    A1000045       L56654   34.68472    -98.40583            US-OK  Carolina Wren       carwre  2006        344.7    1.6002    nesbox                     in                                                                                           3.81                   ne                                 BIRDHOUSE_HIST:SELF     obsr1309                                       NA                         NA                               NA                                 NA            NA          NA          NA             NA        f                           S2489483  2006-08-08 00:00:00                 0                          no                               nm              NA                           0                    NA                                 0                    NA                                 0                        NA                                     0                              NA                                           0                              NA                                           0   </span></span>
 <span><span class="co">#&gt; 3    A1000271      L126818   30.61476    -76.87363            US-TX  Bewick's Wren       bewwre  2006        316.4    1.6154    nesbox                     in                                      baffle                                               3.81                   sw                                     PointMaker1.0_2    obsr10027                                       NA                         NA                               NA                                 NA            NA          NA          NA             NA       f6                           S2494112  2006-03-16 00:00:00                 0           in                                                              NA                           0                    NA                                 0                    NA                                 0                        NA                                     0                              NA                                           0                              NA                                           0   </span></span>
 <span><span class="co">#&gt; 4    A1000271      L126818   30.61476    -76.87363            US-TX  Bewick's Wren       bewwre  2006        316.4    1.6154    nesbox                     in                                      baffle                                               3.81                   sw                                     PointMaker1.0_2    obsr10027                                       NA                         NA                               NA                                 NA            NA          NA          NA             NA       f6                           S2494113  2006-03-13 00:00:00                 0           cn                                                              NA                           0                    NA                                 0                    NA                                 0                        NA                                     0                              NA                                           0                              NA                                           0   </span></span>
 <span><span class="co">#&gt; 5    A1000271      L126818   30.61476    -76.87363            US-TX  Bewick's Wren       bewwre  2006        316.4    1.6154    nesbox                     in                                      baffle                                               3.81                   sw                                     PointMaker1.0_2    obsr10027                                       NA                         NA                               NA                                 NA            NA          NA          NA             NA       f6                           S2494114  2006-04-12 00:00:00                 0                                                                            4                           0                    NA                                 0                    NA                                 0                        NA                                     0                              NA                                           0                              NA                                           0   </span></span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Format First.Lay.Date as a date</span></span>
 <span><span class="va">wrens</span><span class="op">$</span><span class="va">First.Lay.Date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="va">wrens</span><span class="op">$</span><span class="va">First.Lay.Date</span><span class="op">)</span></span>
 <span></span>
