@@ -2,7 +2,7 @@
 % Please edit documentation in R/nw.filterspatial.R
 \name{nw.filterspatial}
 \alias{nw.filterspatial}
-\title{Use Spatial Data to Filter Point Data}
+\title{Filter Nest Locations by Expected Range Maps}
 \usage{
 nw.filterspatial(
   points,

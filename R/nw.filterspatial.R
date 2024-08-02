@@ -1,4 +1,4 @@
-#' Use Spatial Data to Filter Point Data
+#' Filter Nest Locations by Expected Range Maps
 #'
 #' @description Use a geospatial polygon to identify or remove points located outside the polygon. This function also includes an
 #' option buffer argument which can be used to add a specific distance buffer around the polygon prior to filtering.

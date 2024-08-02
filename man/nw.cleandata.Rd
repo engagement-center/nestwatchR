@@ -2,7 +2,7 @@
 % Please edit documentation in R/nw.cleandata.R
 \name{nw.cleandata}
 \alias{nw.cleandata}
-\title{Preform Common Cleaning Procedures to NestWatch Data}
+\title{Perform Common Cleaning Procedures to NestWatch Data}
 \usage{
 nw.cleandata(data, mode, methods, output = NULL)
 }
@@ -29,39 +29,40 @@ deciding what cleaning procedures to conduct. This function contains 10 cleaning
 \cr
     \strong{Cleaning Procedure Details}:
       \itemize{
-       \item \code{a}: Flag/remove attempts with \code{Species.Name} is Brown-headed Cowbird. Brown-headed Cowbirds are nest parasites and
+       \item \code{a}: Flag/remove attempts with \code{Species.Name} is "Brown-headed Cowbird" as they are nest parasites and
        do not create their own nests. This is not the correct interpretation of the nest species. Users may choose to look at these data more
        closely if investigating brood parasitism.
-       \item \code{b}: Flag/remove attempts with \code{Outcome} of "no breeding behavior observed" (\code{u3}), "inactive" (\code{i}), and
-       "not monitored" (\code{n}). These data likely represent either nests from a previous season or nests that were previously active this season,
-       but no active dates can be attributed to. Users may choose to include these data if looking at habitat or location data without measures
-       of phenology or success.
-       \item \code{c}: Flag/remove attempts with \code{Outcome} of "invasive spp management" (\code{f5}). In these attempts, the participant
-       chose to remove/alter eggs or nests of invasive species. If the user is interested in analyzing participants' habits in invasive spp management
-       or rates of brood parasitism, they should consider not using this method. Note: "Invasive spp management", may also be incorrectly chosen by
-       participants trying to indicate nest failure by an invasive species where a failure code should have been used.
-       \item \code{d}: Flag/remove attempts if outcome is a fail code (\code{f, f1, f2, f3, f6, f7}) but recorded fledged host young > 0.
+       \item \code{b}: Flag/remove attempts with  of "no breeding behavior observed" (\code{u3}), "inactive" (\code{i}), and
+       "not monitored" (\code{n}). These data likely represent nests or nest boxes which never received eggs or were unmonitored. Users may choose
+       to include these data if looking at habitat or location data without measures of phenology or success.
+       \item \code{c}: Flag/remove attempts with \code{Outcome} of “invasive species management” (\code{f5}). For these attempts, the participant
+       chose to remove/alter eggs or nests of invasive species. If the user is interested in analyzing participants’ habits in invasive species
+       management or using some of the data fields (e.g., clutch size, first lay date), they might consider skipping this method with the
+       understanding that the outcome code is interpreted as “failure due to human interference” and standard nest survival estimates would
+       not be meaningful. Note: “Invasive species management” may also be incorrectly chosen by participants trying to indicate nest failure
+       caused by an invasive species, in which case it would still be prudent to flag or remove such records.
+       \item \code{d}: Flag/remove attempts if outcome is a failure code (\code{f, f1, f2, f3, f6, f7}) but recorded fledged host young > 0.
        In this case, a participant may have either characterized the nest's outcome incorrectly, recorded the presence of fledged host young
-       incorrectly, or mischaracterized brood parasite young as host, but discerning the true outcome may not be possible. If an attempt
-       produces any number of fledged host young, the attempt was successful.
+       incorrectly, or mischaracterized brood parasite young as host. Discerning the true outcome may not be possible. If an attempt
+       produces any number of fledged host young, the attempt is considered successful.
        \item \code{e}: Flag/remove attempt if \code{Outcome} is success (\code{s1}), but recorded fledged host young = 0. Inverse of \code{d}.
        \item \code{f}: Flag/remove attempt if # hatched host young > clutch size. This may indicate incorrectly entered data or long lengths of time
-       between nest checks where summary data was not properly updated. A user may choose to review these attempts by looking with caution
+       between nest checks where summary data was not properly updated. An analyst may choose to review these attempts by looking with caution
        at the nest visit data to validate hatched young and clutch sizes.
        \item \code{g}: Flag/remove attempt if # fledged host young > # hatched host young. Similar to \code{f}.
-       \item \code{h}: Flag/remove attempts that occur in international waters \code{Subnational.Code == "XX-"}. Consider not using this
-       procedure if analyzing coastal or water-nesting species (eg. Osprey nesting on channel markers). Subnational code is automatically
-       assigned based on coordinates supplied by the participant. Many attempts identified as XX- likely resulted from incorrect
-       or inaccurate coordinates.
-       \item \code{i}: Flag attempts with impossible nesting periods. Incorrect years are sometimes entered between date summary fields
+       \item \code{h}: Flag/remove attempts for which NestWatch failed to identify a region (\code{Subnational.Code == “XX-”}).
+       Subnational.Code is automatically assigned based on coordinates supplied by the participant. Many attempts identified as XX- likely resulted
+        from nests being located in water bodies and/or participants entering incorrect coordinates. Consider removing the “XX” attempts if the
+        coordinates are implausible for the focal species and consider inclusion if analyzing coastal or water-nesting species (e.g., Osprey
+        nesting on channel markers).
+       \item \code{i}: Flag/remove attempts with impossible nesting periods. Incorrect years are sometimes entered between date summary fields
        by participants. This may produce impossibly long nesting periods. To account for nesting phenologies in all hemispheres, this procedure
-       identifies attempts in which (1) Fledge Date - First Lay Date > 365 days (Snowy Albatross nesting period), (2) Hatch Date - First Lay Date
-       > 84 days (Southern Brown Kiwi incubation period), or (3) Fledge Date - Hatch Date > 300 days (Snowy Albatross nestling period).
-       These dates represent the maximum nest phonological period for any bird species and are not realistic for the majority of the NestWatch
-       dataset. We encourage users to determine reasonable phenologies for their species of interest and use
+       identifies attempts in which (1) Fledge Date - First Lay Date > 365 days, (2) Hatch Date - First Lay Date > 84 days, or (3) Fledge Date
+        - Hatch Date > 300 days. These dates represent the maximum nest phenological period for any bird species and are not realistic for the
+       majority of the NestWatch dataset. We encourage users to determine reasonable phenologies for their species of interest and use
        \code{\link[nestwatchR:nw.filterphenology]{nw.filterphenology}} to run a finer filter on nest phenology dates.
        \item \code{j}: Flag/remove attempts where the # days between the first and the last visit are > 365 days. Additional check to identify
-       nest attempts where year portion of dates between nest visits were likely incorrect entered. A user may choose to review these attempts
+       nest attempts where year portion of dates between nest visits were likely incorrectly entered. A user may choose to review these attempts
        individually to verify if a typo occurred.
 }
 }

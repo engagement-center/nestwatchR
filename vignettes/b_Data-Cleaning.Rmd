@@ -21,7 +21,7 @@ knitr::opts_chunk$set(eval = nzchar(Sys.getenv("BUILD_VIGNETTES")))
 library(nestwatchR)
 ```
 
-This vignette will cover several different methods for cleaning data found within the NestWatch database. NestWatch data are collected by volunteer participants (researchers & the public) and are known to contain some common errors and inconsistencies. Thus, these data should be considered as "raw" and the user should consider their individual study system and research objectives when deciding what cleaning procedures to conduct.This package contains two function to provide coarse-scale cleaning procedures that NestWatch staff have identified in order to help the user clean NestWatch data for analysis. The user should read the full function documentation and this vignette prior to cleaning the data.
+This vignette will cover several different methods for cleaning data found within the NestWatch Open Dataset. NestWatch data are collected by volunteer participants (researchers and the public) and are known to contain some common errors and inconsistencies. Thus, these data should be considered as "raw", and the user should consider their individual study system and research objectives when deciding what cleaning procedures to conduct. This package contains two functions to provide coarse-scale cleaning procedures that NestWatch staff have identified in order to help the user clean NestWatch data for analysis. Please read the full function documentation and this vignette prior to cleaning the data.
 
 # Background
 
@@ -31,9 +31,11 @@ NestWatch additionally implements geographic filters on real-time entered specie
 
 # Clean Taxa
 
-The NestWatch platform uses [eBird taxonomy](https://science.ebird.org/en/use-ebird-data/the-ebird-taxonomy) to help users auto-complete species names. This allows users to select any available eBird taxonomic unit, including "spuhs" (ie. "chickadee sp."), slashes (ie. "Tree/Violet-green Swallow"), hybrids (ie. "Mallard x American Black Duck (hybrid)"), and subspecies/forms (ie."House Wren (northern)"). `nw.cleantaxa` helps a user filter out and/or "roll up" these taxonomic units. This function uses a NestWatch dataframe as `data =` and has logical arguments `spuh =`, `slash =`, `hybrid =`, and `rollsubspecies =` where `T` removes attempts with those designations and subspecies/forms are "rolled up" to the species level (ie. "House Wren (northern)" -> "House Wren"). If arguments are set to `F` or `NULL` the filtering and/or roll up are not preformed. The resulting dataframe may be optionally names with `output =`. 
+The NestWatch platform uses [eBird taxonomy](https://science.ebird.org/en/use-ebird-data/the-ebird-taxonomy) to standardize species' names. This allows participants to select any available eBird taxonomic unit, including "spuhs" (i.e., "chickadee sp."), slashes (i.e., "Tree/Violet-green Swallow"), hybrids (i.e., "Mallard x American Black Duck (hybrid)"), and subspecies/forms (i.e., "House Wren (northern)"). The function `nw.cleantaxa` helps filter out and/or "roll up" these taxonomic units. This function uses a NestWatch dataframe as `data =` and has logical arguments `spuh =`, `slash =`, `hybrid =`, and `rollsubspecies =` where `T` removes attempts with those designations and subspecies/forms are "rolled up" to the species level (i.e., "House Wren (northern)" → "House Wren"). If arguments are set to `F` or `NULL` the filtering and/or roll up are not performed. The resulting dataframe may be optionally named with `output =`. This function changes both the common name and the species code to reflect the changes made to the taxonomic unit.
 
-This function changes both the common name and the species code to reflect the changes made to the taxonomic unit. Taxonomy updates are implemented via `auk::ebird_taxonomy` and are updated with the annual eBird taxonomic update. For more information, see [`auk::ebird_taxonomy`](https://cornelllabofornithology.github.io/auk/reference/ebird_taxonomy.html) and [eBird Taxonomy](https://science.ebird.org/en/use-ebird-data/the-ebird-taxonomy). 
+Taxonomy updates to the participant interface and internal database are implemented concurrently with updates from `auk::ebird_taxonomy`. However, new versions of the NestWatch Open Dataset are published in January and may be taxonomically outdated for short periods of time (this typically affects a very low number of records). Previous versions of the NestWatch Open Dataset are not updated for taxonomic or other corrections; we encourage the use of the most recent version. For more information, see [`auk::ebird_taxonomy`](https://cornelllabofornithology.github.io/auk/reference/ebird_taxonomy.html) and [eBird Taxonomy](https://science.ebird.org/en/use-ebird-data/the-ebird-taxonomy). 
+ 
+
 
 ```{r cleantaxa 1, eval = T, echo = T}
 # Simple example dataframe
@@ -45,11 +47,11 @@ df <- data.frame(Attempt.ID = c(1, 1, 2, 3, 4),
 df
 ```
 
-### Sphus and Slashes
+### Spuhs and Slashes
 
 Correct usage of a spuh would, for example, be if a participant observed a chickadee nesting in a region of Black-capped/Carolina Chickadee range overlap and was unable to confirm the exact species with certainty. The same would be true if a participant monitored a nest box of a swallow species and never saw the adults at a site where both Tree and Violet-green Swallows were present. In both cases, either a slash or spuh could be appropriate. 
 
-When certainty of a specie(s) is needed, the user may decide to omit spuhs and slashes as species is not known with certainty:
+When certainty of a specie(s) is needed, the analyst may decide to omit spuhs and slashes as species is not known with certainty:
 
 
 ```{r cleantaxa 2, eval = T, echo = T}
@@ -60,10 +62,9 @@ ex1
 
 ### Subspecies/forms & Hybrids
 
-Some subspecies or forms are easy differentiated and may be specified by a participant. The user should use caution when using these subspecies/form designations as the identification skills of the participant are unknown and the participant may not have selected the correct designation for the populated list of possible species. The user should also consider if there may or may not be biologically relevant differences in nesting behavior, phenology, or other parameter between different subspecies/forms before cleaning or analyzing these data. If these potential differences are not biologically relevant to the analysis, the user may use `rollsubspecies = T` to combine forms to the species level.
+Some subspecies or forms are easily differentiated and may be specified by a participant. Caution should be taken when using these subspecies/form designations as the identification skills of the participant are unknown and the participant may not have selected the correct designation from the pre-populated list of possible species. Consider whether or not there may be biologically relevant differences in nesting behavior, phenology, or other parameters between different subspecies/forms before cleaning or analyzing these data. If these potential differences are not biologically relevant to the analysis, the analyst may opt to `rollsubspecies = T` to combine subspecies and/or forms to the species level.
 
-Documentation of nesting attempts between different parent species, a hybrid parent, or two hybrid parents are very uncommon. The NestWatch database has no way to easily differentiate between these three cases. Thus if a hybrid species was selected for an attempt, the parent specie(s) of the nest vs the resulting young specie will not be known with certainty. Additionally, NestWatch staff have confirmed in some cases that participants incorrectly selected a hybrid species when they should have selected a spuh or slash species designation. If a user is interested in validating attempts labeled with hybrid status, they may [request additional information](https://data.nestwatch.org/nw/contact) from NestWatch staff from "notes" fields which *may contain additional information not exported in the public database*. 
-
+Documentation of nesting attempts between different parent species, a hybrid parent, or two hybrid parents are very uncommon. The NestWatch database has no way to easily differentiate between these three cases. Thus, if a hybrid species was selected for an attempt, the parent specie(s) of the nest vs the resulting young specie will not be known with certainty. Additionally, participants may incorrectly select a hybrid species when they should have selected a spuh or slash species designation. If you are interested in validating attempts labeled with hybrid status, you may [request additional information](https://data.nestwatch.org/nw/contact) NestWatch staff from “notes” fields which may contain additional information not exported in the public dataset.
 
 ```{r cleantaxa3, eval = T, echo = T}
 # Remove hybrids and roll up subspecies
@@ -75,15 +76,15 @@ ex2
 
 # Clean Data
 
-The function `nw.cleandata()` is a collection of 10 common cleaning procedures which NestWatch staff have identified to assist users in cleaning NestWatch data at a coarse-scale. Users need to specify which procedures, lettered `a:j`, to run and should read the function documentation and the below examples while considering their analyses before selecting which procedures to run. After these coarse-scale cleanings are completed, the user should continue cleaning the data at a finer-scale including considering spatial and phonological filtering. See the filtering vignette and `nw.filterspatial()` and `nw.filterphenology()` functions.
+The function `nw.cleandata()` is a collection of 10 common cleaning procedures which NestWatch staff have identified to assist users in cleaning NestWatch data at a coarse scale. You will need to specify which procedures to run, lettered `a:j`, and should read the function documentation and the following examples while considering your analyses before selecting which procedures to run. After these coarse scale cleanings are completed, the user should continue cleaning the data at a finer scale including considering spatial and phenological filtering. See the filtering vignette and `nw.filterspatial()` and `nw.filterphenology()` functions.
 
-`nw.cleandata()` takes a NestWatch dataframe as `data =` and allows the user to specify the function's `mode = ` as either `"flag"` or `"remove"`. When mode is set to flag, nest attempts which do not meet the cleaning criteria will be noted in a new column `Flagged.Attempt` with the value `FLAGGED` or `NA`. If mode is set to remove, these flagged attempts are removed from the output. 
+The function `nw.cleandata()` takes a NestWatch dataframe as `data =` and allows you to specify the function's `mode = ` as either `"flag"` or `"remove"`. When mode is set to flag, nest attempts which do not meet the cleaning criteria will be noted in a new column `Flagged.Attempt` with the value `FLAGGED` or `NA`. If mode is set to remove, these flagged attempts are removed from the output. 
 
 > ![NOTE]
 > If you are only interested in a subset of species, or RAM usage and processing time are a concern, you may choose to subset the data to those species prior to running `nw.cleandata`.  
 
 ```{r cleandata 1, eval = F, echo = T}
-# If interested only in a few species, subset to example of Carolina and Bewick's Wrens
+# Example of subsetting to 2 focal species: Carolina and Bewick's Wrens
 # Using output from `nw.mergedata`
 df <- merged.data %>% filter(Species.Code %in% c("carwre", "bewwre"))
 
@@ -92,36 +93,36 @@ nw.cleandata(data = df, mode = "flag", methods = c("a", "b", "c") , output = "cl
 
 ```
 
-Individual cleaning procedures are specified in a character vector of lowercase letters `a:j`. An optional `ouptput =` argument is included to rename the resulting dataframe as well.
+Individual cleaning procedures are specified in a character vector of lowercase letters `a:j`. An optional `output =` argument is included to rename the resulting dataframe as well.
 
-## Cleaning Procudure Definitions
+## Cleaning Procedure Definitions
 
-a.  **Brown-headed Cowbirds:**  Flag/remove attempts with `Species.Name` as "Brown-headed Cowbird". Brown-headed Cowbirds are nest parasites and do not create their own nests. This is not the correct interpretation of the nest species. Users may choose to look at these data more closely if investigating brood parasitism. <br>
+a.  **Brown-headed Cowbirds:**  Flag/remove attempts with `Species.Name` as "Brown-headed Cowbird" as they are nest parasites and do not create their own nests. This is not the correct interpretation of the nest species. Users may choose to look at these data more closely if investigating brood parasitism. <br>
 <br>
-a.  **No Netsing Activity:**  Flag/remove attempts with Outcome of "no breeding behavior observed" (u3), "inactive" (i), and "not monitored" (n). These data likely represent either nests from a previous season or nests that were previously active this season, but no active dates can be attributed to. Users may choose to include these data if looking at habitat or location data without measures of phenology or success. <br>
+a.  **No Nesting Activity:**  Flag/remove attempts with Outcome of "no breeding behavior observed" (u3), "inactive" (i), and "not monitored" (n). These data likely represent nests or nest boxes which never received eggs or were unmonitored. Users may choose to include these data if looking at habitat or location data without measures of phenology or success. <br>
 <br>
-a.  **Invasive spp Managment:**  Flag/remove attempts with Outcome of "invasive spp management" (f5). In these attempts, the participant chose to remove/alter eggs or nests of invasive species. If the user is interested in analyzing participants' habits in invasive spp management or rates of brood parasitism, they should consider not using this method. Note: "Invasive spp management", may also be incorrectly chosen by participants trying to indicate nest failure by an invasive species where a failure code should have been used. <br>
+a.  **Invasive Species Management:**  Flag/remove attempts with Outcome of “invasive species management” (f5). For these attempts, the participant chose to remove/alter eggs or nests of invasive species. If the user is interested in analyzing participants’ habits in invasive species management or using some of the data fields (e.g., clutch size, first lay date), they might consider skipping this method with the understanding that the outcome code is interpreted as “failure due to human interference” and standard nest survival estimates would not be meaningful. Note: “Invasive species management” may also be incorrectly chosen by participants trying to indicate nest failure caused by an invasive species, in which case it would still be prudent to flag or remove such records. <br>
 <br>
-a.  **Failed but fledged?:**  Flag/remove attempts if outcome is a fail code (f, f1, f2, f3, f6, f7) but recorded fledged host young > 0. In this case, a participant may have either characterized the nest's outcome incorrectly, recorded the presence of fledged host young incorrectly, or mischaracterized brood parasite young as host, but discerning the true outcome may not be possible. If an attempt produces any number of fledged host young, the attempt was successful.<br>
+a.  **Failed but fledged?:**  Flag/remove attempts if outcome is a failure code (f, f1, f2, f3, f6, f7) but recorded fledged host young > 0. In this case, a participant may have either characterized the nest's outcome incorrectly, recorded the presence of fledged host young incorrectly, or mischaracterized brood parasite young as host. Discerning the true outcome may not be possible or expedient. If an attempt produces any number of fledged host young, the attempt is considered successful.<br>
 <br>
 a.  **Successful but didn't fledge?:**  Flag/remove attempt if Outcome is success (s1), but recorded fledged host young = 0. Inverse of d.<br>
 <br>
-a.  **More young than eggs?:**  Flag/remove attempt if # hatched host young > clutch size. This may indicate incorrectly entered data or long lengths of time between nest checks where summary data was not properly updated. A user may choose to review these attempts by looking with caution at the nest visit data to validate hatched young and clutch sizes.<br>
+a.  **More young than eggs?:**  Flag/remove attempt if # hatched host young > clutch size. This may indicate incorrectly entered data or long lengths of time between nest checks where summary data was not properly updated. You may choose to review these attempts by looking with caution at the nest visit data to validate hatched young and clutch sizes.<br>
 <br>
-a.  **More fledged young than young in nest:**  Flag/remove attempt if # fledged host young > # hatched host young. Similar to f.<br>
+a.  **More fledged young than hatched young:**  Flag/remove attempt if # fledged host young > # hatched host young. Similar to f.<br>
 <br>
-a.  **International Waters:**  Flag/remove attempts that occur in international waters Subnational.Code == "XX-". Consider not using this procedure if analyzing coastal or water-nesting species (eg. Osprey nesting on channel markers). Subnational code is automatically assigned based on coordinates supplied by the participant. Many attempts identified as XX- likely resulted from incorrect or inaccurate coordinates.<br>
+a.  **Unmapped Region Code:**  Flag/remove attempts for which NestWatch failed to identify a region (Subnational.Code == “XX-”). Subnational.Code is automatically assigned based on coordinates supplied by the participant. Many attempts identified as XX- likely resulted from nests being located in water bodies and/or participants entering incorrect coordinates. Consider removing the “XX” attempts if the coordinates are implausible for the focal species and consider inclusion if analyzing coastal or water-nesting species (e.g., Osprey nesting on channel markers).<br>
 <br>
-a.  **Impossibly long attempts:**  Flag attempts with impossible nesting periods. Incorrect years are sometimes entered between date summary fields by participants. This may produce impossibly long nesting periods. To account for nesting phenologies in all hemispheres, this procedure identifies attempts in which (1) Fledge Date - First Lay Date > 365 days (Snowy Albatross nesting period), (2) Hatch Date - First Lay Date > 84 days (Southern Brown Kiwi incubation period), or (3) Fledge Date - Hatch Date > 300 days (Snowy Albatross nestling period). These dates represent the maximum nest phonological period for any bird species and are not realistic for the majority of the NestWatch dataset. We encourage users to determine reasonable phenologies for their species of interest and use `nw.filterphenology()` to run a finer filter on nest phenology dates.<br>
+a.  **Impossibly long attempts:**  Flag attempts with impossible nesting periods. Incorrect years are sometimes entered between date summary fields by participants. This may produce impossibly long nesting periods. To account for nesting phenologies in all hemispheres, this procedure identifies attempts in which (1) Fledge Date - First Lay Date > 365 days, (2) Hatch Date - First Lay Date > 84 days, or (3) Fledge Date - Hatch Date > 300 days. These dates represent the maximum nest phenological period for any bird species and are not realistic for the majority of the NestWatch dataset. We encourage users to determine reasonable phenologies for their species of interest and use `nw.filterphenology()` to run a finer filter on nest phenology dates.<br>
 <br>
-a.  **Year errors in visits:**  Flag/remove attempts where the # days between the first and the last visit are > 365 days. Additional check to identify nest attempts where year portion of dates between nest visits were likely incorrect entered. A user may choose to review these attempts individually to verify if a typo occurred.<br>
+a.  **Year errors in visits:**  Flag/remove attempts where the # days between the first and the last visit are > 365 days. Additional check to identify nest attempts where year portion of dates between nest visits were likely incorrectly entered. A user may choose to review these attempts individually to verify if a typo occurred.<br>
 <br>
 
 
-Depending on what cleaning procedures you choose to run, the sample size of nests may decrease to varying degrees. If your species has a small sample size after using `mode = "remove"` you may consider rerunning with `mode = "flag"` and inspecting which attempts were removed and if each cleaning method was appropriate for your analysis. 
+Depending on what cleaning procedures you choose to run, the sample size of nests may decrease to varying degrees. If your species has a small sample size after using `mode = "remove"` you may consider rerunning with `mode = "flag"` and inspecting which attempts were removed and if each cleaning method was appropriate for your analysis. Particularly for cleaning steps `d:g`, you may prefer to nullify questionable fields without deleting the entire attempt (e.g.,if your analysis only requires location, species, and first lay date, then you may not need to remove attempts with questionable outcome codes).
 
 ```{r cleandata ex, eval = F, echo = T}
-# Load and merge version 2 of database
+# Load and merge version 2 of dataset
 nw.getdata(version = 2)
 nw.mergedata(attempts = NW.attempts, checks = NW.checks, output = "merged.data")
 length(unique(merged.data$Attempt.ID))
