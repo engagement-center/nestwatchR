@@ -1,4 +1,4 @@
-#' Preform Cleaning Actions on Species Names & Codes
+#' Perform Cleaning Actions on Species Names & Codes
 #'
 #' @description This function can optionally remove attempts for species identified as hybrids, "spuhs", or "slashes" and  preform
 #' a "taxonomic roll up" of subspecies to the species level.

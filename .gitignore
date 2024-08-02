@@ -3,6 +3,4 @@
 .RData
 .Ruserdata
 inst/doc
-data-raw/
 R/__*.R
-00-testing-zone.R

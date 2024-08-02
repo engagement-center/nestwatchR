@@ -13,15 +13,16 @@ Badge](https://img.shields.io/badge/Code%20License-GPL%20v3-blue)
 ## Development Tasks :construction:
 
 This repository is in early development with plans to add additional
-functions create an R package to facilitate accessibility.
+functions to create an R package to facilitate accessibility.
 
-- [x] Finish code to estimate first lay date if not provided
-- [x] Start code to estimate fledge date if not provided
-- [x] Start code to estimate hatch date if not provided
-- [x] Update “filter” vignette
-- [ ] Debug nw.estfirstlay() and nw.estclutchsize(). Fix handling of no
-  data subsets to bind.
-- [ ] Update “estimate” vignette
+- [ ] Add phenological filtering example to “filter” vignette
+- [ ] Debug nw.estfirstlay() and nw.estclutchsize() to fix handling of
+  no data subsets to bind.
+- [ ] Update “estimate” vignette with all nw.est… functions and examples
+- [ ] Rework nw.estphenology to dynamically find column names regardless
+  of capitalization
+- [ ] Rework nw.estphenology to run from a df of data to allow for
+  multiple spp ina single function run
 
 ## Overview :pushpin:
 
@@ -31,26 +32,24 @@ public have been following a standardized protocol for observing and
 reporting birds’ nests in the United States and Canada (and more
 recently, globally). This dataset contains raw nest records submitted to
 NestWatch. The dataset contains millions of nest check observations from
-\> 648,000 nest attempts (as of January 2024). The purpose of this
-repository is to provide a collection of functions to aid in accessing
-and analyzing the wealth of nesting data contained in the NestWatch
+hundreds of thousands of nest attempts. The purpose of this repository
+is to provide a collection of functions to aid in accessing and
+analyzing the wealth of nesting data contained in the NestWatch
 database.
 
 **The metadata paper associated with this dataset [(Bailey et
 al. 2023)](https://doi.org/10.1002/ecy.4230) is critical for
-understanding and interpreting data fields and their contents**. Details
-about NestWatch can be found on the project website:
-<http://www.nestwatch.org>. This dataset is scheduled for updates
-annually on or about January 31. Relevant information can also be found
-on the NestWatch website here:
-<https://nestwatch.org/explore/nestwatch-open-dataset-downloads/>.
+understanding and interpreting data fields and their contents**. This
+dataset is scheduled for updates annually on or about January 31.
+Relevant details can also be found on the [NestWatch website
+here](https://nestwatch.org/explore/nestwatch-open-dataset-downloads/).
 
 ## Installation :computer:
 
 This package is under active development and is likely to have bugs and
-unexpected issues. Presently, the package exist off-CRAN in the public
+unexpected issues. Presently, the package exists off-CRAN in the public
 `engagement-center/nestwatchR` GitHub repository. To install the package
-on your local machine, either run the following code, or to clone the
+on your local machine, either run the following code, or clone the
 repository to your local machine and use the “build” tab of the
 environments pane to install the package, for testing.
 
@@ -59,11 +58,11 @@ environments pane to install the package, for testing.
 remotes::install_github("engagement-center/nestwatchR")
 ```
 
-This package primarily uses the `R` programming language and some
+This package primarily uses the `R` programming language, and some
 knowledge of R is necessary for using these products. A function in this
 collection also depends on the program `Python`, which needs to be
 [installed](https://www.python.org/downloads/) on your machine prior to
-use of the function. No prior knowledge of Python or manual setup of the
+using the function. No prior knowledge of Python or manual setup of the
 program is needed. Use the following code chunk to check if Python is
 already installed on your machine and follow the resulting link if not
 already installed:
@@ -87,7 +86,7 @@ already have these packages installed, we suggest installing them during
 the `nestwatchR` installation process.
 
 ``` r
-# List of packages used in NewstWatch code
+# List of packages used in NestWatch code
 packages <- c("reticulate", "dplyr", "stringr", "lubridate", "ebirdst", "sf")
 
 # Check if each package is installed, and if not, install it
@@ -104,49 +103,50 @@ library(dplyr); library(stringr); library(lubridate); library(ebirdst); library(
 ## Data access :globe_with_meridians:
 
 Data from NestWatch is free to access either from the `nw.getdata`
-function in R or a direct download from the Mendeley Data Archive or
-NewstWatch website. NestWatch Open Dataset by Cornell Lab of Ornithology
-is licensed under CC BY-NC 4.0. We encourage researchers seeking to
-conduct formal analyses to use these data. As with any dataset, knowing
-the data structure, understanding the metadata, grasping the data
-collection protocols, and being aware of the unique aspects of the
-program are all critical for conducting analyses and interpreting
-results in ways that provide meaningful insights. Prior to analysis, we
-encourage all users of NestWtch Data to read the [Download Raw NestWatch
-Data for
-Analysis](https://nestwatch.org/explore/nestwatch-open-dataset-downloads/)
+function in R or as a direct download from the [Mendeley Data
+Archive](https://data.mendeley.com/datasets/wjf794z7gc/2) or NestWatch
+website. NestWatch Open Dataset by Cornell Lab of Ornithology is
+licensed under CC BY-NC 4.0. We encourage researchers seeking to conduct
+formal analyses to use these data. As with any dataset, knowing the data
+structure, understanding the metadata, grasping the data collection
+protocols, and being aware of the unique aspects of the program are all
+critical for conducting analyses and interpreting results in ways that
+provide meaningful insights. Prior to analysis, we encourage all users
+of NestWatch Data to read the article [“Download Raw NestWatch Data for
+Analysis”](https://nestwatch.org/explore/nestwatch-open-dataset-downloads/)
 article on our website.
 
 ## Versions :memo:
 
-This collection of functions is on Version 0.0, and will be updated to
+This collection of functions is on Version 0.0 and will be updated to
 maintain functionality and improve accessibility to the NestWatch
 datasets.
 
-The NestWatch database is updated annually, by or around 31 January,
-with the previous year’s nesting records. At this time NestWatch also
-updates the database with any nest records being archived from other
-projects. To improve reproducability in NestWatch analyses, each version
-of the database is archived in Mendeley, and each specific version can
-be downloaded either using the `nw.getdata(version = )` function or by a
-direct download from the Mendeley archive.
+The NestWatch Open Dataset is updated annually, by or around 31 January,
+with the previous year’s nesting records. NestWatch also updates the
+database with historical nest records being archived from other
+projects. To improve reproducibility in NestWatch analyses, each version
+of the dataset is archived in Mendeley, and each specific version can be
+downloaded either using the `nw.getdata(version = )` function or by a
+direct download from the [Mendeley
+archive](https://data.mendeley.com/datasets/wjf794z7gc/2).
 
 ## Citation :book:
 
-If you use the the NestWatch dataset or code please cite it with:
+If you use the NestWatch Open Dataset or this R package, please cite:
 
 <blockquote>
 
-**Dataset (replace with appropriate version \#):**</br> Bailey, R., L.
-Larson, D. Bonter. 2023. “NestWatch Open Dataset.” Mendeley Data, V1.
-doi: 10.17632/wjf794z7gc</a>
+**Dataset (replace with appropriate version \# and year):**</br> Bailey,
+R., L. Larson, D. Bonter. 2024. “NestWatch Open Dataset.” Mendeley Data,
+V2. doi: 10.17632/wjf794z7gc.2</a>
 
 **Data Paper:**</br> Bailey, R. L., L. Larson, and D. N. Bonter. 2024.
 “NestWatch: An Open-Access, Long-Term Data Set on Avian Reproductive
 Success.” Ecology 105(2): e4230. https://doi.org/10.1002/ecy.4230</a>
 
-**NestWatch R Code:**<br> Savides, K., R. Bailey, & D. Bonter. NestWatch
-Data Products (Version 0.00.00) \[Computer software\].
+**NestWatch R Package:**<br> Savides, K., R. Bailey, & D. Bonter.
+NestWatch Data Products (Version 0.00.00) \[Computer software\].
 <https://github.com/engagement-center/2024-NestWatch-Package-Internal>
 </blockquote>
 
@@ -156,22 +156,28 @@ For full function documentation, including a series of vignettes
 covering introductory usage of NestWatch data, please see the RMarkdown
 Vignettes:
 
-- [Introduction to NestWatch Data and Data Access](): covers data
-  access, available data products, and introduction to structure and
-  format of data files
-- [Conducting common NestWatch data cleaning procedures](): demonstrates
-  how to when to use a variety of common data cleaning procedures
-  designed for NestWatch data
-- [Filtering and Estimating values in NestWatch data](): demonstrates
-  the use of species-level data filters and functions to estimate
-  missing values
+- [Introduction to NestWatch Data and Data
+  Access](https://engagement-center.github.io/nestwatchR/articles/a_Into-and-Data-Access.html):
+  covers data access, available data products, and introduction to
+  structure and format of data files
+- [Conduct Common NestWatch Data Cleaning
+  Procedures](https://engagement-center.github.io/nestwatchR/articles/b_Data-Cleaning.html):
+  demonstrates how and when to use a variety of common data cleaning
+  procedures designed for NestWatch data
+- [Filter NestWatch Data on Finer
+  Scales](https://engagement-center.github.io/nestwatchR/articles/c_Data-Filtering.html):
+  demonstrates the use of species-level data filters and functions to
+  estimate missing values
+- [Estimate NestWatch Summary
+  Dates](https://engagement-center.github.io/nestwatchR/articles/d_Data-Estimation.html):
+  demonstrates functions to estimate missing summary values
 
 ## Quick Start :ledger:
 
-This quick start guide shows demonstrates how to download data and plot
-the first lay dates of two species. In this guide, and throughout all
-package documentation, a simplified example dataset is used consisting
-of Carolina and Bewrick’s wrens.
+This quick start guide shows how to download data and plot the first lay
+dates of two species. In this guide, and throughout all package
+documentation, a simplified example dataset is used consisting of
+Carolina and Bewick’s wrens.
 
 ``` r
 # Load NestWatch Package
@@ -187,7 +193,7 @@ nrow(merged.data)
 #>  [1] 2639824
 
 # Filter the dataset to include just Carolina and Bewick's wrens
-wrens <- merged.data %>% filter(Species.Code %in% c("carwre", "bewre"))
+wrens <- merged.data %>% filter(Species.Code %in% c("carwre", "bewwre"))
 nrow(wrens)
 #>  [1] 40290
 head(wrens, 5)
@@ -206,7 +212,7 @@ head(wrens, 5)
 # Format First.Lay.Date as a date
 wrens$First.Lay.Date <- as.Date(wrens$First.Lay.Date)
 
-# Filter out NA values of First Lay Date, update all attempt years to 2024
+# Filter out NA values of First Lay Date, force all attempt years to 2024 for visualization
 data <- wrens %>% filter(!is.na(First.Lay.Date)) %>% 
                   mutate(First.Lay.Date = update(First.Lay.Date, year = 2024))
   

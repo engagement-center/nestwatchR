@@ -19,7 +19,7 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -45,12 +45,12 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/a_Into-and-Data-Access.html">Introduction to NestWatch Data and Data Access</a>
+      <a href="articles/a_Intro-and-Data-Access.html">Introduction to NestWatch Data and Data Access</a>
     </li>
     <li>
       <a href="articles/b_Data-Cleaning.html">Conduct Common NestWatch Data Cleaning Procedures</a>
@@ -66,9 +66,9 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/kimsavides/nestwatchR/" class="external-link">
+  <a href="https://github.com/engagement-center/nestwatchR/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -79,7 +79,7 @@
 </div>
 <!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="contents col-md-9">
@@ -93,32 +93,31 @@
 <h2 id="development-tasks-construction">Development Tasks <span class="emoji" data-emoji="construction">🚧</span>
 <a class="anchor" aria-label="anchor" href="#development-tasks-construction"></a>
 </h2>
-<p>This repository is in early development with plans to add additional functions create an R package to facilitate accessibility.</p>
+<p>This repository is in early development with plans to add additional functions to create an R package to facilitate accessibility.</p>
 <ul class="task-list">
-<li><label><input type="checkbox" checked>Finish code to estimate first lay date if not provided</label></li>
-<li><label><input type="checkbox" checked>Start code to estimate fledge date if not provided</label></li>
-<li><label><input type="checkbox" checked>Start code to estimate hatch date if not provided</label></li>
-<li><label><input type="checkbox" checked>Update “filter” vignette</label></li>
-<li><label><input type="checkbox">Debug nw.estfirstlay() and nw.estclutchsize(). Fix handling of no data subsets to bind.</label></li>
-<li><label><input type="checkbox">Update “estimate” vignette</label></li>
+<li><label><input type="checkbox">Add phenological filtering example to “filter” vignette</label></li>
+<li><label><input type="checkbox">Debug nw.estfirstlay() and nw.estclutchsize() to fix handling of no data subsets to bind.</label></li>
+<li><label><input type="checkbox">Update “estimate” vignette with all nw.est… functions and examples</label></li>
+<li><label><input type="checkbox">Rework nw.estphenology to dynamically find column names regardless of capitalization</label></li>
+<li><label><input type="checkbox">Rework nw.estphenology to run from a df of data to allow for multiple spp ina single function run</label></li>
 </ul>
 </div>
 <div class="section level2">
 <h2 id="overview-pushpin">Overview <span class="emoji" data-emoji="pushpin">📌</span>
 <a class="anchor" aria-label="anchor" href="#overview-pushpin"></a>
 </h2>
-<p><a href="http://www.nestwatch.org" class="external-link">NestWatch</a> is a community science project operated by the Cornell Lab of Ornithology. Since 1965, members of the public have been following a standardized protocol for observing and reporting birds’ nests in the United States and Canada (and more recently, globally). This dataset contains raw nest records submitted to NestWatch. The dataset contains millions of nest check observations from &gt; 648,000 nest attempts (as of January 2024). The purpose of this repository is to provide a collection of functions to aid in accessing and analyzing the wealth of nesting data contained in the NestWatch database.</p>
-<p><strong>The metadata paper associated with this dataset <a href="https://doi.org/10.1002/ecy.4230" class="external-link">(Bailey et al. 2023)</a> is critical for understanding and interpreting data fields and their contents</strong>. Details about NestWatch can be found on the project website: <a href="http://www.nestwatch.org" class="external-link uri">http://www.nestwatch.org</a>. This dataset is scheduled for updates annually on or about January 31. Relevant information can also be found on the NestWatch website here: <a href="https://nestwatch.org/explore/nestwatch-open-dataset-downloads/" class="external-link uri">https://nestwatch.org/explore/nestwatch-open-dataset-downloads/</a>.</p>
+<p><a href="http://www.nestwatch.org" class="external-link">NestWatch</a> is a community science project operated by the Cornell Lab of Ornithology. Since 1965, members of the public have been following a standardized protocol for observing and reporting birds’ nests in the United States and Canada (and more recently, globally). This dataset contains raw nest records submitted to NestWatch. The dataset contains millions of nest check observations from hundreds of thousands of nest attempts. The purpose of this repository is to provide a collection of functions to aid in accessing and analyzing the wealth of nesting data contained in the NestWatch database.</p>
+<p><strong>The metadata paper associated with this dataset <a href="https://doi.org/10.1002/ecy.4230" class="external-link">(Bailey et al. 2023)</a> is critical for understanding and interpreting data fields and their contents</strong>. This dataset is scheduled for updates annually on or about January 31. Relevant details can also be found on the <a href="https://nestwatch.org/explore/nestwatch-open-dataset-downloads/" class="external-link">NestWatch website here</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="installation-computer">Installation <span class="emoji" data-emoji="computer">💻</span>
 <a class="anchor" aria-label="anchor" href="#installation-computer"></a>
 </h2>
-<p>This package is under active development and is likely to have bugs and unexpected issues. Presently, the package exist off-CRAN in the public <code>engagement-center/nestwatchR</code> GitHub repository. To install the package on your local machine, either run the following code, or to clone the repository to your local machine and use the “build” tab of the environments pane to install the package, for testing.</p>
+<p>This package is under active development and is likely to have bugs and unexpected issues. Presently, the package exists off-CRAN in the public <code>engagement-center/nestwatchR</code> GitHub repository. To install the package on your local machine, either run the following code, or clone the repository to your local machine and use the “build” tab of the environments pane to install the package, for testing.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Install nestwatchR package in R</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"engagement-center/nestwatchR"</span><span class="op">)</span></span></code></pre></div>
-<p>This package primarily uses the <code>R</code> programming language and some knowledge of R is necessary for using these products. A function in this collection also depends on the program <code>Python</code>, which needs to be <a href="https://www.python.org/downloads/" class="external-link">installed</a> on your machine prior to use of the function. No prior knowledge of Python or manual setup of the program is needed. Use the following code chunk to check if Python is already installed on your machine and follow the resulting link if not already installed:</p>
+<p>This package primarily uses the <code>R</code> programming language, and some knowledge of R is necessary for using these products. A function in this collection also depends on the program <code>Python</code>, which needs to be <a href="https://www.python.org/downloads/" class="external-link">installed</a> on your machine prior to using the function. No prior knowledge of Python or manual setup of the program is needed. Use the following code chunk to check if Python is already installed on your machine and follow the resulting link if not already installed:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Check to see if you already have Python installed</span></span>
 <span><span class="va">check_python_installation</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
@@ -133,7 +132,7 @@
 <span><span class="fu">check_python_installation</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>These functions also depend on several <code>R</code> libraries. If you do not already have these packages installed, we suggest installing them during the <code>nestwatchR</code> installation process.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># List of packages used in NewstWatch code</span></span>
+<code class="sourceCode R"><span><span class="co"># List of packages used in NestWatch code</span></span>
 <span><span class="va">packages</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"reticulate"</span>, <span class="st">"dplyr"</span>, <span class="st">"stringr"</span>, <span class="st">"lubridate"</span>, <span class="st">"ebirdst"</span>, <span class="st">"sf"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Check if each package is installed, and if not, install it</span></span>
@@ -150,24 +149,24 @@
 <h2 id="data-access-globe_with_meridians">Data access <span class="emoji" data-emoji="globe_with_meridians">🌐</span>
 <a class="anchor" aria-label="anchor" href="#data-access-globe_with_meridians"></a>
 </h2>
-<p>Data from NestWatch is free to access either from the <code>nw.getdata</code> function in R or a direct download from the Mendeley Data Archive or NewstWatch website. NestWatch Open Dataset by Cornell Lab of Ornithology is licensed under CC BY-NC 4.0. We encourage researchers seeking to conduct formal analyses to use these data. As with any dataset, knowing the data structure, understanding the metadata, grasping the data collection protocols, and being aware of the unique aspects of the program are all critical for conducting analyses and interpreting results in ways that provide meaningful insights. Prior to analysis, we encourage all users of NestWtch Data to read the <a href="https://nestwatch.org/explore/nestwatch-open-dataset-downloads/" class="external-link">Download Raw NestWatch Data for Analysis</a> article on our website.</p>
+<p>Data from NestWatch is free to access either from the <code>nw.getdata</code> function in R or as a direct download from the <a href="https://data.mendeley.com/datasets/wjf794z7gc/2" class="external-link">Mendeley Data Archive</a> or NestWatch website. NestWatch Open Dataset by Cornell Lab of Ornithology is licensed under CC BY-NC 4.0. We encourage researchers seeking to conduct formal analyses to use these data. As with any dataset, knowing the data structure, understanding the metadata, grasping the data collection protocols, and being aware of the unique aspects of the program are all critical for conducting analyses and interpreting results in ways that provide meaningful insights. Prior to analysis, we encourage all users of NestWatch Data to read the article <a href="https://nestwatch.org/explore/nestwatch-open-dataset-downloads/" class="external-link">“Download Raw NestWatch Data for Analysis”</a> article on our website.</p>
 </div>
 <div class="section level2">
 <h2 id="versions-memo">Versions <span class="emoji" data-emoji="memo">📝</span>
 <a class="anchor" aria-label="anchor" href="#versions-memo"></a>
 </h2>
-<p>This collection of functions is on Version 0.0, and will be updated to maintain functionality and improve accessibility to the NestWatch datasets.</p>
-<p>The NestWatch database is updated annually, by or around 31 January, with the previous year’s nesting records. At this time NestWatch also updates the database with any nest records being archived from other projects. To improve reproducability in NestWatch analyses, each version of the database is archived in Mendeley, and each specific version can be downloaded either using the <code>nw.getdata(version = )</code> function or by a direct download from the Mendeley archive.</p>
+<p>This collection of functions is on Version 0.0 and will be updated to maintain functionality and improve accessibility to the NestWatch datasets.</p>
+<p>The NestWatch Open Dataset is updated annually, by or around 31 January, with the previous year’s nesting records. NestWatch also updates the database with historical nest records being archived from other projects. To improve reproducibility in NestWatch analyses, each version of the dataset is archived in Mendeley, and each specific version can be downloaded either using the <code>nw.getdata(version = )</code> function or by a direct download from the <a href="https://data.mendeley.com/datasets/wjf794z7gc/2" class="external-link">Mendeley archive</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="citation-book">Citation <span class="emoji" data-emoji="book">📖</span>
 <a class="anchor" aria-label="anchor" href="#citation-book"></a>
 </h2>
-<p>If you use the the NestWatch dataset or code please cite it with:</p>
+<p>If you use the NestWatch Open Dataset or this R package, please cite:</p>
 <blockquote>
-<p><strong>Dataset (replace with appropriate version #):</strong> Bailey, R., L. Larson, D. Bonter. 2023. “NestWatch Open Dataset.” Mendeley Data, V1. doi: 10.17632/wjf794z7gc</p>
+<p><strong>Dataset (replace with appropriate version # and year):</strong> Bailey, R., L. Larson, D. Bonter. 2024. “NestWatch Open Dataset.” Mendeley Data, V2. doi: 10.17632/wjf794z7gc.2</p>
 <p><strong>Data Paper:</strong> Bailey, R. L., L. Larson, and D. N. Bonter. 2024. “NestWatch: An Open-Access, Long-Term Data Set on Avian Reproductive Success.” Ecology 105(2): e4230. https://doi.org/10.1002/ecy.4230</p>
-<strong>NestWatch R Code:</strong><br> Savides, K., R. Bailey, &amp; D. Bonter. NestWatch Data Products (Version 0.00.00) [Computer software]. <a href="https://github.com/engagement-center/2024-NestWatch-Package-Internal" class="external-link uri">https://github.com/engagement-center/2024-NestWatch-Package-Internal</a>
+<strong>NestWatch R Package:</strong><br> Savides, K., R. Bailey, &amp; D. Bonter. NestWatch Data Products (Version 0.00.00) [Computer software]. <a href="https://github.com/engagement-center/2024-NestWatch-Package-Internal" class="external-link uri">https://github.com/engagement-center/2024-NestWatch-Package-Internal</a>
 </blockquote>
 </div>
 <div class="section level2">
@@ -177,21 +176,23 @@
 <p>For full function documentation, including a series of vignettes covering introductory usage of NestWatch data, please see the RMarkdown Vignettes:</p>
 <ul>
 <li>
-<a href="">Introduction to NestWatch Data and Data Access</a>: covers data access, available data products, and introduction to structure and format of data files</li>
+<a href="https://engagement-center.github.io/nestwatchR/articles/a_Into-and-Data-Access.html" class="external-link">Introduction to NestWatch Data and Data Access</a>: covers data access, available data products, and introduction to structure and format of data files</li>
 <li>
-<a href="">Conducting common NestWatch data cleaning procedures</a>: demonstrates how to when to use a variety of common data cleaning procedures designed for NestWatch data</li>
+<a href="https://engagement-center.github.io/nestwatchR/articles/b_Data-Cleaning.html" class="external-link">Conduct Common NestWatch Data Cleaning Procedures</a>: demonstrates how and when to use a variety of common data cleaning procedures designed for NestWatch data</li>
 <li>
-<a href="">Filtering and Estimating values in NestWatch data</a>: demonstrates the use of species-level data filters and functions to estimate missing values</li>
+<a href="https://engagement-center.github.io/nestwatchR/articles/c_Data-Filtering.html" class="external-link">Filter NestWatch Data on Finer Scales</a>: demonstrates the use of species-level data filters and functions to estimate missing values</li>
+<li>
+<a href="https://engagement-center.github.io/nestwatchR/articles/d_Data-Estimation.html" class="external-link">Estimate NestWatch Summary Dates</a>: demonstrates functions to estimate missing summary values</li>
 </ul>
 </div>
 <div class="section level2">
 <h2 id="quick-start-ledger">Quick Start <span class="emoji" data-emoji="ledger">📒</span>
 <a class="anchor" aria-label="anchor" href="#quick-start-ledger"></a>
 </h2>
-<p>This quick start guide shows demonstrates how to download data and plot the first lay dates of two species. In this guide, and throughout all package documentation, a simplified example dataset is used consisting of Carolina and Bewrick’s wrens.</p>
+<p>This quick start guide shows how to download data and plot the first lay dates of two species. In this guide, and throughout all package documentation, a simplified example dataset is used consisting of Carolina and Bewick’s wrens.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load NestWatch Package</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/kimsavides/nestwatchR" class="external-link">nestwatchR</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/engagement-center/nestwatchR" class="external-link">nestwatchR</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Download NestWatch dataset by version</span></span>
 <span><span class="fu"><a href="reference/nw.getdata.html">nw.getdata</a></span><span class="op">(</span>version <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
@@ -203,7 +204,7 @@
 <span><span class="co">#&gt;  [1] 2639824</span></span>
 <span></span>
 <span><span class="co"># Filter the dataset to include just Carolina and Bewick's wrens</span></span>
-<span><span class="va">wrens</span> <span class="op">&lt;-</span> <span class="va">merged.data</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Species.Code</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"carwre"</span>, <span class="st">"bewre"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">wrens</span> <span class="op">&lt;-</span> <span class="va">merged.data</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Species.Code</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"carwre"</span>, <span class="st">"bewwre"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">wrens</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  [1] 40290</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">wrens</span>, <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
@@ -218,7 +219,7 @@
 <code class="sourceCode R"><span><span class="co"># Format First.Lay.Date as a date</span></span>
 <span><span class="va">wrens</span><span class="op">$</span><span class="va">First.Lay.Date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="va">wrens</span><span class="op">$</span><span class="va">First.Lay.Date</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Filter out NA values of First Lay Date, update all attempt years to 2024</span></span>
+<span><span class="co"># Filter out NA values of First Lay Date, force all attempt years to 2024 for visualization</span></span>
 <span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">wrens</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">First.Lay.Date</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> </span>
 <span>                  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>First.Lay.Date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">First.Lay.Date</span>, year <span class="op">=</span> <span class="fl">2024</span><span class="op">)</span><span class="op">)</span></span>
 <span>  </span>
@@ -237,8 +238,8 @@
     <div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/kimsavides/nestwatchR/" class="external-link">Browse source code</a></li>
-<li><a href="https://github.com/kimsavides/nestwatchR/issues" class="external-link">Report a bug</a></li>
+<li><a href="https://github.com/engagement-center/nestwatchR/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/engagement-center/nestwatchR/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
@@ -280,16 +281,16 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
       </footer>
 </div>
 
-  
 
 
-  
+
+
 
   </body>
 </html>

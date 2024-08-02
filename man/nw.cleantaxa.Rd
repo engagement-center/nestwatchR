@@ -2,7 +2,7 @@
 % Please edit documentation in R/nw.cleantaxa.R
 \name{nw.cleantaxa}
 \alias{nw.cleantaxa}
-\title{Preform Cleaning Actions on Species Names & Codes}
+\title{Perform Cleaning Actions on Species Names & Codes}
 \usage{
 nw.cleantaxa(
   data,

@@ -1,10 +1,9 @@
 pandoc: 3.1.11
-pkgdown: 2.0.8
+pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
-  a_Into-and-Data-Access: a_Into-and-Data-Access.html
+  a_Intro-and-Data-Access: a_Intro-and-Data-Access.html
   b_Data-Cleaning: b_Data-Cleaning.html
   c_Data-Filtering: c_Data-Filtering.html
   d_Data-Estimation: d_Data-Estimation.html
-last_built: 2024-06-26T19:06Z
-
+last_built: 2024-08-02T18:29Z
