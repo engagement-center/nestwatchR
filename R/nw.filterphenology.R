@@ -8,15 +8,16 @@
 #'
 #' @param data dataframe; A dataframe of merged NestWatch attempt and visits data. Date columns must have class \code{Date}
 #' and Datetime columns must have class \code{POSIXct}.
-#' @param sp character; A single character vector containing the species code for which to filter data for.
+#' @param sp character vector; A character vector containing the species code for one or more species for which to filter the data.
 #' @param mode \code{"flag"} or \code{"remove"}; A character string defining if the user wants the identified nesting attempts to be
 #' flagged with "FLAGGED" in a new column. Or removed from the dataset.
-#' @param phenology numeric vector; A numeric vector of length 4 representing each of the following, in order:
+#' @param phenology dataframe; A simple dataframe with one row for each species of interest and the following column structure:
 #'  \itemize{
-#'   \item \strong{Lay}: The number of days representing the maximum expected laying period.
-#'   \item \strong{Incubation}: The number of days representing the maximum expected incubation period (between clutch complete and hatch).
-#'   \item \strong{Nestling}: The number of days representing the maximum expected nesting period (hatch and last fledge).
-#'   \item \strong{Total Nesting Period}: The number of days representing the maximum expected nesting period (spanning first lay to last fledge).
+#'   \item \strong{Species}: Species for which this row of data represents. Must be a 6-letter species code.
+#'   \item \strong{Lay}: The number of days representing the maximum expected laying period for each species.
+#'   \item \strong{Incubation}: The number of days representing the maximum expected incubation period (between clutch complete and hatch) for each species.
+#'   \item \strong{Nestling}: The number of days representing the maximum expected nesting period (hatch and last fledge) for each species.
+#'   \item \strong{Total Nesting Period}: The number of days representing the maximum expected nesting period (spanning first lay to last fledge) for each species.
 #'   }
 #' @param output character; An optional character string to custom name the output dataframe
 #'
@@ -53,7 +54,7 @@ nw.filterphenology <- function(data, sp, mode, phenology, output = NULL){
   }
   # Stops function if sp is not a species code contained in Species.Code
   if(!sp %in% data$Species.Code){
-    stop("Argument 'sp' must only contain a single species code found within the 'Species.Code' column.")
+    stop("Argument 'sp' must only contain a single 6-letter species code found within the 'Species.Code' column.")
   }
   # Stops Function if 'mode' is not specified.
   if (missing(mode)) {
@@ -64,8 +65,16 @@ nw.filterphenology <- function(data, sp, mode, phenology, output = NULL){
     stop("Invalid 'mode'. Please provide either 'flag' or 'remove'.")
   }
   # Stops function if phenology is not a character vector of length 5.
-  if (!is.numeric(phenology) || length(phenology) != 4) {
-    stop("Argument 'phenology' must be a 4 element vector (numeric or NA). See ?nw.filterphenology() for details.")
+  if (!is.data.frame(phenology) || ncols(phenology) != 5) {
+    stop("Argument 'phenology' must be a dataframe with 5 columns. See ?nw.filterphenology() for details.")
+  }
+  # Stops function if phenology dataframe does not have the correct column names.
+  required_cols <- c("species", "lay", "incubation", "nestling", "total")
+  missing_cols <- required_cols[!sapply(required_cols, function(col) {  # Check if all required columns are present, ignoring case
+                    any(grepl(col, colnames(phenology), ignore.case = TRUE))
+  })]
+  if (length(missing_cols) > 0) {
+    stop(paste("The following required columns are missing:", paste(missing_cols, collapse = ", ")))
   }
   # Stops function if date is not incorrect class.
   if (!all(sapply(data[, c("First.Lay.Date", "Fledge.Date", "Hatch.Date")], inherits, "Date"))) {
@@ -89,59 +98,66 @@ nw.filterphenology <- function(data, sp, mode, phenology, output = NULL){
 
   # Prep dataframe
   data <- data %>% mutate(Flagged.Attempt = NA) %>%                             # Make new column to hold flag code
-    relocate(Flagged.Attempt, .before = Attempt.ID)              # Reorder column to beginning
-  spp_data <- data %>% filter(Species.Code == sp)                               # Filter the dataset to just the sp of interest
+                   relocate(Flagged.Attempt, .before = Attempt.ID)              # Reorder column to beginning
 
-  # Define phenology vector elements
-  lay <- phenology[1]
-  inc <- phenology[2]
-  nestling <- phenology[3]
-  total <- phenology[4]
+  for (sp in phenology$Species) {
+
+    spp_data <- data %>% filter(Species.Code == sp)                             # Filter the dataset to just the sp of interest
+    spp_phen <- phenology %>% filter(grep("species", colnames(spp_phen), ignore.case = TRUE) == sp)   # filter phenology data to just the spp of interest
+
+    # Define phenology vector elements by searching for column names
+    lay <- phenology[[grep("lay", colnames(spp_phen), ignore.case = TRUE)]]
+    inc <- phenology[[grep("incubation", colnames(spp_phen), ignore.case = TRUE)]]
+    nestling <- phenology[[grep("nestling", colnames(spp_phen), ignore.case = TRUE)]]
+    total <- phenology[[grep("total", colnames(spp_phen), ignore.case = TRUE)]]
+
+    #########################################
+    ###        Flag Long Attempts         ###
+    #########################################
+
+    # Find attempts where Hatch - Lay > user input
+    H_L <- lay + inc
+    temp <- spp_data %>% filter(str_detect(First.Lay.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b")) %>%
+      filter(str_detect(Hatch.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b"))
+    temp <- temp %>% filter(as.integer(Hatch.Date - First.Lay.Date) > H_L)
+    toflag <- c(toflag, unique(temp$Attempt.ID))
+    toflag <- unique(toflag)
+
+    # Find attempts where Fledge - Hatch > user input
+    H_F <- nestling
+    temp <- spp_data %>% filter(str_detect(Hatch.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b")) %>%
+      filter(str_detect(Fledge.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b"))
+    temp <- temp %>% filter(as.integer(Fledge.Date - Hatch.Date) > H_F)
+    toflag <- c(toflag, unique(temp$Attempt.ID))
+    toflag <- unique(toflag)
+
+    # Find attempts where Fledge - Lay > user input
+    L_F <- lay + nestling
+    temp <- spp_data %>% filter(str_detect(First.Lay.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b")) %>%
+      filter(str_detect(Fledge.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b"))
+    temp <- temp %>% filter(as.integer(Fledge.Date - First.Lay.Date) > L_F)
+    toflag <- unique(temp$Attempt.ID)
+
+    # Find long Total nesting periods (from checks to account for run-on nests or no summary data provided)
+    temp <- spp_data %>% filter(!is.na(Visit.Datetime))
+    temp <- temp %>% group_by(Attempt.ID) %>%
+      summarize(min_date = min(Visit.Datetime),
+                max_date = max(Visit.Datetime),
+                date_difference = as.integer(difftime(max_date, min_date, units = "days")))
+    toflag <- temp %>% filter(date_difference > total) %>% pull(Attempt.ID) %>% unique()
 
 
-  #########################################
-  ###        Flag Long Attempts         ###
-  #########################################
 
-  # Find attempts where Hatch - Lay > user input
-  H_L <- lay + inc
-  temp <- spp_data %>% filter(str_detect(First.Lay.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b")) %>%
-    filter(str_detect(Hatch.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b"))
-  temp <- temp %>% filter(as.integer(Hatch.Date - First.Lay.Date) > H_L)
-  toflag <- c(toflag, unique(temp$Attempt.ID))
-  toflag <- unique(toflag)
+    # Flag in original dataset and Prep for export
+    pos <- 1
+    envir = as.environment(pos)
 
-  # Find attempts where Fledge - Hatch > user input
-  H_F <- nestling
-  temp <- spp_data %>% filter(str_detect(Hatch.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b")) %>%
-    filter(str_detect(Fledge.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b"))
-  temp <- temp %>% filter(as.integer(Fledge.Date - Hatch.Date) > H_F)
-  toflag <- c(toflag, unique(temp$Attempt.ID))
-  toflag <- unique(toflag)
-
-  # Find attempts where Fledge - Lay > user input
-  L_F <- lay + nestling
-  temp <- spp_data %>% filter(str_detect(First.Lay.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b")) %>%
-    filter(str_detect(Fledge.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b"))
-  temp <- temp %>% filter(as.integer(Fledge.Date - First.Lay.Date) > L_F)
-  toflag <- unique(temp$Attempt.ID)
-
-  # Find long Total nesting periods (from checks to account for run-on nests or no summary data provided)
-  temp <- spp_data %>% filter(!is.na(Visit.Datetime))
-  temp <- temp %>% group_by(Attempt.ID) %>%
-    summarize(min_date = min(Visit.Datetime),
-              max_date = max(Visit.Datetime),
-              date_difference = as.integer(difftime(max_date, min_date, units = "days")))
-  toflag <- temp %>% filter(date_difference > total) %>% pull(Attempt.ID) %>% unique()
+    rows <- which(data$Attempt.ID %in% toflag)
+    data$Flagged.Attempt[rows] <- "FLAGGED"
 
 
+  } # end loop over each species
 
-  # Flag in original dataset and Prep for export
-  pos <- 1
-  envir = as.environment(pos)
-
-  rows <- which(data$Attempt.ID %in% toflag)
-  data$Flagged.Attempt[rows] <- "FLAGGED"
 
 
   #####################################
@@ -179,16 +195,6 @@ nw.filterphenology <- function(data, sp, mode, phenology, output = NULL){
     }
     message("... Identified nesting attempts have been removed from the new dataset.")
   }
-
-
-
-
-
-
-
-
-
-
 
 
 
