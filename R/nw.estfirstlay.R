@@ -91,139 +91,146 @@ nw.estfirstlay <- function(data, phenology, output = NULL) {
   # For each species provided, try to estimate First Lay Date
   for (s in phenology$Species) {
 
-  # Filter to a single species
-  sp_data <- data %>% filter(Species.Code == s & is.na(First.Lay.Date))
-  if (nrow(sp_data) == 0) {message(paste0("Output Note: Either no Attempts exist for species ", shQuote(s, type = "cmd"), ", or all Attempts already contain values for 'First.Lay.Date'."))}
-  if (nrow(sp_data) > 0) {
+    # Filter to a single species
+    sp_data <- data %>% filter(Species.Code == s & is.na(First.Lay.Date))
+    if (nrow(sp_data) == 0) {message(paste0("Output Note: Either no Attempts exist for species ", shQuote(s, type = "cmd"), ", or all Attempts already contain values for 'First.Lay.Date'."))}
+    if (nrow(sp_data) > 0) {
 
-  # Determine if nests were visited during egg lay (and was not marked as such)
-  temp <- sp_data %>%
-    arrange(Attempt.ID, Visit.Datetime) %>%                                # Sort the dataframe by Attempt.ID and Visit.Datetime
-    group_by(Attempt.ID) %>%
-    mutate(Host.Eggs.Increases = c(FALSE, diff(Host.Eggs.Count) > 0)) %>%  # for each timestep, did eggs increase (ie. visited during lay)
-    summarise(LayVisit = any(Host.Eggs.Increases)) %>%                     # for each attempt, was it visited during lay
-    filter(LayVisit == T)                                                  # get only those that were
-  if (nrow(temp) > 0){
+      # Determine if nests were visited during egg lay (and was not marked as such)
+      temp <- sp_data %>%
+        arrange(Attempt.ID, Visit.Datetime) %>%                                # Sort the dataframe by Attempt.ID and Visit.Datetime
+        group_by(Attempt.ID) %>%
+        mutate(Host.Eggs.Increases = c(FALSE, diff(Host.Eggs.Count) > 0)) %>%  # for each timestep, did eggs increase (ie. visited during lay)
+        summarise(LayVisit = any(Host.Eggs.Increases)) %>%                     # for each attempt, was it visited during lay
+        filter(LayVisit == T)
 
-  # Update sp_data$Visited.During.Egg.Laying (not raw data)
-  matching_ids <- sp_data$Attempt.ID %in% temp$Attempt.ID
-  sp_data$Visited.During.Egg.Laying[matching_ids] <- ifelse(is.na(sp_data$Visited.During.Egg.Laying[matching_ids]) |  # if visited is NA OR
-                                                              sp_data$Visited.During.Egg.Laying[matching_ids] == 0,   # if visited is 0
-                                                            1,                                                     # then update with 1
-                                                            sp_data$Visited.During.Egg.Laying[matching_ids])          # if not, keep original
-  } # end denoting if visited during lay but not marked as such
+      if (nrow(temp) > 0){
+        # Update sp_data$Visited.During.Egg.Laying (not raw data)
+        matching_ids <- sp_data$Attempt.ID %in% temp$Attempt.ID
+        sp_data$Visited.During.Egg.Laying[matching_ids] <- ifelse(is.na(sp_data$Visited.During.Egg.Laying[matching_ids]) |  # if visited is NA OR
+                                                                    sp_data$Visited.During.Egg.Laying[matching_ids] == 0,   # if visited is 0
+                                                                  1,                                                        # then update with 1
+                                                                  sp_data$Visited.During.Egg.Laying[matching_ids])          # if not, keep original
+      } # end denoting if visited during lay but not marked as such
 
 
-  ########################################
-  ##    No Lay Date, Visited in Lay     ##
-  ########################################
+      ########################################
+      ##    No Lay Date, Visited in Lay     ##
+      ########################################
 
-  # Subset to Attempts visited during Lay but no lay date
-  subset <- sp_data %>% filter(Visited.During.Egg.Laying == 1 & is.na(First.Lay.Date))
-  if (nrow(subset) > 0){
-  # Make new df to hold egg dates
-  eggdates <- subset %>% filter(!is.na(Visit.Datetime)) %>%
-    filter(Host.Eggs.Count > 0) %>%                                             # filter just visits that recorded eggs
-    group_by(Attempt.ID) %>%                                                    # we will look by Attempt.ID
-    summarise(Visit.Datetime = as.Date(min(Visit.Datetime, na.rm = T)),         # calculate the min date eggs were recorded
-              eggs_on_date = first(Host.Eggs.Count))                            # find who many eggs were on that day
-  # Estimate when First Lay date was
-  eggdates <- eggdates %>% mutate(Days.of.Lay = eggs_on_date * phenology$Eggs.per.Day[phenology$Species == s], # using the earliest # eggs in nest, how many days has it been in lay
-                                  First.Lay.Date = Visit.Datetime - Days.of.Lay + 1) # calculate how many days of lay there have been, and back est first lay date
-  temp <- eggdates %>% select(Attempt.ID, First.Lay.Date)                       # simplified df
+      # Subset to Attempts visited during Lay but no lay date
+      subset <- sp_data %>% filter(Visited.During.Egg.Laying == 1 & is.na(First.Lay.Date))
 
-  # loop over each attempt to add data to the original df
-  for (i in temp$Attempt.ID) {
-    indicies <- which(data$Attempt.ID == i)                                       # get index in whole datatframe where Attempt is i
-    data$First.Lay.Date[indicies] <- as.Date(as.numeric(temp[which(temp$Attempt.ID == i), 2]))  # move date from temp into whole dataframe's First.Lay.Date
-    data$First.Lay.Date.Estimated[indicies] <- 1                                  # add 1 to that Attempt.ID's Lay Estimation column
-    }
-  } # end subset for if no lay date but visited during lay
+      if (nrow(subset) > 0){
+        # Make new df to hold egg dates
+        eggdates <- subset %>% filter(!is.na(Visit.Datetime)) %>%
+          filter(Host.Eggs.Count > 0) %>%                                             # filter just visits that recorded eggs
+          group_by(Attempt.ID) %>%                                                    # we will look by Attempt.ID
+          summarise(Visit.Datetime = as.Date(min(Visit.Datetime, na.rm = T)),         # calculate the min date eggs were recorded
+                    eggs_on_date = first(Host.Eggs.Count))                            # find who many eggs were on that day
+        # Estimate when First Lay date was
+        eggdates <- eggdates %>% mutate(Days.of.Lay = eggs_on_date * phenology$Eggs.per.Day[phenology$Species == s], # using the earliest # eggs in nest, how many days has it been in lay
+                                        First.Lay.Date = Visit.Datetime - Days.of.Lay + 1) # calculate how many days of lay there have been, and back est first lay date
+        temp <- eggdates %>% select(Attempt.ID, First.Lay.Date)                       # simplified df
 
-  ########################################
-  ##    No Lay Date, Yes Hatch Date     ##
-  ########################################
+        # loop over each attempt to add data to the original df
+        for (i in temp$Attempt.ID) {
+          indicies <- which(data$Attempt.ID == i)                                       # get index in whole datatframe where Attempt is i
+          data$First.Lay.Date[indicies] <- as.Date(as.numeric(temp[which(temp$Attempt.ID == i), 2]))  # move date from temp into whole dataframe's First.Lay.Date
+          data$First.Lay.Date.Estimated[indicies] <- 1                                  # add 1 to that Attempt.ID's Lay Estimation column
+        }
+      } # end subset for if no lay date but visited during lay
 
-  # Subset to Attempts without first lay date to those not visited during egg laying, but have hatch dates
-  #    These hatch dates can be known or estimated. So this section's estimates are less certain than using egg dates
-  subset <- sp_data %>% filter((Visited.During.Egg.Laying == 0 & is.na(First.Lay.Date))) %>%
-    filter(!is.na(Hatch.Date))
-  # If subset has identified data, continue
-  if(nrow(subset) > 0){
-  subset <- subset %>% group_by(Attempt.ID) %>%                    # make small dataframe, max() used but only one value exists for each
-    summarise(Clutch.Size = mean(Clutch.Size),
-              Hatch.Date = mean(Hatch.Date),
-              First.Lay.Date = mean(First.Lay.Date))
 
-  # If clutch size data present:
-  #   Count back provided incubation days, count back # eggs*egg/d in the clutch +1
-  temp <- subset %>% filter(Clutch.Size > 0)
-  temp <- temp %>% mutate(First.Lay.Date = (Hatch.Date -
-                                              phenology$Incubation[phenology$Species == s] -
-                                              (Clutch.Size * phenology$Eggs.per.Day[phenology$Species == s]) + 1))
+      ########################################
+      ##    No Lay Date, Yes Hatch Date     ##
+      ########################################
 
-  # If clutch size is NA or 0:
-  #   Count back provided avg clutch size*egg/d +1
-  temp1 <- subset %>% filter(!(Clutch.Size > 0) | is.na(Clutch.Size))
-  temp1 <- temp1 %>% mutate(First.Lay.Date = (Hatch.Date -
-                                                phenology$Incubation[phenology$Species == s] -
-                                                (phenology$Clutch.Size[phenology$Species == s] * phenology$Eggs.per.Day[phenology$Species == s]) + 1))
+      # Subset to Attempts without first lay date to those not visited during egg laying, but have hatch dates
+      #    These hatch dates can be known or estimated. So this section's estimates are less certain than using egg dates
+      subset <- sp_data %>% filter((Visited.During.Egg.Laying == 0 & is.na(First.Lay.Date))) %>%
+        filter(!is.na(Hatch.Date))
 
-  # Bind temp and temp1
-  temp <- rbind(temp, temp1)
+      # If subset has identified data, continue
+      if(nrow(subset) > 0){
+        subset <- subset %>% group_by(Attempt.ID) %>%                    # make small dataframe, max() used but only one value exists for each
+          summarise(Clutch.Size = mean(Clutch.Size),
+                    Hatch.Date = mean(Hatch.Date),
+                    First.Lay.Date = mean(First.Lay.Date))
 
-  # loop over each attempt to add data to the original df
-  for (i in temp$Attempt.ID) {
-    indicies <- which(data$Attempt.ID == i)                                       # get index in whole datatframe where Attempt is i
-    data$First.Lay.Date[indicies] <- as.Date(as.numeric(temp[which(temp$Attempt.ID == i), 4]))  # move date from temp into whole dataframe's First.Lay.Date
-    data$First.Lay.Date.Estimated[indicies] <- 1                                  # add 1 to that Attempt.ID's Lay Estimation column
-    }
-  } # end No Lay Date, Yes Hatch Date subset
+        # If clutch size data present:
+        #   Count back provided incubation days, count back # eggs*egg/d in the clutch +1
+        temp <- subset %>% filter(Clutch.Size > 0)
+        temp <- temp %>% mutate(First.Lay.Date = (Hatch.Date -
+                                                    phenology$Incubation[phenology$Species == s] -
+                                                    (Clutch.Size * phenology$Eggs.per.Day[phenology$Species == s]) + 1))
 
-  #############################################
-  ##    No Lay, No Hatch, Yes Fledge Date    ##
-  #############################################
+        # If clutch size is NA or 0:
+        #   Count back provided avg clutch size*egg/d +1
+        temp1 <- subset %>% filter(!(Clutch.Size > 0) | is.na(Clutch.Size))
+        temp1 <- temp1 %>% mutate(First.Lay.Date = (Hatch.Date -
+                                                      phenology$Incubation[phenology$Species == s] -
+                                                      (phenology$Clutch.Size[phenology$Species == s] * phenology$Eggs.per.Day[phenology$Species == s]) + 1))
 
-  # Subset to Attempts without lay ro natch dates, but have fledge dates
-  #    These fledge dates can be known or estimated. So this section's estimates are less certain than using hatch dates, and much more uncertain than using egg dates
-  subset <- sp_data %>% filter(Visited.During.Egg.Laying == 0) %>%
-    filter(is.na(First.Lay.Date)) %>%
-    filter(is.na(Hatch.Date)) %>%
-    filter(!is.na(Fledge.Date))
-  # If subset has identified data, continue
-  if(nrow(subset) > 0){
-  subset <- subset %>% group_by(Attempt.ID) %>%                    # make small dataframe, mean() hack used but only one value exists for each
-    summarise(Clutch.Size = mean(Clutch.Size),
-              Fledge.Date = mean(Fledge.Date),
-              First.Lay.Date = mean(First.Lay.Date))
+        # Bind temp and temp1
+        temp <- rbind(temp, temp1)
 
-  # If clutch size data present:
-  #   Count back provided incubation days, nestling days, # eggs in the clutch*egg/day +1
-  temp <- subset %>% filter(Clutch.Size > 0)
-  temp <- temp %>% mutate(First.Lay.Date = (Fledge.Date -
-                                              phenology$Nestling[phenology$Species == s] -
-                                              phenology$Incubation[phenology$Species == s] -
-                                              (Clutch.Size * phenology$Eggs.per.Day[phenology$Species == s]) + 1))
+        # loop over each attempt to add data to the original df
+        for (i in temp$Attempt.ID) {
+          indicies <- which(data$Attempt.ID == i)                                       # get index in whole datatframe where Attempt is i
+          data$First.Lay.Date[indicies] <- as.Date(as.numeric(temp[which(temp$Attempt.ID == i), 4]))  # move date from temp into whole dataframe's First.Lay.Date
+          data$First.Lay.Date.Estimated[indicies] <- 1                                  # add 1 to that Attempt.ID's Lay Estimation column
+        }
+      } # end No Lay Date, Yes Hatch Date subset
 
-  # If clutch size is NA or 0:
-  #   Count back provided avg clutch size +1
-  temp1 <- subset %>% filter(!(Clutch.Size > 0) | is.na(Clutch.Size))
-  temp1 <- temp1 %>% mutate(First.Lay.Date = (Fledge.Date -
-                                                phenology$Incubation[phenology$Species == s] -
-                                                (phenology$Clutch.Size[phenology$Species == s] * phenology$Eggs.per.Day[phenology$Species == s]) + 1))
 
-  # Bind temp and temp1
-  temp <- rbind(temp, temp1)
-  # loop over each attempt to add data to the original df
-  for (i in temp$Attempt.ID) {
-    indicies <- which(data$Attempt.ID == i)                                       # get index in whole datatframe where Attempt is i
-    data$First.Lay.Date[indicies] <- as.Date(as.numeric(temp[which(temp$Attempt.ID == i), 4]))  # move date from temp into whole dataframe's First.Lay.Date
-    data$First.Lay.Date.Estimated[indicies] <- 1                                  # add 1 to that Attempt.ID's Lay Estimation column
-    }
-  } # end  No Lay, No Hatch, Yes Fledge Date subset
+      #############################################
+      ##    No Lay, No Hatch, Yes Fledge Date    ##
+      #############################################
 
-  } #end if species subset has >0 rows
-  } #end loop over s in species
+      # Subset to Attempts without lay ro natch dates, but have fledge dates
+      #    These fledge dates can be known or estimated. So this section's estimates are less certain than using hatch dates, and much more uncertain than using egg dates
+      subset <- sp_data %>% filter(Visited.During.Egg.Laying == 0) %>%
+        filter(is.na(First.Lay.Date)) %>%
+        filter(is.na(Hatch.Date)) %>%
+        filter(!is.na(Fledge.Date))
+
+      # If subset has identified data, continue
+      if(nrow(subset) > 0){
+        subset <- subset %>% group_by(Attempt.ID) %>%                    # make small dataframe, mean() hack used but only one value exists for each
+          summarise(Clutch.Size = mean(Clutch.Size),
+                    Fledge.Date = mean(Fledge.Date),
+                    First.Lay.Date = mean(First.Lay.Date))
+
+        # If clutch size data present:
+        #   Count back provided incubation days, nestling days, # eggs in the clutch*egg/day +1
+        temp <- subset %>% filter(Clutch.Size > 0)
+        temp <- temp %>% mutate(First.Lay.Date = (Fledge.Date -
+                                                    phenology$Nestling[phenology$Species == s] -
+                                                    phenology$Incubation[phenology$Species == s] -
+                                                    (Clutch.Size * phenology$Eggs.per.Day[phenology$Species == s]) + 1))
+
+        # If clutch size is NA or 0:
+        #   Count back provided avg clutch size +1
+        temp1 <- subset %>% filter(!(Clutch.Size > 0) | is.na(Clutch.Size))
+        temp1 <- temp1 %>% mutate(First.Lay.Date = (Fledge.Date -
+                                                      phenology$Incubation[phenology$Species == s] -
+                                                      (phenology$Clutch.Size[phenology$Species == s] * phenology$Eggs.per.Day[phenology$Species == s]) + 1))
+
+        # Bind temp and temp1
+        temp <- rbind(temp, temp1)
+        # loop over each attempt to add data to the original df
+        for (i in temp$Attempt.ID) {
+          indicies <- which(data$Attempt.ID == i)                                       # get index in whole datatframe where Attempt is i
+          data$First.Lay.Date[indicies] <- as.Date(as.numeric(temp[which(temp$Attempt.ID == i), 4]))  # move date from temp into whole dataframe's First.Lay.Date
+          data$First.Lay.Date.Estimated[indicies] <- 1                                  # add 1 to that Attempt.ID's Lay Estimation column
+        }
+      } # end  No Lay, No Hatch, Yes Fledge Date subset
+
+    } # end if the species has any NA lay dates
+  } # end loop over each species
+
+
 
   ##################################
   ####        Output data       ####
@@ -242,3 +249,4 @@ nw.estfirstlay <- function(data, phenology, output = NULL) {
 
 
 } #end func
+
