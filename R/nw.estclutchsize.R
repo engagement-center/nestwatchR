@@ -76,77 +76,88 @@ nw.estclutchsize <- function(data, output = NULL){
   ##################################
 
 
-  # For blank clutches, estimates clutch size from checks data
+  # For blank clutches, estimate clutch size from checks data
   # Some prep, remove all NA rows
   # Get the sum each check of Live + Dead host young. If both are NA, sum = NA. If one is NA sum is the other
   df <- df %>% filter(is.na(Clutch.Size))
-  df$Young.in.Nest <- apply(df[, c("Live.Host.Young.Count", "Dead.Host.Young.Count")], 1, function(row) {
-    if (all(is.na(row))) {
-      return(NA)
-    } else {
-      return(sum(row, na.rm = TRUE))
-    }
-  })
 
-  ###
-  # Try changing all NAs to "-999"
-  cols_to_replace <- names(df)
-  df[cols_to_replace] <- lapply(df[cols_to_replace], function(x) ifelse(is.na(x), -999, x))
-  ###
+  if (nrow(df) == 0) {message(paste0("Output Note: All attempts already contain values for 'Clutch.Size'."))}
+  if (nrow(sp_data) > 0) {
 
-  # Summarize by attempt: (1) max egg count, (2) numb unhatched eggs, (3) max young in the nest (dead + alive), (4) numb fledges
-  df <- df %>% group_by(Attempt.ID) %>%
-    summarise(Host.Eggs.Count = max(Host.Eggs.Count),
-              Unhatched.Eggs = unique(Unhatched.Eggs),
-              Young.Total = max(Young.Total, Young.in.Nest),
-              Young.Fledged = unique(Young.Fledged))
-  # Remove attempts that have all NA (-999) values
-  df <- df[rowSums(df[ , -1]) != (-999*4), ]
-
-  # Find the max nest contents between (1) number of observed host eggs, (2) young (alive/dead) + unhatched eggs, (3) fledged + unhatched eggs
-  df$est1 <- df$Host.Eggs.Count
-  df$est2 <- apply(df[, c("Young.Total", "Unhatched.Eggs")], 1, function(row) {   # sum = NA if all NA
-    if (all(row == -999)) {                                  # if both are NA return NA
-      return(-999)
-    } else if ((sum(row) > (-999*2)) & (sum(row) < 0)){      # if one is NA, return the value
-      return(sum(row) - -999)
-    } else {                                                 # if both have values, return sum
-      return(sum(row))
-    }
-  })
-
-  df$est3 <- apply(df[, c("Young.Fledged", "Unhatched.Eggs")], 1, function(row) {   # sum = NA if all NA
-    if (all(row == -999)) {                                  # if both are NA return NA
-      return(-999)
-    } else if ((sum(row) > (-999*2)) & (sum(row) < 0)){      # if one is NA, return the value
-      return(sum(row) - -999)
-    } else {                                                 # if both have values, return sum
-      return(sum(row))
-    }
-  })
-
-  df <- df %>% mutate(Clutch.Size = pmax(est1, est2, est3))
-  df <- df %>% select(c("Attempt.ID", "Clutch.Size"))
+    # By visit get sum of live and dead young
+    df$Young.in.Nest <- apply(df[, c("Live.Host.Young.Count", "Dead.Host.Young.Count")], 1, function(row) {
+      if (all(is.na(row))) {
+        return(NA)
+      } else {
+        return(sum(row, na.rm = TRUE))
+      }
+    })
 
 
-  ##################################
-  ####   Update Field in data   ####
-  ##################################
+    # Change all NAs to "-999"
+    cols_to_replace <- names(df)
+    df[cols_to_replace] <- lapply(df[cols_to_replace], function(x) ifelse(is.na(x), -999, x))
 
-  # Replace NA clutches with data if we were able to estimate it, cleanup columns
-  out <- data %>% left_join(df, by = c("Attempt.ID")) %>%
-    mutate(Clutch.Size = coalesce(Clutch.Size.x, Clutch.Size.y)) %>%
-    select(-Clutch.Size.x,-Clutch.Size.y) %>%
-    relocate(Clutch.Size, .after = Young.Fledged) %>%
-    relocate(Clutch.Size.Estimated, .after = Clutch.Size)
+    # Summarize by attempt: (1) max egg count, (2) numb unhatched eggs, (3) max young in the nest (dead + alive), (4) numb fledges
+    df <- df %>% group_by(Attempt.ID) %>%
+                 summarise(Host.Eggs.Count = max(Host.Eggs.Count),
+                           Unhatched.Eggs = unique(Unhatched.Eggs),
+                           Young.Total = max(Young.Total, Young.in.Nest),
+                           Young.Fledged = unique(Young.Fledged))
 
-  # Add `1` to Clutch.Size.Estimated if value was estimated
-  estIDs <- unique(df$Attempt.ID)
-  out$Clutch.Size.Estimated <- ifelse(out$Attempt.ID %in% estIDs, 1, out$Clutch.Size.Estimated)
+    # Remove attempts that have all NA (-999) values, we can not estimate these
+    df <- df[rowSums(df[ , -1]) != (-999*4), ]
 
-  # Change -999 back to NA
-  cols_to_replace <- names(out)
-  out[cols_to_replace] <- lapply(out[cols_to_replace], function(x) ifelse(x == -999, NA, x))
+
+    # Find the max nest contents between (1) number of observed host eggs, (2) young (alive/dead) + unhatched eggs, (3) fledged + unhatched eggs
+    df$est1 <- df$Host.Eggs.Count
+    df$est2 <- apply(df[, c("Young.Total", "Unhatched.Eggs")], 1, function(row) {   # sum = NA if all NA
+      if (all(row == -999)) {                                  # if both are NA return NA
+        return(-999)
+      } else if ((sum(row) > (-999*2)) & (sum(row) < 0)){      # if one is NA, return the value
+        return(sum(row) - -999)
+      } else {                                                 # if both have values, return sum
+        return(sum(row))
+      }
+    })
+
+    df$est3 <- apply(df[, c("Young.Fledged", "Unhatched.Eggs")], 1, function(row) {   # sum = NA if all NA
+      if (all(row == -999)) {                                  # if both are NA return NA
+        return(-999)
+      } else if ((sum(row) > (-999*2)) & (sum(row) < 0)){      # if one is NA, return the value
+        return(sum(row) - -999)
+      } else {                                                 # if both have values, return sum
+        return(sum(row))
+      }
+    })
+
+    df <- df %>% mutate(Clutch.Size = pmax(est1, est2, est3))
+    df <- df %>% select(c("Attempt.ID", "Clutch.Size"))
+
+
+
+    ##################################
+    ####   Update Field in data   ####
+    ##################################
+
+    # Replace NA clutches with data if we were able to estimate it, cleanup columns
+    out <- data %>% left_join(df, by = c("Attempt.ID")) %>%
+      mutate(Clutch.Size = coalesce(Clutch.Size.x, Clutch.Size.y)) %>%
+      select(-Clutch.Size.x,-Clutch.Size.y) %>%
+      relocate(Clutch.Size, .after = Young.Fledged) %>%
+      relocate(Clutch.Size.Estimated, .after = Clutch.Size)
+
+    # Add `1` to Clutch.Size.Estimated if value was estimated
+    estIDs <- unique(df$Attempt.ID)
+    out$Clutch.Size.Estimated <- ifelse(out$Attempt.ID %in% estIDs, 1, out$Clutch.Size.Estimated)
+
+    # Change -999 back to NA
+    cols_to_replace <- names(out)
+    out[cols_to_replace] <- lapply(out[cols_to_replace], function(x) ifelse(x == -999, NA, x))
+
+  } # end if df has any NA clutch sizes
+
+
 
   ##################################
   ####        Output data       ####
