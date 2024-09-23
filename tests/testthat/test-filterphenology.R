@@ -11,12 +11,6 @@ test_that("dataframe is properly input", {
   expect_error(nw.filterphenology(data = data.frame(Attempt.ID = c(1, 2, 3))), )
 })
 
-test_that("Species is properly input", {
-  expect_error(nw.filterphenology(data = data), )
-  expect_error(nw.filterphenology(data = data, sp = c("bird1", "bird2")), "Argument 'sp' must only contain the species code of a single species.")
-  expect_error(nw.filterphenology(data = data, sp = "badspp"), "Argument 'sp' must only contain a single species code found within the 'Species.Code' column.")
-})
-
 test_that("Mode is properly input", {
   expect_error(nw.filterphenology(data = data, sp = "norcar"), "Invalid 'mode'. Please provide either 'flag' or 'remove'.")
   expect_error(nw.filterphenology(data = data, sp = "norcar", mode = "badmode"), "Invalid 'mode'. Please provide either 'flag' or 'remove'.")

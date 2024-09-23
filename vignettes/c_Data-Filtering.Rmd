@@ -25,9 +25,13 @@ Before analysis, users should consider conducting finer-scale filtering in order
 
 ## Filter Species
 
-Limiting the dataset to just a few species can easily be done using the pipe (`%>%`). If you are unfamiliar with "piping", see the `migritrr` package. Below we will subset the `merged.data` dataframe produced in the Intro vignette to include only attempts for Bewick's Wren ("bewwre") and Carolina Wren ("carwre").
+Limiting the dataset to just a few species can easily be done using the pipe (`%>%`). If you are unfamiliar with "piping", see the `migritrr` package. Below we will subset the version 2 of the NestWatch dataset to include only attempts for Bewick's Wren ("bewwre") and Carolina Wren ("carwre"). The code below walks through download, merging, and filtering to species. But this data subset is also included in the package for quick access using `wrens <- nestwatchR::wren_quickstart`:
 
 ```{r filter to spp, eval = F, echo = T}
+# Download and merge datasets
+nw.getdata(version = 2)
+nw.mergedata(attempts = NW.attemps, checks = NW.checks, output = "merged.data")
+
 # Filter data to include only carwre and bewwre
 wrens <- merged.data %>% filter(Species.Code %in% c("carwre", "bewwre"))
 
@@ -207,26 +211,58 @@ map
 
 ```
 
+We can now quickly filter out those nests where their location was flagged to be outside of our defined range.
+
+```{r remove out of range, eval = F, echo = T}
+# Remove flagged attempts
+nests_cleanlocs <- flagged_nests %>% filter(Flagged.Location == "In-Range")
+
+```
+
 ## Filter Using Nest Phenology
 
-You may also choose to refine the coarse phenologic filtering done in the cleaning phase. NestWatch data are known to have some errors where participants either enter dates incorrectly (i.e., enter the year portion of a date as 2021 in one field and 2020 in the next) or incorrectly continue a nest attempt when it should be a new nest. As an example of the latter, if a bluebird nest fails due to predation and the pair renests in the same box, this should be entered as two different attempts at the same location. But records of "run-on nests" where the first attempt was not ended do exist in the dataset. One way a user might choose to identify or remove such nesting attempts, or ones which are outside of the expected nest timeframe for a given species, is to use phenologic filtering.
+You may also choose to refine the coarse phenologic filtering done in the cleaning phase. NestWatch data are known to have some errors where participants either enter dates incorrectly (i.e., enter the year portion of a date as 2021 in one field and 2020 in the next) or incorrectly continue a nest attempt when it should be a new nest. As an example of the latter, if a bluebird nest fails due to predation and the pair renests in the same box, this should be entered as two different attempts at the same location. But records of "run-on nests" where the first attempt was not ended do exist in the dataset. One way a user might choose to identify or remove such nesting attempts, or ones which are outside of the expected nest time frame for a given species, is to use phenologic filtering.
 
-Phenologic filtering allows the user to define the allowed maximum number of days for each different period in the nesting cycle. 
-# The function `nw.filterphenology()` uses both the data in the attempt summary info (data originating from the "Attempts" dataset) and the individual visits data (originating from the "Checks" dataset). For this function, a small user-created dataframe in the following format is needed:
+Phenologic filtering allows the user to define the allowed maximum number of days for each different period in the nesting cycle, or for the whole nesting cycle. The function `nw.filterphenology()` uses both the data in the attempt summary info (data originating from the "Attempts" dataset) and the individual visits data (originating from the "Checks" dataset). For this function, a small user-created dataframe in the following format is needed. These values represent the maximum allowable number of days a nest of a particular species can be in each nesting stage. In this example we will use NestWatch data for Eastern Bluebird and Tree Swallow:
 
 ```{r phen df, eval = F}
 
-# You can provide data for a single species, or species multiple to be run at the same time
+# You can provide data for a single species or multiple species to be run at the same time
+# Create simple df with maximum allowable # days in each nest phase for Eastern Bluebird and Tree Swallow:
 
-# Create simple df with maximum allowable # days in each nest phase for 2 species
 max_days <- 
-  data.frame(species_code = c("bewwre", "carwre"),
-             lay = c(8, 6),    # here we chose max recorded clutch size
-             incubation = c(20, 20),  # here means plus a bit of buffer
-             nestling = c(18, 15), # here means plus a bit of buffer
-             total = c(45, 40)) # here means plus a bit of buffer
+  data.frame(species_code = c("easblu", "treswa"),
+             lay = c(7, 7),           # here we chose max recorded clutch size
+             incubation = c(25, 25),  # here means plus a bit of buffer
+             nestling = c(25, 30),    # here means plus a bit of buffer
+             total = c(60, 65))       # here means plus a bit of buffer
 
 ```
+
+
+
+```{r filter phen, echo = T, eval = F}
+# Download NestWatch dataset and merge
+nw.getdata(version = 2)
+nw.mergedata(attempts = NW.attempts, checks = NW.checks, output = "data")
+
+# Filter data to select species
+data <- data %>% filter(Species.Code == c("easblu", "treswa"))
+length(unique(data$Attempt.ID))
+# > [1] 256582      # number of nesting attempts for Eastern Bluebird and Tree Swallow
+
+# Filter attempts based on nesting phenology
+nw.filterphenology(data = data, sp = c("easblu", "treswa"), mode = "flag", phenology = max_days, output = "flagged_phenology")
+
+# How many attempts were flagged?
+flagged <- flagged_phenology %>% filter(Flagged.Attempt == "FLAGGED")
+length(unique(flagged$Attempt.ID))
+# > [1] 96552       # number of attempts which were flagged
+
+
+```
+
+
 
 
 

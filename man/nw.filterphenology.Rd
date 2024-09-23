@@ -10,17 +10,18 @@ nw.filterphenology(data, sp, mode, phenology, output = NULL)
 \item{data}{dataframe; A dataframe of merged NestWatch attempt and visits data. Date columns must have class \code{Date}
 and Datetime columns must have class \code{POSIXct}.}
 
-\item{sp}{character; A single character vector containing the species code for which to filter data for.}
+\item{sp}{character vector; A character vector containing the species code for one or more species for which to filter the data.}
 
 \item{mode}{\code{"flag"} or \code{"remove"}; A character string defining if the user wants the identified nesting attempts to be
 flagged with "FLAGGED" in a new column. Or removed from the dataset.}
 
-\item{phenology}{numeric vector; A numeric vector of length 4 representing each of the following, in order:
+\item{phenology}{dataframe; A simple dataframe with one row for each species of interest and the following column structure:
 \itemize{
- \item \strong{Lay}: The number of days representing the maximum expected laying period.
- \item \strong{Incubation}: The number of days representing the maximum expected incubation period (between clutch complete and hatch).
- \item \strong{Nestling}: The number of days representing the maximum expected nesting period (hatch and last fledge).
- \item \strong{Total Nesting Period}: The number of days representing the maximum expected nesting period (spanning first lay to last fledge).
+ \item \strong{Species}: Species for which this row of data represents. Must be a 6-letter species code.
+ \item \strong{Lay}: The number of days representing the maximum expected laying period for each species.
+ \item \strong{Incubation}: The number of days representing the maximum expected incubation period (between clutch complete and hatch) for each species.
+ \item \strong{Nestling}: The number of days representing the maximum expected nesting period (hatch and last fledge) for each species.
+ \item \strong{Total Nesting Period}: The number of days representing the maximum expected nesting period (spanning first lay to last fledge) for each species.
  }}
 
 \item{output}{character; An optional character string to custom name the output dataframe}
