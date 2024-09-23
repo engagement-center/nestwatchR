@@ -2,9 +2,9 @@
 #'
 #' @description Fledge Date data may be important for investigating relationships between nesting success and environmental variables. These data
 #' in the NestWatch dataset are provided by participants, and the input of these dates may be overlooked by the participants. If not explicitly
-#' provided by the participant, fledge date may be estimated based off hatch date of first lay date. This function checks, in order, if the nest
+#' provided by the participant, fledge date may be estimated based off hatch date or first lay date. This function checks, in order, if the nest
 #' fledged successfully, and if a Hatch.Date was recorded or then if a First.Lay.Date was recorded. If these requirements are met, the function
-#' uses user-input nest phenology timeframes to estimate fledge date. Estimated dates are denoted with a \code{1} in \code{data$Fledge.Date.Estimated}.
+#' uses user-input nest phenology time frames to estimate fledge date. Estimated dates are denoted with a \code{1} in \code{data$Fledge.Date.Estimated}.
 #'
 #' @details Precision of the fledge date estimates depend on what data is used to estimate the values from (and if those values are estimated). Users
 #' should consider if they want to estimate fledge dates based on estimated hatch or lay dates. The function estimates fledge date by counting

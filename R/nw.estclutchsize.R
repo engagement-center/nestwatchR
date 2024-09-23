@@ -82,7 +82,7 @@ nw.estclutchsize <- function(data, output = NULL){
   df <- df %>% filter(is.na(Clutch.Size))
 
   if (nrow(df) == 0) {message(paste0("Output Note: All attempts already contain values for 'Clutch.Size'."))}
-  if (nrow(sp_data) > 0) {
+  if (nrow(df) > 0) {
 
     # By visit get sum of live and dead young
     df$Young.in.Nest <- apply(df[, c("Live.Host.Young.Count", "Dead.Host.Young.Count")], 1, function(row) {
