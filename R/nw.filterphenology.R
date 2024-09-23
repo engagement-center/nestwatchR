@@ -21,6 +21,18 @@
 #'   }
 #' @param output character; An optional character string to custom name the output dataframe
 #'
+#' @details This function calculates the number of days between \code{First.Lay.Date}, \code{Hatch.Date}, and \code{Fledge.Date} date values, comparing
+#' each to the user-provided acceptable date spans for each nest phase. Not all attempts contain these summary dates. An analyst may choose to explore
+#' \link[nestwatchR]{nw.estclutchsize}, \link[nestwatchR]{nw.estfirstlay}, \link[nestwatchR]{nw.esthatch}, and \link[nestwatchR]{nw.estfledge} functions
+#' to estimate these summary dates from the individual nest visit data prior to using this function. As an additional check, this function calculates
+#' the date span between the first and second to last nest check and compares this to the user-provided "total nesting period" value. The second to last
+#' date is used because participants may not check a nest when close to fledgling. For example, a participant may attempt to confirm a successful
+#' fledged nest when emptying a nets box at the end of the nesting season. In this case the last "nest check" may be weeks to months after the last
+#' activity at that nest.
+#'
+#'
+#'
+#'
 #' @importFrom stringr str_detect
 #'
 #' @return dataframe
