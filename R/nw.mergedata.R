@@ -47,6 +47,11 @@ nw.mergedata <- function(attempts, checks, output = NULL) {
     relocate(Predator.Guard, .after = Substrate.Other.Description) %>%
     relocate(Predator.Guard.Other, .after = Predator.Guard)
 
+  # Make dates class date
+  data$First.Lay.Date <- as.Date(data$First.Lay.Date)
+  data$Fledge.Date <- as.Date(data$Fledge.Date)
+  data$Hatch.Date <- as.Date(data$Hatch.Date)
+  data$Visit.Datetime <- as.POSIXct(data$Visit.Datetime, format="%Y-%m-%d %H:%M:%S")
 
   # Prep for and output
   pos <- 1
