@@ -18,19 +18,25 @@ knitr::opts_chunk$set(
 # NestWatch Data Products
 
 <!-- badges: start -->
-![Static Badge](https://img.shields.io/badge/Dataset%20License-CC%20BY--NC%204.0-blue)     
+
+![Static Badge](https://img.shields.io/badge/Dataset%20License-CC%20BY--NC%204.0-blue)\
 ![Static Badge](https://img.shields.io/badge/Code%20License-GPL%20v3-blue)
 
 <!-- badges: end   -->
 
-## Development Tasks :construction: 
-This repository is in early development with plans to add additional functions to create an R package to facilitate accessibility. 
+## Development Tasks :construction:
 
-- [ ] Add phenological filtering example to "filter" vignette
-- [ ] Debug nw.estfirstlay() and nw.estclutchsize() to fix handling of no data subsets to bind.
-- [ ] Update "estimate" vignette with all nw.est... functions and examples
-- [ ] Rework nw.estphenology to dynamically find column names regardless of capitalization
-- [ ] Rework nw.estphenology to run from a df of data to allow for multiple spp ina single function run
+This repository is in early development with plans to add additional functions to create an R package to facilitate accessibility.
+
+   🔲 Modify nw.filterphenology() to more properly handle run-on nesting attempts
+
+   🔲 Finish phenological filtering example in "filter" vignette
+
+   🔲 Add reproducible example short code to function documentations where missing
+   
+   🔲 Internal testing
+
+    
 
 ## Overview :pushpin:
 
@@ -49,7 +55,6 @@ remotes::install_github("engagement-center/nestwatchR")
 
 This package primarily uses the `R` programming language, and some knowledge of R is necessary for using these products. A function in this collection also depends on the program `Python`, which needs to be [installed](https://www.python.org/downloads/) on your machine prior to using the function. No prior knowledge of Python or manual setup of the program is needed. Use the following code chunk to check if Python is already installed on your machine and follow the resulting link if not already installed:
 
-
 ```{r gh-installation, eval = FALSE}
 # Check to see if you already have Python installed
 check_python_installation <- function() {
@@ -64,7 +69,7 @@ check_python_installation <- function() {
 check_python_installation()
 ```
 
-These functions also depend on several `R` libraries. If you do not already have these packages installed, we suggest installing them during the `nestwatchR` installation process. 
+These functions also depend on several `R` libraries. If you do not already have these packages installed, we suggest installing them during the `nestwatchR` installation process.
 
 ```{r package dependencies, evel = FALSE}
 # List of packages used in NestWatch code
@@ -86,7 +91,6 @@ library(dplyr); library(stringr); library(lubridate); library(ebirdst); library(
 
 Data from NestWatch is free to access either from the `nw.getdata` function in R or as a direct download from the [Mendeley Data Archive](https://data.mendeley.com/datasets/wjf794z7gc/2) or NestWatch website. NestWatch Open Dataset by Cornell Lab of Ornithology is licensed under CC BY-NC 4.0. We encourage researchers seeking to conduct formal analyses to use these data. As with any dataset, knowing the data structure, understanding the metadata, grasping the data collection protocols, and being aware of the unique aspects of the program are all critical for conducting analyses and interpreting results in ways that provide meaningful insights. Prior to analysis, we encourage all users of NestWatch Data to read the article ["Download Raw NestWatch Data for Analysis"](https://nestwatch.org/explore/nestwatch-open-dataset-downloads/) article on our website.
 
-
 ## Versions :memo:
 
 This collection of functions is on Version 0.0 and will be updated to maintain functionality and improve accessibility to the NestWatch datasets.
@@ -95,29 +99,26 @@ The NestWatch Open Dataset is updated annually, by or around 31 January, with th
 
 ## Citation :book:
 
-If you use the NestWatch Open Dataset or this R package, please cite: 
+If you use the NestWatch Open Dataset or this R package, please cite:
 
 <blockquote>
 
-**Dataset (replace with appropriate version # and year):**</br>
-Bailey, R., L. Larson, D. Bonter. 2024. “NestWatch Open Dataset." Mendeley Data, V2. doi: 10.17632/wjf794z7gc.2</a>
+**Dataset (replace with appropriate version \# and year):**</br> Bailey, R., L. Larson, D. Bonter. 2024. “NestWatch Open Dataset." Mendeley Data, V2. doi: 10.17632/wjf794z7gc.2</a>
 
-**Data Paper:**</br>
-Bailey, R. L., L. Larson, and D. N. Bonter. 2024. “NestWatch: An Open-Access, Long-Term Data Set on Avian Reproductive Success.” Ecology 105(2): e4230. https://doi.org/10.1002/ecy.4230</a>
+**Data Paper:**</br> Bailey, R. L., L. Larson, and D. N. Bonter. 2024. “NestWatch: An Open-Access, Long-Term Data Set on Avian Reproductive Success.” Ecology 105(2): e4230. https://doi.org/10.1002/ecy.4230</a>
 
-**NestWatch R Package:**<br>
-Savides, K., R. Bailey, & D. Bonter. NestWatch Data Products (Version 0.00.00) [Computer software]. https://github.com/engagement-center/2024-NestWatch-Package-Internal
+**NestWatch R Package:**<br> Savides, K., R. Bailey, & D. Bonter. NestWatch Data Products (Version 0.00.00) [Computer software]. <https://github.com/engagement-center/2024-NestWatch-Package-Internal>
+
 </blockquote>
-
 
 ## Vignettes :books:
 
 For full function documentation, including a series of vignettes covering introductory usage of NestWatch data, please see the RMarkdown Vignettes:
 
-- [Introduction to NestWatch Data and Data Access](https://engagement-center.github.io/nestwatchR/articles/a_Into-and-Data-Access.html): covers data access, available data products, and introduction to structure and format of data files
-- [Conduct Common NestWatch Data Cleaning Procedures](https://engagement-center.github.io/nestwatchR/articles/b_Data-Cleaning.html): demonstrates how and when to use a variety of common data cleaning procedures designed for NestWatch data
-- [Filter NestWatch Data on Finer Scales](https://engagement-center.github.io/nestwatchR/articles/c_Data-Filtering.html): demonstrates the use of species-level data filters and functions to estimate missing values
-- [Estimate NestWatch Summary Dates](https://engagement-center.github.io/nestwatchR/articles/d_Data-Estimation.html): demonstrates functions to estimate missing summary values
+-   [Introduction to NestWatch Data and Data Access](https://engagement-center.github.io/nestwatchR/articles/a_Into-and-Data-Access.html): covers data access, available data products, and introduction to structure and format of data files
+-   [Conduct Common NestWatch Data Cleaning Procedures](https://engagement-center.github.io/nestwatchR/articles/b_Data-Cleaning.html): demonstrates how and when to use a variety of common data cleaning procedures designed for NestWatch data
+-   [Filter NestWatch Data on Finer Scales](https://engagement-center.github.io/nestwatchR/articles/c_Data-Filtering.html): demonstrates the use of species-level data filters and functions to estimate missing values
+-   [Estimate NestWatch Summary Dates](https://engagement-center.github.io/nestwatchR/articles/d_Data-Estimation.html): demonstrates functions to estimate missing summary values
 
 ## Quick Start :ledger:
 
@@ -150,7 +151,6 @@ nrow(wrens)
 head(wrens, 5)
 ```
 
-
 ```{r head of wren DO NOT MODIFY its manually formatted, max.height='100px', max.width='100px'}
 #> X  Attempt.ID  Location.ID   Latitude    Longitude Subnational.Code  Species.Name  Species.Code  Year  Elevation.m  Height.m Substrate Substrate.Relationship  Substrate.Other.Description Predator.Guard  Predator.Guard.Other  Cavity.Entrance.Diameter.cm Entrance.Orientation  Habitat.1m  Habitat.100m  Location.Entry.Technique  Observer.ID First.Lay.Date  First.Lay.Date.Estimated  Visited.During.Egg.Laying Hatch.Date  Hatch.Date.Estimated  Fledge.Date Fledge.Date.Estimated Young.Fledged Clutch.Size Young.Total Unhatched.Eggs  Outcome Attempt.Entry.Technique   Visit.ID       Visit.Datetime  Visit.Time.Valid  Nest.Status Adult.Activity  Young.Status  Management.Status Host.Eggs.Count Host.Eggs.Present.Uncounted Live.Host.Young.Count Live.Host.Young.Present.Uncounted Dead.Host.Young.Count Dead.Host.Young.Present.Uncounted Brood.Parasite.Eggs.Count Brood.Parasite.Eggs.Present.Uncounted Brood.Parasite.Live.Young.Count Brood.Parasite.Live.Young.Present.Uncounted Brood.Parasite.Dead.Young.Count Brood.Parasite.Dead.Young.Present.Uncounted Visit.Entry.Technique 
 #> 1	A1000045	   L56654	34.68472	-98.40583	         US-OK	Carolina Wren	    carwre	2006	    344.7	 1.6002	   nesbox	                  in		                                               		                               3.81	                  ne 	               	             BIRDHOUSE_HIST:SELF     obsr1309		                                NA	                       NA		                        NA				                   NA	         NA	         NA          NA	            NA	      f	                       	  S2489482	2006-07-10 00:00:00	                0	                   			                               	             5                           0                    NA                                 0                    NA                                 0                        NA                                     0                              NA                                           0                              NA                                           0
@@ -159,7 +159,6 @@ head(wrens, 5)
 #> 4	A1000271	  L126818	30.61476	-76.87363	         US-TX	Bewick's Wren	    bewwre	2006	    316.4	 1.6154	   nesbox	                  in		                              baffle	                                           3.81	                  sw 	               	                 PointMaker1.0_2    obsr10027		                                NA	                       NA		                        NA				                   NA	         NA	         NA          NA	            NA	     f6	                          S2494113	2006-03-13 00:00:00	                0	        cn                                                              NA                           0                    NA                                 0                    NA                                 0                        NA                                     0                              NA                                           0                              NA                                           0   
 #> 5	A1000271	  L126818	30.61476	-76.87363	         US-TX	Bewick's Wren	    bewwre	2006	    316.4	 1.6154	   nesbox	                  in		                              baffle	                                           3.81	                  sw 	               	                 PointMaker1.0_2    obsr10027		                                NA	                       NA		                        NA				                   NA	         NA	         NA          NA	            NA	     f6	                          S2494114	2006-04-12 00:00:00	                0	                                                                         4                           0                    NA                                 0                    NA                                 0                        NA                                     0                              NA                                           0                              NA                                           0   
 ```
-
 
 ```{r plot, eval =TRUE}
 # Format First.Lay.Date as a date

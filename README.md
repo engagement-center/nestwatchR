@@ -15,14 +15,15 @@ Badge](https://img.shields.io/badge/Code%20License-GPL%20v3-blue)
 This repository is in early development with plans to add additional
 functions to create an R package to facilitate accessibility.
 
-- [ ] Add phenological filtering example to “filter” vignette
-- [ ] Debug nw.estfirstlay() and nw.estclutchsize() to fix handling of
-  no data subsets to bind.
-- [ ] Update “estimate” vignette with all nw.est… functions and examples
-- [ ] Rework nw.estphenology to dynamically find column names regardless
-  of capitalization
-- [ ] Rework nw.estphenology to run from a df of data to allow for
-  multiple spp ina single function run
+🔲 Modify nw.filterphenology() to more properly handle run-on nesting
+attempts
+
+🔲 Finish phenological filtering example in “filter” vignette
+
+🔲 Add reproducible example short code to function documentations where
+missing
+
+🔲 Internal testing
 
 ## Overview :pushpin:
 
@@ -148,6 +149,7 @@ Success.” Ecology 105(2): e4230. https://doi.org/10.1002/ecy.4230</a>
 **NestWatch R Package:**<br> Savides, K., R. Bailey, & D. Bonter.
 NestWatch Data Products (Version 0.00.00) \[Computer software\].
 <https://github.com/engagement-center/2024-NestWatch-Package-Internal>
+
 </blockquote>
 
 ## Vignettes :books:

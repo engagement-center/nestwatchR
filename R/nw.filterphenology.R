@@ -192,7 +192,6 @@ nw.filterphenology <- function(data, sp, mode, phenology, output = NULL){
     temp <- temp %>% filter(as.integer(Hatch.Date - First.Lay.Date) > H_L)
     toflag <- c(unique(temp$Attempt.ID))
 
-
     # Find attempts where Fledge - Hatch > user input
     H_F <- nestling
     temp <- spp_data %>% filter(str_detect(Hatch.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b")) %>%
@@ -201,7 +200,7 @@ nw.filterphenology <- function(data, sp, mode, phenology, output = NULL){
     flag <- unique(temp$Attempt.ID)
     toflag <- unique(c(toflag, flag))
 
-    ### # Find attempts where Fledge - Lay > user input
+    # Find attempts where Fledge - Lay > user input
     L_F <- lay + inc + nestling
     temp <- spp_data %>% filter(str_detect(First.Lay.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b")) %>%
       filter(str_detect(Fledge.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b"))
@@ -210,6 +209,8 @@ nw.filterphenology <- function(data, sp, mode, phenology, output = NULL){
     toflag <- unique(c(toflag, flag))
 
     # Find long Total nesting periods (from checks to account for run-on nests or no summary data provided)
+    # not currently working as intended.
+    # maybe IF no lay, hatch, fledge dates available, check for length?
     temp <- spp_data %>% filter(!is.na(Visit.Datetime))
     temp <- temp %>% group_by(Attempt.ID) %>%
       summarize(min_date = min(Visit.Datetime),

@@ -88,7 +88,7 @@ and Datetime columns must have class <code>POSIXct</code>.</p></dd>
 
 
 <dt id="arg-sp">sp<a class="anchor" aria-label="anchor" href="#arg-sp"></a></dt>
-<dd><p>character; A single character vector containing the species code for which to filter data for.</p></dd>
+<dd><p>character vector; A character vector containing the species code for one or more species for which to filter the data.</p></dd>
 
 
 <dt id="arg-mode">mode<a class="anchor" aria-label="anchor" href="#arg-mode"></a></dt>
@@ -97,10 +97,11 @@ flagged with "FLAGGED" in a new column. Or removed from the dataset.</p></dd>
 
 
 <dt id="arg-phenology">phenology<a class="anchor" aria-label="anchor" href="#arg-phenology"></a></dt>
-<dd><p>numeric vector; A numeric vector of length 4 representing each of the following, in order:</p><ul><li><p><strong>Lay</strong>: The number of days representing the maximum expected laying period.</p></li>
-<li><p><strong>Incubation</strong>: The number of days representing the maximum expected incubation period (between clutch complete and hatch).</p></li>
-<li><p><strong>Nestling</strong>: The number of days representing the maximum expected nesting period (hatch and last fledge).</p></li>
-<li><p><strong>Total Nesting Period</strong>: The number of days representing the maximum expected nesting period (spanning first lay to last fledge).</p></li>
+<dd><p>dataframe; A simple dataframe with one row for each species of interest and the following column structure:</p><ul><li><p><strong>Species</strong>: Species for which this row of data represents. Must be a 6-letter species code.</p></li>
+<li><p><strong>Lay</strong>: The number of days representing the maximum expected laying period for each species.</p></li>
+<li><p><strong>Incubation</strong>: The number of days representing the maximum expected incubation period (between clutch complete and hatch) for each species.</p></li>
+<li><p><strong>Nestling</strong>: The number of days representing the maximum expected nesting period (hatch and last fledge) for each species.</p></li>
+<li><p><strong>Total Nesting Period</strong>: The number of days representing the maximum expected nesting period (spanning first lay to last fledge) for each species.</p></li>
 </ul></dd>
 
 

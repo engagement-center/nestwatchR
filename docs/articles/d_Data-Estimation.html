@@ -80,7 +80,12 @@
 
 
 
-      </header><div class="row">
+      </header><link href="d_Data-Estimation_files/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="d_Data-Estimation_files/htmlwidgets-1.6.4/htmlwidgets.js"></script><link href="d_Data-Estimation_files/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+<script src="d_Data-Estimation_files/datatables-binding-0.33/datatables.js"></script><link href="d_Data-Estimation_files/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="d_Data-Estimation_files/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="d_Data-Estimation_files/dt-core-1.13.6/js/jquery.dataTables.min.js"></script><link href="d_Data-Estimation_files/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="d_Data-Estimation_files/crosstalk-1.2.1/js/crosstalk.min.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Estimate NestWatch Summary Dates</h1>
@@ -123,16 +128,17 @@ in the nest visits and summary data and finds (1) the maximum egg count,
 (2) the unhatched eggs count, (3) the maximum young count in the nest
 (dead + alive), and (4) the number of fledglings recorded for each
 attempt. From these summaries, the function calculates the maximum
-number of observed (1) host eggs, (2) young (alive/dead) + unhatched
-eggs, and (3) fledged + unhatched eggs, to get the maximum contents of
-the nest at each state (lay/incubation, nestling, and fledging).</p>
+number (during each nest check) of observed (1) host eggs, (2) young
+(alive/dead) + unhatched eggs, and (3) fledged + unhatched eggs, to get
+the maximum contents of the nest at each nest stage (lay/incubation,
+nestling, and fledging).</p>
 <p>Depending on the data available, the certainty of the clutch size
-estimate may vary, or in some cases, may not be estimable. For instance,
-a successful nest with 4 eggs recorded on several checks and 4 fledged
-young observed would have high certainty that the clutch size was 4.
-However, if a nest was observed with 2 eggs on one check and a week
-later was found depredated, the certainty of the clutch size is not
-known. In this case, the clutch size would be estimated as 2 but may
+estimate may vary, or in some cases, may not be estimatable. For
+instance, a successful nest with 4 eggs recorded on several checks and 4
+fledged young observed would have high certainty that the clutch size
+was 4. However, if a nest was observed with 2 eggs on one check and a
+week later was found depredated, the certainty of the clutch size is not
+known. In this case, the clutch size would be estimated as 2, but may
 have been higher depending on the exact (unobserved) failure date.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load wrens example data</span></span>
@@ -140,7 +146,7 @@ have been higher depending on the exact (unobserved) failure date.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">wrens</span><span class="op">$</span><span class="va">Attempt.ID</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># &gt; [1] 7626    # total attempts in wrens</span></span>
 <span></span>
-<span><span class="co"># How many attempts have missing clutch sizes</span></span>
+<span><span class="co"># How many attempts have missing clutch sizes?</span></span>
 <span><span class="va">empty_clutchsize</span> <span class="op">&lt;-</span> <span class="va">wrens</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">Clutch.Size</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">empty_clutchsize</span><span class="op">$</span><span class="va">Attempt.ID</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># &gt; [1] 2228    # number of NA clutch sizes</span></span>
@@ -187,6 +193,91 @@ most relevant to your study):</p>
 <span>                        Total.Nesting.Period <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">DT</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/DT/man/datatable.html" class="external-link">datatable</a></span><span class="op">(</span><span class="va">phenology</span>, options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>paging <span class="op">=</span> <span class="cn">F</span>, scrollX <span class="op">=</span> <span class="cn">T</span>, searching  <span class="op">=</span> <span class="cn">F</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-ac96cb3ee4656e2e9ec3" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-ac96cb3ee4656e2e9ec3">{"x":{"filter":"none","vertical":false,"data":[["1","2"],["bewwre","carwre"],[5,4],[1,1],[16,16],[16,13],[50,40]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Species<\/th>\n      <th>Clutch.Size<\/th>\n      <th>Eggs.per.Day<\/th>\n      <th>Incubation<\/th>\n      <th>Nestling<\/th>\n      <th>Total.Nesting.Period<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"paging":false,"scrollX":true,"searching":false,"columnDefs":[{"className":"dt-right","targets":[2,3,4,5,6]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Species","targets":1},{"name":"Clutch.Size","targets":2},{"name":"Eggs.per.Day","targets":3},{"name":"Incubation","targets":4},{"name":"Nestling","targets":5},{"name":"Total.Nesting.Period","targets":6}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><p>As in this example, you can input phenological data for multiple
+species to estimate first lay dates for each.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Reuse `estimated.clutch` data from above</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">estimated.clutch</span><span class="op">$</span><span class="va">Attempt.ID</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># &gt; [1] 7626    # total attempts in estimated.clutch</span></span>
+<span></span>
+<span><span class="co"># How many attempts have missing first lay dates?</span></span>
+<span><span class="va">empty_firstlay</span> <span class="op">&lt;-</span> <span class="va">estimated.clutch</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">First.Lay.Date</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">empty_firstlay</span><span class="op">$</span><span class="va">Attempt.ID</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># &gt; [1] 3008    # number of NA first lay dates</span></span>
+<span></span>
+<span><span class="co"># Run estfirstlay</span></span>
+<span><span class="fu"><a href="../reference/nw.estfirstlay.html">nw.estfirstlay</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">estimated.clutch</span>, phenology <span class="op">=</span> <span class="va">phenology</span>, output <span class="op">=</span> <span class="st">"estimated.lay"</span><span class="op">)</span></span>
+<span><span class="va">still_empty</span> <span class="op">&lt;-</span> <span class="va">estimated.lay</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">First.Lay.Date</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">still_empty</span><span class="op">$</span><span class="va">Attempt.ID</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># &gt; [1] 2392     # number of first lay dates not estimated</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="estimate-hatch-date">Estimate Hatch Date<a class="anchor" aria-label="anchor" href="#estimate-hatch-date"></a>
+</h2>
+<p>For nesting attempts where young were known to have hatched, hatch
+dates may be estimatable if first lay date or fledge date is known. The
+function <code><a href="../reference/nw.esthatch.html">nw.esthatch()</a></code> takes a merged NestWatch dataframe
+as <code>data =</code>, a user-provided nest phenology dataframe
+(<code>phenology =</code>, see above for details), and has an optional
+<code>output =</code> argument to rename the resulting dataframe.</p>
+<p>This function checks, in order, if (1) the Young.Total were recorded
+or if the nest fledged (positive indication of hatching), (2) then if a
+hatch date is available, and finally (3) if a known (non-estimated)
+fledge date is available. If these requirements are met, the function
+uses the user-input nest phenology time frames to estimate hatch date
+date. Estimated dates are denoted with a 1 in
+<code>data$Hatch.Date.Estimated</code>. NestWatch does not have a data
+field for specific nestling age, but rather has a categorical nestling
+age score (i.e.”naked young”, “partially feathered young”). Due to the
+uncertainty in day-age of this score between species and possibly
+between observers, this function does not utilize these data.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Reuse `estimated.lay` data from above</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">estimated.lay</span><span class="op">$</span><span class="va">Attempt.ID</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># &gt; [1] 7626    # total attempts in estimated.lay</span></span>
+<span></span>
+<span><span class="co"># How many attempts have missing hatch dates?</span></span>
+<span><span class="va">empty_hatch</span> <span class="op">&lt;-</span> <span class="va">estimated.lay</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">Hatch.Date</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">empty_hatch</span><span class="op">$</span><span class="va">Attempt.ID</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># &gt; [1] 3680    # number of NA hatch dates</span></span>
+<span></span>
+<span><span class="co"># Run esthatch</span></span>
+<span><span class="fu"><a href="../reference/nw.esthatch.html">nw.esthatch</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">estimated.lay</span>, phenology <span class="op">=</span> <span class="va">phenology</span>, output <span class="op">=</span> <span class="st">"estimated.hatch"</span><span class="op">)</span></span>
+<span><span class="va">still_empty</span> <span class="op">&lt;-</span> <span class="va">estimated.hatch</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">Hatch.Date</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">still_empty</span><span class="op">$</span><span class="va">Attempt.ID</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># &gt; [1] 3207     # number of hatch dates not estimated</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="estimate-fledge-date">Estimate Fledge Date<a class="anchor" aria-label="anchor" href="#estimate-fledge-date"></a>
+</h2>
+<p>For nesting attempts where young were known to have fledged, hatch
+dates may be estimatable if hatch date or first lay date is known. The
+function <code><a href="../reference/nw.estfledge.html">nw.estfledge()</a></code>, like those estimation functions
+above, takes a merged NestWatch dataframe as <code>data =</code>, a
+user-provided nest phenology dataframe (<code>phenology =</code>, see
+above for details), and has an optional <code>output =</code> argument
+to rename the resulting dataframe.</p>
+<p>This function checks, in order, (1) if the nest fledged successfully,
+and (2) if a Hatch.Date was recorded or then (3) if a First.Lay.Date was
+recorded. If these requirements are met, the function uses user-input
+nest phenology time frames to estimate fledge date. Estimated dates are
+denoted with a 1 in <code>data$Fledge.Date.Estimated</code>.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Reuse `estimated.hatch` data from above</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">estimated.hatch</span><span class="op">$</span><span class="va">Attempt.ID</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># &gt; [1] 7626    # total attempts in estimated.hatch</span></span>
+<span></span>
+<span><span class="co"># How many attempts have missing fledge dates?</span></span>
+<span><span class="va">empty_fledge</span> <span class="op">&lt;-</span> <span class="va">estimated.hatch</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">Fledge.Date</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">empty_fledge</span><span class="op">$</span><span class="va">Attempt.ID</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># &gt; [1] 3779    # number of NA fledge dates</span></span>
+<span></span>
+<span><span class="co"># Run estfledge</span></span>
+<span><span class="fu"><a href="../reference/nw.estfledge.html">nw.estfledge</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">estimated.hatch</span>, phenology <span class="op">=</span> <span class="va">phenology</span>, output <span class="op">=</span> <span class="st">"estimated.fledge"</span><span class="op">)</span></span>
+<span><span class="va">still_empty</span> <span class="op">&lt;-</span> <span class="va">estimated.fledge</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">Fledge.Date</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">still_empty</span><span class="op">$</span><span class="va">Attempt.ID</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># &gt; [1] 3483     # number of fledge dates not estimated</span></span></code></pre></div>
 </div>
   </div>
 
