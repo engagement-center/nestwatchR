@@ -49,7 +49,7 @@
 #'                         Eggs.per.Day = c(1, 1),
 #'                         Incubation   = c(16, 16),
 #'                         Nestling     = c(16, 13),
-#'                         Total.Nesting.Period = c(50, 40))
+#'                         Total = c(50, 40))
 #'
 #' # Run function
 #' nw.esthatch(data = data, phenology = phenology)
@@ -70,8 +70,8 @@ nw.esthatch <- function(data, phenology, output = NULL) {
   if(!is.data.frame(phenology)){
     stop("Augument 'phenology' must be a dataframe, see ?nw.estfirstlay() for details.")
   }
-  needed_columns <- c("Species", "Clutch.Size", "Eggs.per.Day", "Incubation", "Nestling", "Total.Nesting.Period")
-  if (!all(needed_columns %in% colnames(phenology))) {
+  needed_columns <- c("Species", "Clutch.Size", "Eggs.per.Day", "Incubation", "Nestling", "Total")
+  if (!all(tolower(needed_columns) %in% tolower(colnames(phenology)))) {
     stop("Augument 'phenology' must be a dataframe, see ?nw.estfirstlay() for details.")
   }
 
@@ -88,7 +88,24 @@ nw.esthatch <- function(data, phenology, output = NULL) {
   ####  Function         ####
   ###########################
 
-  for (s in phenology$Species) {
+  # Force species column name to lowercase if upper
+  if ("Species" %in% colnames(phenology)) {
+    colnames(phenology)[colnames(phenology) == "Species"] <- "species"
+  }
+
+  message("... Estimating hatch dates, this may take some time ...")
+
+  for (s in phenology$species) {
+
+    # Define phenology vector elements by searching for column names
+    spp_phen <- phenology %>% filter(species == s)
+    clutch.size <- spp_phen[[grep("clutch.size", colnames(spp_phen), ignore.case = TRUE)]]
+    eggs.per.day <- spp_phen[[grep("eggs.per.day", colnames(spp_phen), ignore.case = TRUE)]]
+    inc <- spp_phen[[grep("incubation", colnames(spp_phen), ignore.case = TRUE)]]
+    nestling <- spp_phen[[grep("nestling", colnames(spp_phen), ignore.case = TRUE)]]
+    total <- spp_phen[[grep("total", colnames(spp_phen), ignore.case = TRUE)]]
+
+
     # Filter to a single species
     sp_data <- data %>% filter(Species.Code == s & is.na(Hatch.Date))
     # If this subset contains data, continue (there may not be these cases), if not skip and display message
@@ -113,8 +130,7 @@ nw.esthatch <- function(data, phenology, output = NULL) {
       summarise(First.Lay = mean(First.Lay.Date),                  # get the first lay date and clutch size for each attempt
                 Clutch = mean(Clutch.Size)) %>%
       mutate(Hatch = (First.Lay +                                  # hatch = first lay + clutch*egg/day + avg inc
-                        (Clutch * phenology$Eggs.per.Day[phenology$Species == s]) +
-                        phenology$Incubation[phenology$Species == s] -1))
+                        (Clutch * eggs.per.day) + inc -1))
     temp <- temp %>% select(Attempt.ID, Hatch)
     }
 
@@ -125,9 +141,7 @@ nw.esthatch <- function(data, phenology, output = NULL) {
       temp1 <- temp1 %>% group_by(Attempt.ID) %>%                               # group by attempt id
                          summarise(First.Lay = mean(First.Lay.Date)) %>%        # get the first lay date and clutch size for each attempt
                          mutate(Hatch = (First.Lay +                            # hatch = first lay + avg clutch*egg/day + avg inc
-                                        (phenology$Clutch.Size[phenology$Species == s] *
-                                           phenology$Eggs.per.Day[phenology$Species == s]) +
-                                        phenology$Incubation[phenology$Species == s] -1))
+                                        (clutch.size * eggs.per.day) + inc - 1))
       temp1 <- temp1 %>% select(Attempt.ID, Hatch)
     }
 
@@ -140,11 +154,11 @@ nw.esthatch <- function(data, phenology, output = NULL) {
     temp2 <- subset %>% filter(is.na(First.Lay.Date) & Fledge.Date.Estimated == 0)
     if (nrow(temp2) > 0) {
 
-    temp2 <- temp2 %>% filter(!is.na(Fledge.Date)) %>%                              # filter to fledge dates provided
+    temp2 <- temp2 %>% filter(!is.na(Fledge.Date)) %>%             # filter to fledge dates provided
       group_by(Attempt.ID) %>%                                     # group by attempt id
       summarise(Fledge = mean(Fledge.Date)) %>%                    # get the fledge date date and clutch size for each attempt
-      mutate(Hatch = (Fledge -                                     # hatch = fledge - avg nestling
-                        (phenology$Nestling[phenology$Species == s])))
+      mutate(Hatch = (Fledge - nestling))                          # hatch = fledge - avg nestling
+
     temp2 <- temp2 %>% select(Attempt.ID, Hatch)
     }
 
