@@ -20,7 +20,7 @@
 #'     \item \code{Eggs.per.Day}: Average number of eggs laid per day by each species.
 #'     \item \code{Incubation}: Average number of days spent in incubation (days between clutch complete and hatch).
 #'     \item \code{Nestling}: Average number of days spent in nestling period (days between hatch and fledge).
-#'     \item \code{Total.Nesting.Period}: Average number of days between first lay date and fledge date.
+#'     \item \code{Total}: Average number of days between first lay date and fledge date.
 #'     }
 #' @param output character; An optional character string to custom name the output dataframe
 #'
@@ -47,7 +47,7 @@
 #'                         Eggs.per.Day = c(1, 1),
 #'                         Incubation   = c(16, 16),
 #'                         Nestling     = c(16, 13),
-#'                         Total.Nesting.Period = c(50, 40))
+#'                         Total = c(50, 40))
 #'
 #' nw.estfledge(data = data, phenology = phenology)
 nw.estfledge <- function(data, phenology, output = NULL) {
@@ -68,8 +68,8 @@ nw.estfledge <- function(data, phenology, output = NULL) {
   if(!is.data.frame(phenology)){
     stop("Augument 'phenology' must be a dataframe, see ?nw.estfirstlay() for details.")
   }
-  needed_columns <- c("Species", "Clutch.Size", "Eggs.per.Day", "Incubation", "Nestling", "Total.Nesting.Period")
-  if (!all(needed_columns %in% colnames(phenology))) {
+  needed_columns <- c("Species", "Clutch.Size", "Eggs.per.Day", "Incubation", "Nestling", "Total")
+  if (!all(tolower(needed_columns) %in% tolower(colnames(phenology)))) {
     stop("Augument 'phenology' must be a dataframe, see ?nw.estfirstlay() for details.")
   }
 
@@ -89,8 +89,24 @@ nw.estfledge <- function(data, phenology, output = NULL) {
   ####  Function         ####
   ###########################
 
+  # Force species column name to lowercase if upper
+  if ("Species" %in% colnames(phenology)) {
+    colnames(phenology)[colnames(phenology) == "Species"] <- "species"
+  }
 
-  for (s in phenology$Species) {
+  message("... Estimating fledge dates, this may take some time ...")
+
+
+  for (s in phenology$species) {
+
+    # Define phenology vector elements by searching for column names
+    spp_phen <- phenology %>% filter(species == s)
+    clutch.size <- spp_phen[[grep("clutch.size", colnames(spp_phen), ignore.case = TRUE)]]
+    eggs.per.day <- spp_phen[[grep("eggs.per.day", colnames(spp_phen), ignore.case = TRUE)]]
+    inc <- spp_phen[[grep("incubation", colnames(spp_phen), ignore.case = TRUE)]]
+    nestling <- spp_phen[[grep("nestling", colnames(spp_phen), ignore.case = TRUE)]]
+    total <- spp_phen[[grep("total", colnames(spp_phen), ignore.case = TRUE)]]
+
 
     # Filter to a single species with no fledge date data
     sp_data <- data %>% filter(Species.Code == s & is.na(Fledge.Date))
@@ -113,8 +129,8 @@ nw.estfledge <- function(data, phenology, output = NULL) {
     if (nrow(temp) > 0) {                                          # If this subset contains data - continue, if not skip
     temp <- temp %>% group_by(Attempt.ID) %>%                      # group by attempt id
       summarise(Hatch.Date = max(Hatch.Date)) %>%                  # use max() as hack to get hatch date
-      mutate(Fledge = (Hatch.Date +                                # fledge = hatch + avg nestling
-                        phenology$Nestling[phenology$Species == s]))
+      mutate(Fledge = (Hatch.Date + nestling))                     # fledge = hatch + avg nestling
+
     temp <- temp %>% select(Attempt.ID, Fledge)
     } # end if temp > 0
 
@@ -131,9 +147,7 @@ nw.estfledge <- function(data, phenology, output = NULL) {
       summarise(First.Lay = max(First.Lay.Date),                   # use max() to get clutch and first lay
                 Clutch.Size = max(Clutch.Size)) %>%
       mutate(Fledge = (First.Lay +                                 # Fledge = lay + clutch size * egg/day + avg inc + avg nestling
-                         Clutch.Size*phenology$Eggs.per.Day[phenology$Species == s] +
-                         phenology$Incubation[phenology$Species == s] +
-                         phenology$Nestling[phenology$Species == s]))
+                         Clutch.Size * eggs.per.day + inc + nestling))
     temp1 <- temp1 %>% select(Attempt.ID, Fledge)
     } # end if temp1 > 0
 
@@ -143,9 +157,7 @@ nw.estfledge <- function(data, phenology, output = NULL) {
     temp2 <- temp2 %>% group_by(Attempt.ID) %>%                    # group by attempt id
       summarise(First.Lay = max(First.Lay.Date)) %>%               # use max() to get clutch and first lay
       mutate(Fledge = (First.Lay +                                 # Fledge = lay + avg clutch * egg/day + avg inc + avg nestling
-                         phenology$Clutch.Size[phenology$Species == s] * phenology$Eggs.per.Day[phenology$Species == s] +
-                         phenology$Incubation[phenology$Species == s] +
-                         phenology$Nestling[phenology$Species == s]))
+                         (clutch.size * eggs.per.day) + inc + nestling))
     temp2 <- temp2 %>% select(Attempt.ID, Fledge)
     } # end if temp2 > 0
 
