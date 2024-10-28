@@ -46,7 +46,7 @@
 #'                    Eggs.per.Day = c(1, 1),
 #'                    Incubation   = c(16, 16),
 #'                    Nestling     = c(16, 13),
-#'                    Total.Nesting.Period = c(50, 40))
+#'                    Total = c(50, 40))
 #'
 #' # Run function
 #' nw.estfirstlay(data = data, phenology = phen)
@@ -68,8 +68,8 @@ nw.estfirstlay <- function(data, phenology, output = NULL) {
   if(!is.data.frame(phenology)){
     stop("Augument 'phenology' must be a dataframe, see ?nw.estfirstlay() for details.")
   }
-  needed_columns <- c("Species", "Clutch.Size", "Eggs.per.Day", "Incubation", "Nestling", "Total.Nesting.Period")
-  if (!all(needed_columns %in% colnames(phenology))) {
+  needed_columns <- c("Species", "Clutch.Size", "Eggs.per.Day", "Incubation", "Nestling", "Total")
+  if (!all(tolower(needed_columns) %in% tolower(colnames(phenology)))) {
     stop("Augument 'phenology' must be a dataframe, see ?nw.estfirstlay() for details.")
   }
 
@@ -87,9 +87,22 @@ nw.estfirstlay <- function(data, phenology, output = NULL) {
   ####  Function         ####
   ###########################
 
+  # Force species column name to lowercase if upper
+  if ("Species" %in% colnames(phenology)) {
+    colnames(phenology)[colnames(phenology) == "Species"] <- "species"
+  }
 
   # For each species provided, try to estimate First Lay Date
-  for (s in phenology$Species) {
+  for (s in phenology$species) {
+
+    # Define phenology vector elements by searching for column names
+    spp_phen <- phenology %>% filter(species == s)
+    clutch.size <- spp_phen[[grep("clutch.size", colnames(spp_phen), ignore.case = TRUE)]]
+    eggs.per.day <- spp_phen[[grep("eggs.per.day", colnames(spp_phen), ignore.case = TRUE)]]
+    inc <- spp_phen[[grep("incubation", colnames(spp_phen), ignore.case = TRUE)]]
+    nestling <- spp_phen[[grep("nestling", colnames(spp_phen), ignore.case = TRUE)]]
+    total <- spp_phen[[grep("total", colnames(spp_phen), ignore.case = TRUE)]]
+
 
     # Filter to a single species
     sp_data <- data %>% filter(Species.Code == s & is.na(First.Lay.Date))
@@ -129,7 +142,7 @@ nw.estfirstlay <- function(data, phenology, output = NULL) {
           summarise(Visit.Datetime = as.Date(min(Visit.Datetime, na.rm = T)),         # calculate the min date eggs were recorded
                     eggs_on_date = first(Host.Eggs.Count))                            # find who many eggs were on that day
         # Estimate when First Lay date was
-        eggdates <- eggdates %>% mutate(Days.of.Lay = eggs_on_date * phenology$Eggs.per.Day[phenology$Species == s], # using the earliest # eggs in nest, how many days has it been in lay
+        eggdates <- eggdates %>% mutate(Days.of.Lay = eggs_on_date * eggs.per.day, # using the earliest # eggs in nest, how many days has it been in lay
                                         First.Lay.Date = Visit.Datetime - Days.of.Lay + 1) # calculate how many days of lay there have been, and back est first lay date
         temp <- eggdates %>% select(Attempt.ID, First.Lay.Date)                       # simplified df
 
@@ -161,16 +174,12 @@ nw.estfirstlay <- function(data, phenology, output = NULL) {
         # If clutch size data present:
         #   Count back provided incubation days, count back # eggs*egg/d in the clutch +1
         temp <- subset %>% filter(Clutch.Size > 0)
-        temp <- temp %>% mutate(First.Lay.Date = (Hatch.Date -
-                                                    phenology$Incubation[phenology$Species == s] -
-                                                    (Clutch.Size * phenology$Eggs.per.Day[phenology$Species == s]) + 1))
+        temp <- temp %>% mutate(First.Lay.Date = (Hatch.Date - inc - (Clutch.Size * eggs.per.day) + 1))
 
         # If clutch size is NA or 0:
         #   Count back provided avg clutch size*egg/d +1
         temp1 <- subset %>% filter(!(Clutch.Size > 0) | is.na(Clutch.Size))
-        temp1 <- temp1 %>% mutate(First.Lay.Date = (Hatch.Date -
-                                                      phenology$Incubation[phenology$Species == s] -
-                                                      (phenology$Clutch.Size[phenology$Species == s] * phenology$Eggs.per.Day[phenology$Species == s]) + 1))
+        temp1 <- temp1 %>% mutate(First.Lay.Date = (Hatch.Date - inc - (clutch.size * eggs.per.day) + 1))
 
         # Bind temp and temp1
         temp <- rbind(temp, temp1)
@@ -205,17 +214,12 @@ nw.estfirstlay <- function(data, phenology, output = NULL) {
         # If clutch size data present:
         #   Count back provided incubation days, nestling days, # eggs in the clutch*egg/day +1
         temp <- subset %>% filter(Clutch.Size > 0)
-        temp <- temp %>% mutate(First.Lay.Date = (Fledge.Date -
-                                                    phenology$Nestling[phenology$Species == s] -
-                                                    phenology$Incubation[phenology$Species == s] -
-                                                    (Clutch.Size * phenology$Eggs.per.Day[phenology$Species == s]) + 1))
+        temp <- temp %>% mutate(First.Lay.Date = (Fledge.Date - nestling - inc - (Clutch.Size * eggs.per.day) + 1))
 
         # If clutch size is NA or 0:
         #   Count back provided avg clutch size +1
         temp1 <- subset %>% filter(!(Clutch.Size > 0) | is.na(Clutch.Size))
-        temp1 <- temp1 %>% mutate(First.Lay.Date = (Fledge.Date -
-                                                      phenology$Incubation[phenology$Species == s] -
-                                                      (phenology$Clutch.Size[phenology$Species == s] * phenology$Eggs.per.Day[phenology$Species == s]) + 1))
+        temp1 <- temp1 %>% mutate(First.Lay.Date = (Fledge.Date - inc - (clutch.size * eggs.per.day) + 1))
 
         # Bind temp and temp1
         temp <- rbind(temp, temp1)
