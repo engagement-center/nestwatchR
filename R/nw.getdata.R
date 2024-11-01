@@ -30,13 +30,21 @@ nw.getdata <- function(version = NULL) {                                        
   }
 
   dir.create("temp-dir")                                             # create temporary directory for data to download to
+  venv <- file.path(getwd(), "python-env")                           # path to the virtual python instance
+
 
   ### 2. Download the data using Reticulate and DataHugger
-  reticulate::use_virtualenv()                                                # use a virtual instance of Python
-  reticulate::virtualenv_install(packages = "datahugger", pip_options = character())  # virtually install DataHugger to retrieve Mendeley Data
-  reticulate::virtualenv_install(packages = "pandas", pip_options = character())  # virtually install pandas to help
+  if(!dir.exists(venv)){                               # if a virtual instance of python is not in the wd,
+    reticulate::virtualenv_create(envname = venv)      # create the virtual instance
+  }
+  reticulate::use_virtualenv(virtualenv = venv, required = T)   # tell R to use this instance of python
+
+  reticulate::virtualenv_install(envname = venv, packages = "datahugger", pip_options = character())  # virtually install DataHugger to retrieve Mendeley Data
+  reticulate::virtualenv_install(envname = venv, packages = "pandas", pip_options = character())  # virtually install pandas to help
   datahugger <- reticulate::import("datahugger")
   datahugger$get(DOI, unzip = T, "temp-dir")
+
+
 
   ### 3. Unzip datafiles, add to global environment, remove temp directory
   files <- list.files("temp-dir")                                             # get list of files in the temporary directory
