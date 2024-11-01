@@ -44,15 +44,20 @@ nw.estclutchsize <- function(data, output = NULL){
   ####  Check arguments  ####
   ###########################
 
+  # Stop function if output was not named AND no assignment arrow was used
+  if ((interactive() && sys.nframe() == 1) & is.null(output)) {
+    stop("Please either assign the output to an object or specify an output name using output = 'object_name'.")
+  }
+
   # Check the dataframe is merged NW data
   if (missing(data)){
     stop("Augument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
   }
   if (all(!(c("Species.Code", "Visit.ID") %in% names(data)))){
-        stop("Augument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
+    stop("Augument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
   }
   # Check output is character vector
-  if(!inherits(output, "character"))
+  if(!is.null(output) & !inherits(output, "character"))
     stop("Augument 'output' must be a character vector.")
 
   ###########################
@@ -100,10 +105,10 @@ nw.estclutchsize <- function(data, output = NULL){
 
     # Summarize by attempt: (1) max egg count, (2) numb unhatched eggs, (3) max young in the nest (dead + alive), (4) numb fledges
     df <- df %>% group_by(Attempt.ID) %>%
-                 summarise(Host.Eggs.Count = max(Host.Eggs.Count),
-                           Unhatched.Eggs = unique(Unhatched.Eggs),
-                           Young.Total = max(Young.Total, Young.in.Nest),
-                           Young.Fledged = unique(Young.Fledged))
+      summarise(Host.Eggs.Count = max(Host.Eggs.Count),
+                Unhatched.Eggs = unique(Unhatched.Eggs),
+                Young.Total = max(Young.Total, Young.in.Nest),
+                Young.Fledged = unique(Young.Fledged))
 
     # Remove attempts that have all NA (-999) values, we can not estimate these
     df <- df[rowSums(df[ , -1]) != (-999*4), ]
@@ -153,7 +158,19 @@ nw.estclutchsize <- function(data, output = NULL){
 
     # Change -999 back to NA
     cols_to_replace <- names(out)
-    out[cols_to_replace] <- lapply(out[cols_to_replace], function(x) ifelse(x == -999, NA, x))
+
+    out[cols_to_replace] <- lapply(out[cols_to_replace], function(x) {  # to preserve datetime formatting
+      if (is.numeric(x)) {
+        replace(x, x == -999, NA)
+      } else if (inherits(x, "Date") || inherits(x, "POSIXct")) {
+        x  # Leave date columns as they are
+      } else {
+        x  # Leave other columns as they are
+      }
+    })
+
+
+
 
   } # end if df has any NA clutch sizes
 
@@ -163,15 +180,13 @@ nw.estclutchsize <- function(data, output = NULL){
   ####        Output data       ####
   ##################################
 
-  # Prep for and Export resulting dataframe
-  pos <- 1
-  envir = as.environment(pos)
-
+  # Assign output
   if (is.null(output)) {
-    estimated.data <- NULL
-    assign("estimated.data", out, envir = envir)
+    return(out)  # Return 'out' directly if 'output' is NULL
   } else {
-    assign(paste0(output), out, envir = envir)
+    assign(output, out, envir = .GlobalEnv)  # Assign to specified name in global environment
+    invisible(out)  # Return invisibly so the function doesn’t print the data frame
   }
 
-}
+} # end of function
+
