@@ -138,20 +138,26 @@ nw.estfirstlay <- function(data, phenology, output = NULL) {
         # Make new df to hold egg dates
         eggdates <- subset %>% filter(!is.na(Visit.Datetime)) %>%
           filter(Host.Eggs.Count > 0) %>%                                             # filter just visits that recorded eggs
-          group_by(Attempt.ID) %>%                                                    # we will look by Attempt.ID
-          summarise(Visit.Datetime = as.Date(min(Visit.Datetime, na.rm = T)),         # calculate the min date eggs were recorded
+          group_by(Attempt.ID)                                                        # we will look by Attempt.ID
+        # Check to see if there are nests in this subset, if so continue, if not skip
+        if (nrow(eggdates) > 0) {
+          eggdates <- eggdates %>% summarise(Visit.Datetime = as.Date(min(Visit.Datetime, na.rm = T)),  # calculate the min date eggs were recorded
                     eggs_on_date = first(Host.Eggs.Count))                            # find who many eggs were on that day
-        # Estimate when First Lay date was
-        eggdates <- eggdates %>% mutate(Days.of.Lay = eggs_on_date * eggs.per.day, # using the earliest # eggs in nest, how many days has it been in lay
+          # Estimate when First Lay date was
+          eggdates <- eggdates %>% mutate(Days.of.Lay = eggs_on_date * eggs.per.day, # using the earliest # eggs in nest, how many days has it been in lay
                                         First.Lay.Date = Visit.Datetime - Days.of.Lay + 1) # calculate how many days of lay there have been, and back est first lay date
-        temp <- eggdates %>% select(Attempt.ID, First.Lay.Date)                       # simplified df
+          temp <- eggdates %>% select(Attempt.ID, First.Lay.Date)                       # simplified df
 
-        # loop over each attempt to add data to the original df
-        for (i in temp$Attempt.ID) {
-          indicies <- which(data$Attempt.ID == i)                                       # get index in whole datatframe where Attempt is i
-          data$First.Lay.Date[indicies] <- as.Date(as.numeric(temp[which(temp$Attempt.ID == i), 2]))  # move date from temp into whole dataframe's First.Lay.Date
-          data$First.Lay.Date.Estimated[indicies] <- 1                                  # add 1 to that Attempt.ID's Lay Estimation column
-        }
+          # loop over each attempt to add data to the original df
+          for (i in temp$Attempt.ID) {
+            indicies <- which(data$Attempt.ID == i)                                       # get index in whole datatframe where Attempt is i
+            data$First.Lay.Date[indicies] <- as.Date(as.numeric(temp[which(temp$Attempt.ID == i), 2]))  # move date from temp into whole dataframe's First.Lay.Date
+            data$First.Lay.Date.Estimated[indicies] <- 1                                  # add 1 to that Attempt.ID's Lay Estimation column
+          } # end loop
+        } # end if there is data to calc egg dates off of
+
+
+
       } # end subset for if no lay date but visited during lay
 
 
