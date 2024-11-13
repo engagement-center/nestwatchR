@@ -109,19 +109,21 @@ nw.filterphenology <- function(data, sp, mode, phenology, output = NULL){
                    relocate(Flagged.Attempt, .before = Attempt.ID)              # Reorder column to beginning
 
   phen <- phenology                                                             # shorter name
-  spp_col <- grep("species", colnames(phen), ignore.case = TRUE)                # get the spp column index
+  names(phen) <- tolower(names(phen))                                           # force lowercase column names
+  phen <- phen %>% mutate(species = tolower(species))                           # force species codes into lower if not already
 
-  for (sp in phen[[spp_col]]) {for (sp in phen[[spp_col]]) {
+
+  for (sp in phen[[spp_col]]){
 
     spp_data <- data %>% filter(Species.Code == sp)                         # Filter the dataset to just the sp of interest
     spp_col <- grep("species", colnames(phen), ignore.case = TRUE)          # get the spp column index
     spp_phen <- phen[phen[[spp_col]] == sp, ]                               # filter phenology data to just the spp of interest
 
     # Define phenology vector elements by searching for column names
-    lay <- spp_phen[[grep("lay", colnames(spp_phen), ignore.case = TRUE)]]
-    inc <- spp_phen[[grep("incubation", colnames(spp_phen), ignore.case = TRUE)]]
-    nestling <- spp_phen[[grep("nestling", colnames(spp_phen), ignore.case = TRUE)]]
-    total <- spp_phen[[grep("total", colnames(spp_phen), ignore.case = TRUE)]]
+    lay <- spp_phen[[grep("lay", colnames(spp_phen))]]
+    inc <- spp_phen[[grep("incubation", colnames(spp_phen))]]
+    nestling <- spp_phen[[grep("nestling", colnames(spp_phen))]]
+    total <- spp_phen[[grep("total", colnames(spp_phen))]]
 
 
     #########################################
@@ -153,14 +155,21 @@ nw.filterphenology <- function(data, sp, mode, phenology, output = NULL){
     toflag <- unique(c(toflag, flag))
 
     # Find long Total nesting periods (from checks to account for run-on nests or no summary data provided)
-    temp <- spp_data %>% filter(!is.na(Visit.Datetime))
+    ### Select attempts that did not have summary info which would trigger the previous flags
+    ### Select checks where nest status != "no" or "in" -- some people enter empty box checks/incomplete nests  which we want to exclude here
+    temp <- spp_data %>% filter(is.na(First.Lay.Date) | is.na(Hatch.Date) | is.na(Fledge.Date))  # if no summary dates provided, subset to temp
+    temp <- temp %>% filter(Nest.Status != "no")  # remove status "no nest" checks (ie. empy box)
+    temp <- temp %>% filter(Nest.Status != "in")  # remove status "incomplete nest" checks
+
+    temp <- temp %>% filter(!is.na(Visit.Datetime))
     temp <- temp %>% group_by(Attempt.ID) %>%
       summarize(min_date = min(Visit.Datetime),
-                max_date = nth(sort(Visit.Datetime, decreasing = TRUE), 2),
+                max_date = max(Visit.Datetime),    # this would do 2nd to last date: nth(sort(Visit.Datetime, decreasing = TRUE), 2),
                 date_difference = as.integer(difftime(max_date, min_date, units = "days")))
     flag <- temp %>% filter(date_difference > total) %>% pull(Attempt.ID) %>% unique()
-    toflag <- unique(c(toflag, flag))
 
+    # Combine both flags
+    toflag <- unique(c(toflag, flag))
 
 
     # Flag in original dataset
@@ -170,63 +179,7 @@ nw.filterphenology <- function(data, sp, mode, phenology, output = NULL){
 
   } # end loop over each species
 
-    spp_data <- data %>% filter(Species.Code == sp)                         # Filter the dataset to just the sp of interest
-    spp_col <- grep("species", colnames(phen), ignore.case = TRUE)          # get the spp column index
-    spp_phen <- phen[phen[[spp_col]] == sp, ]                               # filter phenology data to just the spp of interest
 
-    # Define phenology vector elements by searching for column names
-    lay <- spp_phen[[grep("lay", colnames(spp_phen), ignore.case = TRUE)]]
-    inc <- spp_phen[[grep("incubation", colnames(spp_phen), ignore.case = TRUE)]]
-    nestling <- spp_phen[[grep("nestling", colnames(spp_phen), ignore.case = TRUE)]]
-    total <- spp_phen[[grep("total", colnames(spp_phen), ignore.case = TRUE)]]
-
-
-    #########################################
-    ###        Flag Long Attempts         ###
-    #########################################
-
-    # Find attempts where Hatch - Lay > user input
-    H_L <- lay + inc
-    temp <- spp_data %>% filter(str_detect(First.Lay.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b")) %>%
-      filter(str_detect(Hatch.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b"))
-    temp <- temp %>% filter(as.integer(Hatch.Date - First.Lay.Date) > H_L)
-    toflag <- c(unique(temp$Attempt.ID))
-
-    # Find attempts where Fledge - Hatch > user input
-    H_F <- nestling
-    temp <- spp_data %>% filter(str_detect(Hatch.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b")) %>%
-      filter(str_detect(Fledge.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b"))
-    temp <- temp %>% filter(as.integer(Fledge.Date - Hatch.Date) > H_F)
-    flag <- unique(temp$Attempt.ID)
-    toflag <- unique(c(toflag, flag))
-
-    # Find attempts where Fledge - Lay > user input
-    L_F <- lay + inc + nestling
-    temp <- spp_data %>% filter(str_detect(First.Lay.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b")) %>%
-      filter(str_detect(Fledge.Date, "\\b\\d{4}-\\d{2}-\\d{2}\\b"))
-    temp <- temp %>% filter(as.integer(Fledge.Date - First.Lay.Date) > L_F)
-    flag <- unique(temp$Attempt.ID)
-    toflag <- unique(c(toflag, flag))
-
-    # Find long Total nesting periods (from checks to account for run-on nests or no summary data provided)
-    # not currently working as intended.
-    # maybe IF no lay, hatch, fledge dates available, check for length?
-    temp <- spp_data %>% filter(!is.na(Visit.Datetime))
-    temp <- temp %>% group_by(Attempt.ID) %>%
-      summarize(min_date = min(Visit.Datetime),
-                max_date = nth(sort(Visit.Datetime, decreasing = TRUE), 2),
-                date_difference = as.integer(difftime(max_date, min_date, units = "days")))
-    flag <- temp %>% filter(date_difference > total) %>% pull(Attempt.ID) %>% unique()
-    toflag <- unique(c(toflag, flag))
-
-
-
-    # Flag in original dataset
-    rows <- which(data$Attempt.ID %in% toflag)
-    data$Flagged.Attempt[rows] <- "FLAGGED"
-
-
-  } # end loop over each species
 
 
   #####################################
