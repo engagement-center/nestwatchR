@@ -10,16 +10,16 @@
 #' @import dplyr
 #' @examples
 #'
-#' # load example NestWatch data
-#' NW.attempts <- nestwatchR::exNWattempts
-#' NW.checks <- nestwatchR::exNWchecks
+#' # Load example NestWatch data
+#' ex.attempts <- nestwatchR::exNWattempts
+#' ex.checks <- nestwatchR::exNWchecks
 #'
-#' # Merge downloaded NestWatch datasets
-#' nw.mergedata(NW.attempts, NW.checks)
+#' # Merge example NestWatch datasets
+#' nw.mergedata(ex.attempts, ex.checks)
 #'
 #' \dontrun{
-#' # Specify the new dataframe name
-#' nw.mergedata(NW.attempts, NW.checks, output = "merged_data")
+#' # Optionally specify the new dataframe name
+#' nw.mergedata(ex.attempts, ex.checks, output = "merged_data")
 #' }
 nw.mergedata <- function(attempts, checks, output = NULL) {
 
