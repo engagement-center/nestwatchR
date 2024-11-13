@@ -42,7 +42,7 @@
 #' \dontrun{
 #' x <- 1+2
 #' }
-nw.filterphenology <- function(data, sp, mode, phenology, output = NULL){
+nw.filterphenology <- function(data, mode, phenology, output = NULL){
 
   #####################################
   ###   Function Parameters Check   ###
@@ -56,14 +56,6 @@ nw.filterphenology <- function(data, sp, mode, phenology, output = NULL){
   if (all(!(c("Species.Code", "Visit.ID") %in% names(data)))){
     stop("Augument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
   }
-  # Stop if species is missing
-  if (missing(sp)){
-    stop("Argument 'sp' must contain a vector of at least one 6-letter species code found within the 'Species.Code' column.")
-  }
-  # Stops function if sp is not a species code contained in Species.Code
-  #if(!sp %in% data$Species.Code){
-  #  stop("Argument 'sp' must contain a vector of at least one 6-letter species code found within the 'Species.Code' column.")
-  #}
   # Stops Function if 'mode' is not specified.
   if (missing(mode)) {
     stop("Invalid 'mode'. Please provide either 'flag' or 'remove'.")
@@ -111,6 +103,7 @@ nw.filterphenology <- function(data, sp, mode, phenology, output = NULL){
   phen <- phenology                                                             # shorter name
   names(phen) <- tolower(names(phen))                                           # force lowercase column names
   phen <- phen %>% mutate(species = tolower(species))                           # force species codes into lower if not already
+  spp_col <- grep("species", colnames(phen), ignore.case = TRUE)                # get the spp column index
 
 
   for (sp in phen[[spp_col]]){
