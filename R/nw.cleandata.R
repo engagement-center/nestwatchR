@@ -48,7 +48,7 @@
 #'
 #' @param data dataframe; A dataframe containing NestWatch data.
 #' @param mode \code{"flag"} or \code{"remove"}; A character string defining if the user wants the identified nesting attempts to be flagged with "FLAGGED" in a new column. Or removed from the dataset.
-#' @param methods character vector; A vector containing any of the letters \code{a:j}, or \code{"all"}, identifying each cleaning procedure to be conducted on the data. See \strong{Details} below and the vignette for details on each procedure.
+#' @param methods character vector; A vector containing any of the letters \code{a:j} (not case- or order-sensitive), identifying each cleaning procedure to be conducted on the data. See \strong{Details} below and the vignette for details on each procedure.
 #' @param output character; An optional character string to custom name the output dataframe.
 #'
 #' @importFrom stringr str_detect
@@ -86,7 +86,7 @@ nw.cleandata  <- function(data, mode, methods, output = NULL) {
     stop("Invalid 'methods'. See ?nw.cleandata for descriptions.")
   }
   # If 'methods' contains any invalid characters, stop the function.
-  valid_methods <- c(letters[1:10])
+  valid_methods <- c(letters[1:10], LETTERS[1:10])
   if (!all(methods %in% valid_methods)) {
     stop("Invalid 'methods'. See ?nw.cleandata for descriptions.")
   }# end of parameter check
@@ -111,13 +111,18 @@ nw.cleandata  <- function(data, mode, methods, output = NULL) {
   data$Hatch.Date     <- as.Date(data$Hatch.Date)
   data$Visit.Datetime <- as.POSIXct(data$Visit.Datetime, format = "%Y-%m-%d %H:%M:%S", tz = "")
 
+  # Force methods to be lowercase
+  methods <- tolower(methods)
+
   #####################################
   ###    Individual Methods         ###
   #####################################
 
-  # If individual methods were specified, loop through each individual method.
+
+  # Loop through each individual method.
   if (all(methods %in% letters[1:10])) {
     message("... Beginning to identify nesting attempts that do not meet the criteria. This may take a minute ...")
+
 
     # Start of methods loop:
     for (m in methods) {
