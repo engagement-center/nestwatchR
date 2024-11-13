@@ -20,18 +20,36 @@
 #' @export
 #'
 #' @examples
-#' test <- 1 + 2
-#'\dontrun{
+#' library(sf)
 #' set.seed(123)
-#' Generate random points and polygon
-#' points <- st_sfc(st_multipoint(matrix(runif(20, -10, 10), ncol = 2, byrow = TRUE)))
-#' polygon <- st_polygon(list(rbind(c(-5,-5), c(5,-5), c(5,5), c(-5,5), c(-5,-5))))
 #'
-#' nw.filterspatial(points, polygon, mode = "remove")
+#' # Define simple polygon
+#' square_coords <- matrix(c(0, 0,   # bottom-left
+#'                           1, 0,   # bottom-right
+#'                           1, 1,   # top-right
+#'                           0, 1,   # top-left
+#'                           0, 0),  # close the square back to bottom-left
+#'                         ncol = 2, byrow = TRUE)
 #'
+#' # Create an `sf` polygon
+#' square_polygon <- st_polygon(list(square_coords)) %>%
+#'   st_sfc() %>% st_sf() %>%
+#'   st_set_crs(4326)  # Set a coordinate reference system (WGS84)
 #'
-#'}
-nw.filterspatial  <- function(points, polygon, mode, buffer = NULL, buffer_units = NULL, buffer_output = NULL, proj = NULL, output = NULL) {
+#' # Generate random points around the square, convert to sf object
+#' random_points <- data.frame(Attempt.ID = seq(1:30),
+#'                             x = runif(30, -0.5, 1.5),
+#'                             y = runif(30, -0.5, 1.5))
+#' points_sf <- st_as_sf(random_points, coords = c("x", "y"), crs = 4326)
+#'
+#' # Run the spatial filter
+#' nw.filterspatial(points = points_sf,
+#'                  polygon = square_polygon,
+#'                  mode = "flag",
+#'                  proj = "+proj=longlat +datum=WGS84 +no_defs",
+#'                  output = "geofiltered.data")
+#' sum(is.na(geofiltered.data$Flagged.Location)) # Those points found to be within the polygon
+nw.filterspatial  <- function(points, polygon, mode, buffer = F, buffer_units = NULL, buffer_output = NULL, proj = NULL, output = NULL) {
 
   #####################################
   ###   Function Parameters Check   ###
@@ -54,7 +72,7 @@ nw.filterspatial  <- function(points, polygon, mode, buffer = NULL, buffer_units
     stop("Invalid 'mode'. Please provide either 'flag' or 'remove'.")
   }
   # Stop function if 'buffer' is provided and is not numeric
-  if (!is.null(buffer) && !is.numeric(buffer)) {
+  if (isTRUE(buffer) && !is.numeric(buffer)) {
     stop("Invalid 'buffer'. Buffer must be a numeric value.")
   }
   # Stop function if 'buffer_units' is provided and is not either "km" or "mi"
@@ -64,7 +82,7 @@ nw.filterspatial  <- function(points, polygon, mode, buffer = NULL, buffer_units
     }
   }
   # Stop function if one of 'buffer' and 'buffer_units' is provided but the other is not
-  if (!is.null(buffer)){
+  if (isTRUE(buffer)){
     if (is.null(buffer_units)) {
       stop("Missing 'buffer_units'. Please provide the units 'km' or 'mi' for the buffer.")
     }
@@ -81,8 +99,10 @@ nw.filterspatial  <- function(points, polygon, mode, buffer = NULL, buffer_units
     }
   }
   # Stops function if 'buffer_output' is not logical
-  if(!is.logical(buffer_output)) {
+  if(isTRUE(buffer) & !is.null(buffer_output)){
+    if(!is.logical(buffer_output)) {
     stop("Invalid 'buffer_output'. Value must be logical T or F.")
+    }
   }
   # Stops function if proj is not a PROJ.4 string
   if (!missing(proj)) {
