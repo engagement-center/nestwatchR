@@ -151,8 +151,8 @@ nw.filterphenology <- function(data, mode, phenology, output = NULL){
     ### Select attempts that did not have summary info which would trigger the previous flags
     ### Select checks where nest status != "no" or "in" -- some people enter empty box checks/incomplete nests  which we want to exclude here
     temp <- spp_data %>% filter(is.na(First.Lay.Date) | is.na(Hatch.Date) | is.na(Fledge.Date))  # if no summary dates provided, subset to temp
-    temp <- temp %>% filter(Nest.Status != "no")  # remove status "no nest" checks (ie. empy box)
-    temp <- temp %>% filter(Nest.Status != "in")  # remove status "incomplete nest" checks
+    temp <- temp %>% filter(Nest.Status != "no" | is.na(Nest.Status))  # remove status "no nest" checks (ie. empy box)
+    temp <- temp %>% filter(Nest.Status != "in" | is.na(Nest.Status))  # remove status "incomplete nest" checks
 
     temp <- temp %>% filter(!is.na(Visit.Datetime))
     temp <- temp %>% group_by(Attempt.ID) %>%
