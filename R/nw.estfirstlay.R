@@ -28,8 +28,8 @@
 #' @export
 #'
 #' @examples
-#' # Simplified NestWatch data with missing data
-#' # All hatch dates should be 2024-05-01
+#' # Simplified NestWatch dataset with missing data
+#' # All hatch dates should be estimated to be 2024-05-01
 #' data <- data.frame(Attempt.ID = c(1, 2, 3, 3),
 #'   Species.Code = rep("carwre", 4),
 #'   Visited.During.Egg.Laying = c(0, 0, NA, NA),
@@ -49,7 +49,8 @@
 #'                    Total = c(50, 40))
 #'
 #' # Run function
-#' nw.estfirstlay(data = data, phenology = phen)
+#' nw.estfirstlay(data = data, phenology = phen, output = "estimated.lay")
+#' all(estimated.lay$First.Lay.Date == "2024-05-01")
 
 nw.estfirstlay <- function(data, phenology, output = NULL) {
 
