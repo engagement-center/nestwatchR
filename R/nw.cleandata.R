@@ -62,7 +62,7 @@
 #'
 #' # Flag data not meeting procedures e, f, g, and h
 #' nw.cleandata(data = wrens, mode = "flag",
-#'              methods = c("a", "b", "c", "d", "e", "f", "g", "h"))
+#'              methods = c("e", "f", "g", "h"))
 #'
 #' # Remove data not meeting procedures i or j.
 #' nw.cleandata(data = wrens, mode = "remove",
