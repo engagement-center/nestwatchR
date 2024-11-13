@@ -39,9 +39,41 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' x <- 1+2
-#' }
+#' # Create phenology dataframe
+#' phenology <- data.frame(species = c("carwre"),
+#'                         lay = c(7),          # max observed
+#'                         incubation = c(20),  # mean plus some extra
+#'                         nestling = c(20),    # mean plus some extra
+#'                         total = c(50))       # mean plus some extra
+#'
+#'
+#' # Simplified NestWatch dataset with nest summary dates
+#' # Attempts 3 & 4 should be flagged (too long in incuation and nestling phases respectively)
+#' data <- data.frame(Attempt.ID = c("1", "2", "3", "4"),
+#'                    Species.Code = rep("carwre", 4),
+#'                    First.Lay.Date = as.Date(c("2024-05-01", "2024-05-01",
+#'                                               "2024-05-01", "2024-05-01")),
+#'                    Hatch.Date = as.Date(c("2024-05-20", "2024-05-21", "2024-06-10", "2024-05-21")),
+#'                    Fledge.Date = as.Date(c("2024-06-05", NA, "2024-06-25", "2024-06-30")),
+#'                    Visit.Datetime = c(rep(NA, 4)),
+#'                    Outcome = c("s1", "f", "s1", "s1"),
+#'                    Nest.Status = rep(NA, 4))
+nw.filterphenology(data = data, phenology = phenology, mode = "flag")
+
+
+# Simplified NestWatch dataset without nest summary dates (will look at total nest attempt duration from visit dates)
+# Attempt "2" should be flagged as being too long.
+data <- data.frame(Attempt.ID = c("1", "1", "2", "2"),
+                   Species.Code = rep("carwre", 4),
+                   First.Lay.Date = as.Date(rep(NA, 4)),
+                   Hatch.Date = as.Date(rep(NA, 4)),
+                   Fledge.Date = as.Date(rep(NA, 4)),
+                   Visit.Datetime = as.POSIXct(c("2024-05-01", "2024-06-15", "2024-05-01", "2024-07-30")),
+                   Outcome = c("s1", "s1", "s1", "s1"),
+                   Nest.Status = rep(NA, 4))
+nw.filterphenology(data = data, phenology = phenology, mode = "flag")
+
+
 nw.filterphenology <- function(data, mode, phenology, output = NULL){
 
   #####################################
