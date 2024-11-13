@@ -32,8 +32,6 @@ This repository is in early development with plans to add additional functions t
 
    🔲 Finish phenological filtering example in "filter" vignette
 
-   🔲 Add reproducible example short code to function documentations where missing
-   
    🔲 Internal testing
 
     

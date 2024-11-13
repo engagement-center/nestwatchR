@@ -20,9 +20,6 @@ attempts
 
 🔲 Finish phenological filtering example in “filter” vignette
 
-🔲 Add reproducible example short code to function documentations where
-missing
-
 🔲 Internal testing
 
 ## Overview :pushpin:
