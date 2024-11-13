@@ -22,7 +22,7 @@
 #' @export
 #'
 #' @examples
-#' # Example simplified NestWatch dataset with only single nest visits:
+#' # Example simplified NestWatch dataset:
 #' data <- data.frame(Attempt.ID = c(1, 2, 3, 4, 5, 6),
 #'                    Visit.ID = c(1, 2, 3, 4, 5, 6),
 #'                    Clutch.Size = c(1, NA, NA, NA, NA, NA),
@@ -36,8 +36,8 @@
 #' # Estimate Clutch Sizes if NA
 #' nw.estclutchsize(data = data, output = "out")
 #'
-#' out$Clutch.Size   # estimated values
-#' out$Clutch.Size.Estimated   # estimated binary indicator
+#' out$Clutch.Size   # clutch size values
+#' out$Clutch.Size.Estimated   # binary indicator if clutch size value is estimated or not
 nw.estclutchsize <- function(data, output = NULL){
 
   ###########################
