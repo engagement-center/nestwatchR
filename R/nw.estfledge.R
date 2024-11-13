@@ -30,6 +30,7 @@
 #' @examples
 #' # Simplified NestWatch data with missing data
 #' # All fledge dates if nest fledged (Outcome = s1) should be 2024-06-03
+#' # Notem Attemp.ID "4" failed to fledged (outcome = "f"), so a fledge date is not estimated
 #' data <- data.frame(Attempt.ID = c("1", "2", "3", "4"),
 #'                    Species.Code = rep("carwre", 4),
 #'                    First.Lay.Date = as.Date(c("2024-05-01", "2024-05-02",
@@ -42,12 +43,12 @@
 #'                    Outcome = c("s1", "s1", "s1", "f"))
 #'
 #' # Create phenology dataframe
-#' phenology <- data.frame(Species = c("bewwre", "carwre"),
-#'                         Clutch.Size  = c(5, 4),
-#'                         Eggs.per.Day = c(1, 1),
-#'                         Incubation   = c(16, 16),
-#'                         Nestling     = c(16, 13),
-#'                         Total = c(50, 40))
+#' phenology <- data.frame(Species = c("carwre"),
+#'                         Clutch.Size  = c(4),
+#'                         Eggs.per.Day = c(1),
+#'                         Incubation   = c(16),
+#'                         Nestling     = c(13),
+#'                         Total = c(40))
 #'
 #' nw.estfledge(data = data, phenology = phenology)
 nw.estfledge <- function(data, phenology, output = NULL) {
