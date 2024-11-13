@@ -75,7 +75,7 @@ remove "run-on" nest attempts or nests which do not match the specie's life hist
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">nw.filterphenology</span><span class="op">(</span><span class="va">data</span>, <span class="va">sp</span>, <span class="va">mode</span>, <span class="va">phenology</span>, output <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">nw.filterphenology</span><span class="op">(</span><span class="va">data</span>, <span class="va">mode</span>, <span class="va">phenology</span>, output <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -85,10 +85,6 @@ remove "run-on" nest attempts or nests which do not match the specie's life hist
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
 <dd><p>dataframe; A dataframe of merged NestWatch attempt and visits data. Date columns must have class <code>Date</code>
 and Datetime columns must have class <code>POSIXct</code>.</p></dd>
-
-
-<dt id="arg-sp">sp<a class="anchor" aria-label="anchor" href="#arg-sp"></a></dt>
-<dd><p>character vector; A character vector containing the species code for one or more species for which to filter the data.</p></dd>
 
 
 <dt id="arg-mode">mode<a class="anchor" aria-label="anchor" href="#arg-mode"></a></dt>
@@ -108,17 +104,64 @@ flagged with "FLAGGED" in a new column. Or removed from the dataset.</p></dd>
 <dt id="arg-output">output<a class="anchor" aria-label="anchor" href="#arg-output"></a></dt>
 <dd><p>character; An optional character string to custom name the output dataframe</p></dd>
 
+
+<dt id="arg-sp">sp<a class="anchor" aria-label="anchor" href="#arg-sp"></a></dt>
+<dd><p>character vector; A character vector containing the species code for one or more species for which to filter the data.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
     <p>dataframe</p>
     </div>
+    <div id="details">
+    <h2>Details</h2>
+    <p>This function calculates the number of days between <code>First.Lay.Date</code>, <code>Hatch.Date</code>, and <code>Fledge.Date</code> date values, comparing
+each to the user-provided acceptable date spans for each nest phase. Not all attempts contain these summary dates. An analyst may choose to explore
+<a href="nw.estclutchsize.html">nw.estclutchsize</a>, <a href="nw.estfirstlay.html">nw.estfirstlay</a>, <a href="nw.esthatch.html">nw.esthatch</a>, and <a href="nw.estfledge.html">nw.estfledge</a> functions
+to estimate these summary dates from the individual nest visit data prior to using this function. As an additional check, this function calculates
+the date span between the first and second to last nest check and compares this to the user-provided "total nesting period" value. The second to last
+date is used because participants may not check a nest when close to fledgling. For example, a participant may attempt to confirm a successful
+fledged nest when emptying a nets box at the end of the nesting season. In this case the last "nest check" may be weeks to months after the last
+activity at that nest.</p>
+    </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">+</span><span class="fl">2</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Create phenology dataframe</span></span></span>
+<span class="r-in"><span><span class="va">phenology</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"carwre"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                        lay <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">7</span><span class="op">)</span>,          <span class="co"># max observed</span></span></span>
+<span class="r-in"><span>                        incubation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span>,  <span class="co"># mean plus some extra</span></span></span>
+<span class="r-in"><span>                        nestling <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span>,    <span class="co"># mean plus some extra</span></span></span>
+<span class="r-in"><span>                        total <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span><span class="op">)</span><span class="op">)</span>       <span class="co"># mean plus some extra</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Simplified NestWatch dataset with nest summary dates</span></span></span>
+<span class="r-in"><span><span class="co"># Attempts 3 &amp; 4 should be flagged (too long in incuation and nestling phases respectively)</span></span></span>
+<span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Attempt.ID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1"</span>, <span class="st">"2"</span>, <span class="st">"3"</span>, <span class="st">"4"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                   Species.Code <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"carwre"</span>, <span class="fl">4</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                   First.Lay.Date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2024-05-01"</span>, <span class="st">"2024-05-01"</span>,</span></span>
+<span class="r-in"><span>                                              <span class="st">"2024-05-01"</span>, <span class="st">"2024-05-01"</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                   Hatch.Date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2024-05-20"</span>, <span class="st">"2024-05-21"</span>, <span class="st">"2024-06-10"</span>, <span class="st">"2024-05-21"</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                   Fledge.Date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2024-06-05"</span>, <span class="cn">NA</span>, <span class="st">"2024-06-25"</span>, <span class="st">"2024-06-30"</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                   Visit.Datetime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                   Outcome <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s1"</span>, <span class="st">"f"</span>, <span class="st">"s1"</span>, <span class="st">"s1"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                   Nest.Status <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">nw.filterphenology</span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span>, phenology <span class="op">=</span> <span class="va">phenology</span>, mode <span class="op">=</span> <span class="st">"flag"</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in nw.filterphenology(data = data, phenology = phenology, mode = "flag"):</span> Column 'Visit.Datetime' must be of class 'POSIXct' or 'POSIXt'.</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Simplified NestWatch dataset without nest summary dates (will look at total nest attempt duration from visit dates)</span></span></span>
+<span class="r-in"><span><span class="co"># Attempt "2" should be flagged as being too long.</span></span></span>
+<span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Attempt.ID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1"</span>, <span class="st">"1"</span>, <span class="st">"2"</span>, <span class="st">"2"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                   Species.Code <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"carwre"</span>, <span class="fl">4</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                   First.Lay.Date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                   Hatch.Date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                   Fledge.Date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                   Visit.Datetime <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2024-05-01"</span>, <span class="st">"2024-06-15"</span>, <span class="st">"2024-05-01"</span>, <span class="st">"2024-07-30"</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                   Outcome <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s1"</span>, <span class="st">"s1"</span>, <span class="st">"s1"</span>, <span class="st">"s1"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                   Nest.Status <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">nw.filterphenology</span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span>, phenology <span class="op">=</span> <span class="va">phenology</span>, mode <span class="op">=</span> <span class="st">"flag"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ... Identified nesting attempts have been noted with 'FLAGGED' in the new dataset in column 'Flagged.Attempt'.</span>
 </code></pre></div>
     </div>
   </div>

@@ -30,7 +30,7 @@ nw.cleantaxa(
   \item if \code{FALSE}, retains identified rows in the output dataframe.
 }}
 
-\item{hybrid}{logical; Should attempt with "(hybird)" be removed?
+\item{hybrid}{logical; Should attempt with "(hybrid)" be removed?
  \itemize{
   \item if \code{NULL}, the default, retains identified rows in the output dataframe.
   \item if \code{TRUE}, removes identified rows from the output dataframe.
@@ -63,7 +63,7 @@ are not biologically relevant to the analysis. This function will update both th
 according to the current version of eBird taxonomy in \code{\link[auk:ebird_taxonomy]{auk::ebird_taxonomy}}.
 }
 \examples{
-# data with species name variations
+# Data with species name variations
 df <- data.frame(Attempt.ID = c(1, 1, 2, 3, 4),
                  Species.Name = c("House Wren (northern)", "House Wren (northern)",
                                  "chickadee sp.", "Tree/Violet-green Swallow",
@@ -74,7 +74,7 @@ df <- data.frame(Attempt.ID = c(1, 1, 2, 3, 4),
 nw.cleantaxa(df, spuh = TRUE)
 
 # Remove "/" and hybrid attempts, roll up subspecies to species
-nw.cleantaxa(df, slash = TRUE, hybrid = FALSE, rollsubspecies = TRUE)
+nw.cleantaxa(df, slash = TRUE, hybrid = TRUE, rollsubspecies = TRUE)
 }
 \seealso{
 \code{\link[auk:ebird_taxonomy]{auk::ebird_taxonomy}}

@@ -104,7 +104,7 @@ a "taxonomic roll up" of subspecies to the species level.</p>
 
 
 <dt id="arg-hybrid">hybrid<a class="anchor" aria-label="anchor" href="#arg-hybrid"></a></dt>
-<dd><p>logical; Should attempt with "(hybird)" be removed?</p><ul><li><p>if <code>NULL</code>, the default, retains identified rows in the output dataframe.</p></li>
+<dd><p>logical; Should attempt with "(hybrid)" be removed?</p><ul><li><p>if <code>NULL</code>, the default, retains identified rows in the output dataframe.</p></li>
 <li><p>if <code>TRUE</code>, removes identified rows from the output dataframe.</p></li>
 <li><p>if <code>FALSE</code>, retains identified rows in the output dataframe.</p></li>
 </ul></dd>
@@ -142,7 +142,7 @@ according to the current version of eBird taxonomy in <code><a href="https://cor
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># data with species name variations</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Data with species name variations</span></span></span>
 <span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Attempt.ID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                 Species.Name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"House Wren (northern)"</span>, <span class="st">"House Wren (northern)"</span>,</span></span>
 <span class="r-in"><span>                                 <span class="st">"chickadee sp."</span>, <span class="st">"Tree/Violet-green Swallow"</span>,</span></span>
@@ -153,7 +153,7 @@ according to the current version of eBird taxonomy in <code><a href="https://cor
 <span class="r-in"><span><span class="fu">nw.cleantaxa</span><span class="op">(</span><span class="va">df</span>, spuh <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Remove "/" and hybrid attempts, roll up subspecies to species</span></span></span>
-<span class="r-in"><span><span class="fu">nw.cleantaxa</span><span class="op">(</span><span class="va">df</span>, slash <span class="op">=</span> <span class="cn">TRUE</span>, hybrid <span class="op">=</span> <span class="cn">FALSE</span>, rollsubspecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">nw.cleantaxa</span><span class="op">(</span><span class="va">df</span>, slash <span class="op">=</span> <span class="cn">TRUE</span>, hybrid <span class="op">=</span> <span class="cn">TRUE</span>, rollsubspecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </div>

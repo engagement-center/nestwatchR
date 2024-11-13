@@ -8,7 +8,7 @@ nw.filterspatial(
   points,
   polygon,
   mode,
-  buffer = NULL,
+  buffer = F,
   buffer_units = NULL,
   buffer_output = NULL,
   proj = NULL,
@@ -40,15 +40,33 @@ Use a geospatial polygon to identify or remove points located outside the polygo
 option buffer argument which can be used to add a specific distance buffer around the polygon prior to filtering.
 }
 \examples{
-test <- 1 + 2
-\dontrun{
+library(dplyr)
 set.seed(123)
-Generate random points and polygon
-points <- st_sfc(st_multipoint(matrix(runif(20, -10, 10), ncol = 2, byrow = TRUE)))
-polygon <- st_polygon(list(rbind(c(-5,-5), c(5,-5), c(5,5), c(-5,5), c(-5,-5))))
 
-nw.filterspatial(points, polygon, mode = "remove")
+# Define simple polygon
+square_coords <- matrix(c(0, 0,   # bottom-left
+                          1, 0,   # bottom-right
+                          1, 1,   # top-right
+                          0, 1,   # top-left
+                          0, 0),  # close the square back to bottom-left
+                        ncol = 2, byrow = TRUE)
 
+# Create an `sf` polygon
+square_polygon <- sf::st_polygon(list(square_coords)) \%>\%
+                  sf::st_sfc() \%>\% sf::st_sf() \%>\%
+                  sf::st_set_crs(4326)  # Set a coordinate reference system (WGS84)
 
-}
+# Generate random points around the square, convert to sf object
+random_points <- data.frame(Attempt.ID = seq(1:30),
+                            x = runif(30, -0.5, 1.5),
+                            y = runif(30, -0.5, 1.5))
+points_sf <- sf::st_as_sf(random_points, coords = c("x", "y"), crs = 4326)
+
+# Run the spatial filter
+nw.filterspatial(points = points_sf,
+                  polygon = square_polygon,
+                  mode = "flag",
+                  proj = "+proj=longlat +datum=WGS84 +no_defs",
+                  output = "geofiltered.data")
+
 }

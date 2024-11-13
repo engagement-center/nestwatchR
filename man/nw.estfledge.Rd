@@ -16,7 +16,7 @@ nw.estfledge(data, phenology, output = NULL)
  \item \code{Eggs.per.Day}: Average number of eggs laid per day by each species.
  \item \code{Incubation}: Average number of days spent in incubation (days between clutch complete and hatch).
  \item \code{Nestling}: Average number of days spent in nestling period (days between hatch and fledge).
- \item \code{Total.Nesting.Period}: Average number of days between first lay date and fledge date.
+ \item \code{Total}: Average number of days between first lay date and fledge date.
  }}
 
 \item{output}{character; An optional character string to custom name the output dataframe}
@@ -27,9 +27,9 @@ dataframe
 \description{
 Fledge Date data may be important for investigating relationships between nesting success and environmental variables. These data
 in the NestWatch dataset are provided by participants, and the input of these dates may be overlooked by the participants. If not explicitly
-provided by the participant, fledge date may be estimated based off hatch date of first lay date. This function checks, in order, if the nest
+provided by the participant, fledge date may be estimated based off hatch date or first lay date. This function checks, in order, if the nest
 fledged successfully, and if a Hatch.Date was recorded or then if a First.Lay.Date was recorded. If these requirements are met, the function
-uses user-input nest phenology timeframes to estimate fledge date. Estimated dates are denoted with a \code{1} in \code{data$Fledge.Date.Estimated}.
+uses user-input nest phenology time frames to estimate fledge date. Estimated dates are denoted with a \code{1} in \code{data$Fledge.Date.Estimated}.
 }
 \details{
 Precision of the fledge date estimates depend on what data is used to estimate the values from (and if those values are estimated). Users
@@ -41,6 +41,7 @@ or user-provided average clutch size) and eggs-per-day of the species. #'
 \examples{
 # Simplified NestWatch data with missing data
 # All fledge dates if nest fledged (Outcome = s1) should be 2024-06-03
+# Notem Attemp.ID "4" failed to fledged (outcome = "f"), so a fledge date is not estimated
 data <- data.frame(Attempt.ID = c("1", "2", "3", "4"),
                    Species.Code = rep("carwre", 4),
                    First.Lay.Date = as.Date(c("2024-05-01", "2024-05-02",
@@ -53,12 +54,12 @@ data <- data.frame(Attempt.ID = c("1", "2", "3", "4"),
                    Outcome = c("s1", "s1", "s1", "f"))
 
 # Create phenology dataframe
-phenology <- data.frame(Species = c("bewwre", "carwre"),
-                        Clutch.Size  = c(5, 4),
-                        Eggs.per.Day = c(1, 1),
-                        Incubation   = c(16, 16),
-                        Nestling     = c(16, 13),
-                        Total.Nesting.Period = c(50, 40))
+phenology <- data.frame(Species = c("carwre"),
+                        Clutch.Size  = c(4),
+                        Eggs.per.Day = c(1),
+                        Incubation   = c(16),
+                        Nestling     = c(13),
+                        Total = c(40))
 
 nw.estfledge(data = data, phenology = phenology)
 }

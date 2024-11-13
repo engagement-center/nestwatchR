@@ -89,7 +89,7 @@ This function provides several common procedures that NestWatch staff have ident
 
 
 <dt id="arg-methods">methods<a class="anchor" aria-label="anchor" href="#arg-methods"></a></dt>
-<dd><p>character vector; A vector containing any of the letters <code>a:j</code>, or <code>"all"</code>, identifying each cleaning procedure to be conducted on the data. See <strong>Details</strong> below and the vignette for details on each procedure.</p></dd>
+<dd><p>character vector; A vector containing any of the letters <code>a:j</code> (not case- or order-sensitive), identifying each cleaning procedure to be conducted on the data. See <strong>Details</strong> below and the vignette for details on each procedure.</p></dd>
 
 
 <dt id="arg-output">output<a class="anchor" aria-label="anchor" href="#arg-output"></a></dt>
@@ -147,7 +147,7 @@ deciding what cleaning procedures to conduct. This function contains 10 cleaning
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Flag data not meeting procedures e, f, g, and h</span></span></span>
 <span class="r-in"><span><span class="fu">nw.cleandata</span><span class="op">(</span>data <span class="op">=</span> <span class="va">wrens</span>, mode <span class="op">=</span> <span class="st">"flag"</span>,</span></span>
-<span class="r-in"><span>             methods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>, <span class="st">"d"</span>, <span class="st">"e"</span>, <span class="st">"f"</span>, <span class="st">"g"</span>, <span class="st">"h"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>             methods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"e"</span>, <span class="st">"f"</span>, <span class="st">"g"</span>, <span class="st">"h"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ... Beginning to identify nesting attempts that do not meet the criteria. This may take a minute ...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ... Identified nesting attempts have been noted with 'FLAGGED' in the new dataset in column 'Flagged.Attempt'.</span>
 <span class="r-in"><span></span></span>

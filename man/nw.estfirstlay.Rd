@@ -38,8 +38,8 @@ as there is less variability in eggs laid per day than number of incubation days
 latitude, climate, and other factors).
 }
 \examples{
-# Simplified NestWatch data with missing data
-# All hatch dates should be 2024-05-01
+# Simplified NestWatch dataset with missing data
+# All hatch dates should be estimated to be 2024-05-01
 data <- data.frame(Attempt.ID = c(1, 2, 3, 3),
   Species.Code = rep("carwre", 4),
   Visited.During.Egg.Laying = c(0, 0, NA, NA),
@@ -51,13 +51,14 @@ data <- data.frame(Attempt.ID = c(1, 2, 3, 3),
   Host.Eggs.Count = c(0, 0, 2, 4))
 
 # Create phenology dataframe
-phen <- data.frame(Species = c("bewwre", "carwre"),
-                   Clutch.Size  = c(5, 4),
-                   Eggs.per.Day = c(1, 1),
-                   Incubation   = c(16, 16),
-                   Nestling     = c(16, 13),
-                   Total.Nesting.Period = c(50, 40))
+phen <- data.frame(Species = c("carwre"),
+                   Clutch.Size  = c(4),
+                   Eggs.per.Day = c(1),
+                   Incubation   = c(16),
+                   Nestling     = c(13),
+                   Total = c(40))
 
 # Run function
-nw.estfirstlay(data = data, phenology = phen)
+nw.estfirstlay(data = data, phenology = phen, output = "estimated.lay")
+all(estimated.lay$First.Lay.Date == "2024-05-01")
 }

@@ -20,6 +20,7 @@
 #' @export
 #'
 #' @examples
+#' library(dplyr)
 #' set.seed(123)
 #'
 #' # Define simple polygon

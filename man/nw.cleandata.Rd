@@ -11,7 +11,7 @@ nw.cleandata(data, mode, methods, output = NULL)
 
 \item{mode}{\code{"flag"} or \code{"remove"}; A character string defining if the user wants the identified nesting attempts to be flagged with "FLAGGED" in a new column. Or removed from the dataset.}
 
-\item{methods}{character vector; A vector containing any of the letters \code{a:j}, or \code{"all"}, identifying each cleaning procedure to be conducted on the data. See \strong{Details} below and the vignette for details on each procedure.}
+\item{methods}{character vector; A vector containing any of the letters \code{a:j} (not case- or order-sensitive), identifying each cleaning procedure to be conducted on the data. See \strong{Details} below and the vignette for details on each procedure.}
 
 \item{output}{character; An optional character string to custom name the output dataframe.}
 }
@@ -72,7 +72,7 @@ wrens <- nestwatchR::wren_quickstart
 
 # Flag data not meeting procedures e, f, g, and h
 nw.cleandata(data = wrens, mode = "flag",
-             methods = c("a", "b", "c", "d", "e", "f", "g", "h"))
+             methods = c("e", "f", "g", "h"))
 
 # Remove data not meeting procedures i or j.
 nw.cleandata(data = wrens, mode = "remove",

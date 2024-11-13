@@ -96,7 +96,7 @@ estimate hatch date date. Estimated dates are denoted with a <code>1</code> in <
 <li><p><code>Eggs.per.Day</code>: Average number of eggs laid per day by each species.</p></li>
 <li><p><code>Incubation</code>: Average number of days spent in incubation (days between clutch complete and hatch).</p></li>
 <li><p><code>Nestling</code>: Average number of days spent in nestling period (days between hatch and fledge).</p></li>
-<li><p><code>Total.Nesting.Period</code>: Average number of days between first lay date and fledge date.</p></li>
+<li><p><code>Total</code>: Average number of days between first lay date and fledge date.</p></li>
 </ul></dd>
 
 
@@ -133,16 +133,16 @@ from estimated fledge dates.</p>
 <span class="r-in"><span>                   Outcome <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s1"</span>, <span class="st">"s1"</span>, <span class="st">"s1"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Create phenology dataframe</span></span></span>
-<span class="r-in"><span><span class="va">phenology</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bewwre"</span>, <span class="st">"carwre"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                        Clutch.Size  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">4</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                        Eggs.per.Day <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                        Incubation   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">16</span>, <span class="fl">16</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                        Nestling     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">16</span>, <span class="fl">13</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                        Total.Nesting.Period <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">40</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">phenology</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"carwre"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                        Clutch.Size  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                        Eggs.per.Day <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                        Incubation   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">16</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                        Nestling     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">13</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                        Total <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">40</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Run function</span></span></span>
 <span class="r-in"><span><span class="fu">nw.esthatch</span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span>, phenology <span class="op">=</span> <span class="va">phenology</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in nw.esthatch(data = data, phenology = phenology):</span> Augument 'phenology' must be a dataframe, see ?nw.estfirstlay() for details.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ... Estimating hatch dates, this may take some time ...</span>
 </code></pre></div>
     </div>
   </div>

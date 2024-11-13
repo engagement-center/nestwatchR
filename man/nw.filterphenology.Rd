@@ -4,13 +4,11 @@
 \alias{nw.filterphenology}
 \title{Filter Nesting Attempts Based on Expected Nest Phenological Periods}
 \usage{
-nw.filterphenology(data, sp, mode, phenology, output = NULL)
+nw.filterphenology(data, mode, phenology, output = NULL)
 }
 \arguments{
 \item{data}{dataframe; A dataframe of merged NestWatch attempt and visits data. Date columns must have class \code{Date}
 and Datetime columns must have class \code{POSIXct}.}
-
-\item{sp}{character vector; A character vector containing the species code for one or more species for which to filter the data.}
 
 \item{mode}{\code{"flag"} or \code{"remove"}; A character string defining if the user wants the identified nesting attempts to be
 flagged with "FLAGGED" in a new column. Or removed from the dataset.}
@@ -25,6 +23,8 @@ flagged with "FLAGGED" in a new column. Or removed from the dataset.}
  }}
 
 \item{output}{character; An optional character string to custom name the output dataframe}
+
+\item{sp}{character vector; A character vector containing the species code for one or more species for which to filter the data.}
 }
 \value{
 dataframe
@@ -35,8 +35,48 @@ recorded to have nesting phenologies of unexpected lengths. This function allows
 using expected days in the lay, incubation, nestling, and total nesting periods. By defining these allowable time frames a user can flag or
 remove "run-on" nest attempts or nests which do not match the specie's life history.
 }
-\examples{
-\dontrun{
-x <- 1+2
+\details{
+This function calculates the number of days between \code{First.Lay.Date}, \code{Hatch.Date}, and \code{Fledge.Date} date values, comparing
+each to the user-provided acceptable date spans for each nest phase. Not all attempts contain these summary dates. An analyst may choose to explore
+\link[nestwatchR]{nw.estclutchsize}, \link[nestwatchR]{nw.estfirstlay}, \link[nestwatchR]{nw.esthatch}, and \link[nestwatchR]{nw.estfledge} functions
+to estimate these summary dates from the individual nest visit data prior to using this function. As an additional check, this function calculates
+the date span between the first and second to last nest check and compares this to the user-provided "total nesting period" value. The second to last
+date is used because participants may not check a nest when close to fledgling. For example, a participant may attempt to confirm a successful
+fledged nest when emptying a nets box at the end of the nesting season. In this case the last "nest check" may be weeks to months after the last
+activity at that nest.
 }
+\examples{
+# Create phenology dataframe
+phenology <- data.frame(species = c("carwre"),
+                        lay = c(7),          # max observed
+                        incubation = c(20),  # mean plus some extra
+                        nestling = c(20),    # mean plus some extra
+                        total = c(50))       # mean plus some extra
+
+
+# Simplified NestWatch dataset with nest summary dates
+# Attempts 3 & 4 should be flagged (too long in incuation and nestling phases respectively)
+data <- data.frame(Attempt.ID = c("1", "2", "3", "4"),
+                   Species.Code = rep("carwre", 4),
+                   First.Lay.Date = as.Date(c("2024-05-01", "2024-05-01",
+                                              "2024-05-01", "2024-05-01")),
+                   Hatch.Date = as.Date(c("2024-05-20", "2024-05-21", "2024-06-10", "2024-05-21")),
+                   Fledge.Date = as.Date(c("2024-06-05", NA, "2024-06-25", "2024-06-30")),
+                   Visit.Datetime = c(rep(NA, 4)),
+                   Outcome = c("s1", "f", "s1", "s1"),
+                   Nest.Status = rep(NA, 4))
+nw.filterphenology(data = data, phenology = phenology, mode = "flag")
+
+
+# Simplified NestWatch dataset without nest summary dates (will look at total nest attempt duration from visit dates)
+# Attempt "2" should be flagged as being too long.
+data <- data.frame(Attempt.ID = c("1", "1", "2", "2"),
+                   Species.Code = rep("carwre", 4),
+                   First.Lay.Date = as.Date(rep(NA, 4)),
+                   Hatch.Date = as.Date(rep(NA, 4)),
+                   Fledge.Date = as.Date(rep(NA, 4)),
+                   Visit.Datetime = as.POSIXct(c("2024-05-01", "2024-06-15", "2024-05-01", "2024-07-30")),
+                   Outcome = c("s1", "s1", "s1", "s1"),
+                   Nest.Status = rep(NA, 4))
+nw.filterphenology(data = data, phenology = phenology, mode = "flag")
 }

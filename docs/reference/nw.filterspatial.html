@@ -75,7 +75,7 @@ option buffer argument which can be used to add a specific distance buffer aroun
 <span>  <span class="va">points</span>,</span>
 <span>  <span class="va">polygon</span>,</span>
 <span>  <span class="va">mode</span>,</span>
-<span>  buffer <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  buffer <span class="op">=</span> <span class="cn">F</span>,</span>
 <span>  buffer_units <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  buffer_output <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  proj <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -126,7 +126,46 @@ option buffer argument which can be used to add a specific distance buffer aroun
 
     <div id="ref-examples">
     <h2>Examples</h2>
-
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: 'dplyr'</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from 'package:stats':</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     filter, lag</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from 'package:base':</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     intersect, setdiff, setequal, union</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Define simple polygon</span></span></span>
+<span class="r-in"><span><span class="va">square_coords</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>,   <span class="co"># bottom-left</span></span></span>
+<span class="r-in"><span>                          <span class="fl">1</span>, <span class="fl">0</span>,   <span class="co"># bottom-right</span></span></span>
+<span class="r-in"><span>                          <span class="fl">1</span>, <span class="fl">1</span>,   <span class="co"># top-right</span></span></span>
+<span class="r-in"><span>                          <span class="fl">0</span>, <span class="fl">1</span>,   <span class="co"># top-left</span></span></span>
+<span class="r-in"><span>                          <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,  <span class="co"># close the square back to bottom-left</span></span></span>
+<span class="r-in"><span>                        ncol <span class="op">=</span> <span class="fl">2</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Create an `sf` polygon</span></span></span>
+<span class="r-in"><span><span class="va">square_polygon</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_polygon</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">square_coords</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>                  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sf.html" class="external-link">st_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>                  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_set_crs</a></span><span class="op">(</span><span class="fl">4326</span><span class="op">)</span>  <span class="co"># Set a coordinate reference system (WGS84)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Generate random points around the square, convert to sf object</span></span></span>
+<span class="r-in"><span><span class="va">random_points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Attempt.ID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                            x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">30</span>, <span class="op">-</span><span class="fl">0.5</span>, <span class="fl">1.5</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                            y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">30</span>, <span class="op">-</span><span class="fl">0.5</span>, <span class="fl">1.5</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">points_sf</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">random_points</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Run the spatial filter</span></span></span>
+<span class="r-in"><span><span class="fu">nw.filterspatial</span><span class="op">(</span>points <span class="op">=</span> <span class="va">points_sf</span>,</span></span>
+<span class="r-in"><span>                  polygon <span class="op">=</span> <span class="va">square_polygon</span>,</span></span>
+<span class="r-in"><span>                  mode <span class="op">=</span> <span class="st">"flag"</span>,</span></span>
+<span class="r-in"><span>                  proj <span class="op">=</span> <span class="st">"+proj=longlat +datum=WGS84 +no_defs"</span>,</span></span>
+<span class="r-in"><span>                  output <span class="op">=</span> <span class="st">"geofiltered.data"</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>attribute variables are assumed to be spatially constant throughout all geometries</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ... Identified nesting attempts have been noted with 'FLAGGED' in the new dataset in column 'Flagged.Location'.</span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
     </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
