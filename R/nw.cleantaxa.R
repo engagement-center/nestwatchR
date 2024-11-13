@@ -26,7 +26,7 @@
 #'   \item if \code{TRUE}, removes identified rows from the output dataframe.
 #'   \item if \code{FALSE}, retains identified rows in the output dataframe.
 #' }
-#' @param hybrid logical; Should attempt with "(hybird)" be removed?
+#' @param hybrid logical; Should attempt with "(hybrid)" be removed?
 #'  \itemize{
 #'   \item if \code{NULL}, the default, retains identified rows in the output dataframe.
 #'   \item if \code{TRUE}, removes identified rows from the output dataframe.
@@ -46,7 +46,7 @@
 #' @export
 #'
 #' @examples
-#' # data with species name variations
+#' # Data with species name variations
 #' df <- data.frame(Attempt.ID = c(1, 1, 2, 3, 4),
 #'                  Species.Name = c("House Wren (northern)", "House Wren (northern)",
 #'                                  "chickadee sp.", "Tree/Violet-green Swallow",
@@ -57,7 +57,7 @@
 #' nw.cleantaxa(df, spuh = TRUE)
 #'
 #' # Remove "/" and hybrid attempts, roll up subspecies to species
-#' nw.cleantaxa(df, slash = TRUE, hybrid = FALSE, rollsubspecies = TRUE)
+#' nw.cleantaxa(df, slash = TRUE, hybrid = TRUE, rollsubspecies = TRUE)
 nw.cleantaxa <- function(data, spuh = FALSE, slash = FALSE, hybrid = FALSE, rollsubspecies = FALSE, output = NULL){
 
   # Remove "spuhs" from the data
