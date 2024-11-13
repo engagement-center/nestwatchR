@@ -44,12 +44,12 @@
 #'                    Outcome = c("s1", "s1", "s1"))
 #'
 #' # Create phenology dataframe
-#' phenology <- data.frame(Species = c("bewwre", "carwre"),
-#'                         Clutch.Size  = c(5, 4),
-#'                         Eggs.per.Day = c(1, 1),
-#'                         Incubation   = c(16, 16),
-#'                         Nestling     = c(16, 13),
-#'                         Total = c(50, 40))
+#' phenology <- data.frame(Species = c("carwre"),
+#'                         Clutch.Size  = c(4),
+#'                         Eggs.per.Day = c(1),
+#'                         Incubation   = c(16),
+#'                         Nestling     = c(13),
+#'                         Total = c(40))
 #'
 #' # Run function
 #' nw.esthatch(data = data, phenology = phenology)

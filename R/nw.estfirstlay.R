@@ -41,12 +41,12 @@
 #'   Host.Eggs.Count = c(0, 0, 2, 4))
 #'
 #' # Create phenology dataframe
-#' phen <- data.frame(Species = c("bewwre", "carwre"),
-#'                    Clutch.Size  = c(5, 4),
-#'                    Eggs.per.Day = c(1, 1),
-#'                    Incubation   = c(16, 16),
-#'                    Nestling     = c(16, 13),
-#'                    Total = c(50, 40))
+#' phen <- data.frame(Species = c("carwre"),
+#'                    Clutch.Size  = c(4),
+#'                    Eggs.per.Day = c(1),
+#'                    Incubation   = c(16),
+#'                    Nestling     = c(13),
+#'                    Total = c(40))
 #'
 #' # Run function
 #' nw.estfirstlay(data = data, phenology = phen, output = "estimated.lay")
