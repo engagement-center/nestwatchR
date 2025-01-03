@@ -35,13 +35,20 @@
 #'         from nests being located in water bodies and/or participants entering incorrect coordinates. Consider removing the “XX” attempts if the
 #'         coordinates are implausible for the focal species and consider inclusion if analyzing coastal or water-nesting species (e.g., Osprey
 #'         nesting on channel markers).
-#'        \item \code{i}: Flag/remove attempts with impossible nesting periods. Incorrect years are sometimes entered between date summary fields
+#'        \item \code{i}: Flag/remove attempts where the number of eggs or young decrease and then subsequently increase. This may happen if
+#'        a nest fails and a new attempt is started at the same location, which should be two individual nesting attempts. If the analyst is
+#'        looking at host response to depredation events or egg dumping you may choose to retain these records.
+#'        \item \code{j}: Flag/remove attempts with impossible nesting periods. Incorrect years are sometimes entered between date summary fields
 #'        by participants. This may produce impossibly long nesting periods. To account for nesting phenologies in all hemispheres, this procedure
 #'        identifies attempts in which (1) Fledge Date - First Lay Date > 365 days, (2) Hatch Date - First Lay Date > 84 days, or (3) Fledge Date
 #'         - Hatch Date > 300 days. These dates represent the maximum nest phenological period for any bird species and are not realistic for the
 #'        majority of the NestWatch dataset. We encourage users to determine reasonable phenologies for their species of interest and use
+#'        \item \code{l}: Flag/remove nest checks which occur after the nest fledged or failed according to the number of young or eggs
+#'        in the nest checks data. Participants my continue to check nests after an observed fledge or fail resulting in abnormally long nest attempts.
+#'        This will identify many but not all checks post-fledge/fail as some fledge/fail statuses are unobserved and only determined at the
+#'        end of breeding season (i.e. cleaning out a nest box in the fall).
 #'        \code{\link[nestwatchR:nw.filterphenology]{nw.filterphenology}} to run a finer filter on nest phenology dates.
-#'        \item \code{j}: Flag/remove attempts where the # days between the first and the last visit are > 365 days. Additional check to identify
+#'        \item \code{k}: Flag/remove attempts where the # days between the first and the last visit are > 365 days. Additional check to identify
 #'        nest attempts where year portion of dates between nest visits were likely incorrectly entered. A user may choose to review these attempts
 #'        individually to verify if a typo occurred.
 #' }
@@ -64,9 +71,9 @@
 #' nw.cleandata(data = wrens, mode = "flag",
 #'              methods = c("e", "f", "g", "h"))
 #'
-#' # Remove data not meeting procedures i or j.
+#' # Remove data not meeting procedures j or k.
 #' nw.cleandata(data = wrens, mode = "remove",
-#'              methods = c("i", "j"))
+#'              methods = c("j", "k"))
 nw.cleandata  <- function(data, mode, methods, output = NULL) {
 
   #####################################                                         # Stops the function if the provided arguments are not correctly provided
@@ -86,7 +93,7 @@ nw.cleandata  <- function(data, mode, methods, output = NULL) {
     stop("Invalid 'methods'. See ?nw.cleandata for descriptions.")
   }
   # If 'methods' contains any invalid characters, stop the function.
-  valid_methods <- c(letters[1:10], LETTERS[1:10])
+  valid_methods <- c(letters[1:12], LETTERS[1:12])
   if (!all(methods %in% valid_methods)) {
     stop("Invalid 'methods'. See ?nw.cleandata for descriptions.")
   }# end of parameter check
@@ -120,7 +127,7 @@ nw.cleandata  <- function(data, mode, methods, output = NULL) {
 
 
   # Loop through each individual method.
-  if (all(methods %in% letters[1:10])) {
+  if (all(methods %in% letters[1:12])) {
     message("... Beginning to identify nesting attempts that do not meet the criteria. This may take a minute ...")
 
 
@@ -188,6 +195,45 @@ nw.cleandata  <- function(data, mode, methods, output = NULL) {
 
       } else if (m == "i") {
         # Code block for method "i"
+        # I. Flag attempts where the number of eggs or young decrease and then increase
+
+        # Function to check for egg or young count changes
+        check_unacceptable <- function(counts) {        # counts can be Host.Egg.Count or Live.Host.Young
+          decrease_indices <- which(diff(counts) < 0)   # Find indices where the count decreases
+
+          # If no decrease, it's acceptable
+          if (length(decrease_indices) == 0) {
+            return(FALSE)
+          }
+
+          # Check if any count after the first decrease is greater than any count before
+          first_decrease <- decrease_indices[1]
+          before_decrease <- counts[1:first_decrease]
+          after_decrease <- counts[(first_decrease + 1):length(counts)]
+          any(after_decrease > max(before_decrease))
+        } # end count function
+
+
+        # Apply the function to each Attempt for Egg Counts
+        temp <- data %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime) %>%
+          summarize(Unacceptable = check_unacceptable(Host.Eggs.Count),  # apply function for eggs
+                    .groups = "drop")
+        toflag <- temp %>% filter(Unacceptable) %>% pull(Attempt.ID) %>% unique()      # flagged eggs count attempts
+        rows <- which(data$Attempt.ID %in% toflag)
+        data$Flagged.Attempt[rows] <- "FLAGGED"
+
+        # Apply the function to each Attempt for Young Counts
+        temp <- data %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime) %>%
+          summarize(Unacceptable = check_unacceptable(Live.Host.Young.Count), # apply function for young
+                    .groups = "drop")
+        toflag <- temp %>% filter(Unacceptable) %>% pull(Attempt.ID) %>% unique()      # flagged young count attempts
+        rows <- which(data$Attempt.ID %in% toflag)
+        data$Flagged.Attempt[rows] <- "FLAGGED"
+
+
+
+      } else if (m == "j") {
+        # Code block for method "j"
         # I. Flag attempts with nest periods > absolute max of any bird
         #    Stepping through different nest stages looking for if any summary date data was provided to work off of
         # Find attempts where Fledge - Lay > 365 (Snowy Albatross)
@@ -227,19 +273,39 @@ nw.cleandata  <- function(data, mode, methods, output = NULL) {
         data$Flagged.Attempt[rows] <- "FLAGGED"
         rm(temp)
 
-      } else if (m == "j") {
-        # J. Flag attempts where the #days between the first check and the last check are < 365 days (Snowy Albatross nets span)
-        temp <- data %>% select(c("Attempt.ID", "Visit.Datetime"))
-        temp$Visit.Datetime <- gsub(" .*", "", temp$Visit.Datetime)
-        temp <- temp %>% filter(!is.na(Visit.Datetime))
-        # Convert to unix dates
-        temp$Visit.Datetime <- as.numeric(as.Date(temp$Visit.Datetime))
-        temp <- group_by(temp, Attempt.ID)
-        temp <- temp %>% summarise(min_date = min(Visit.Datetime), max_date = max(Visit.Datetime))
-        temp <- temp %>% mutate(date_diff = as.numeric(max_date - min_date))
-        toflag <- temp %>% filter(temp$date_diff > 365) %>% pull("Attempt.ID") %>% unique()
-        rows <- which(data$Attempt.ID %in% toflag)
+      } else if (m == "k") {
+        # J. Flag attempts where the # days between the first check and the last check are < 365 days (Snowy Albatross nest span)
+        temp <- data %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime) %>%                             # group by attempt
+                         mutate(date_span = as.numeric(max(Visit.Datetime) - min(Visit.Datetime))) %>%    # calc max check date span
+                         filter(date_span >= 365) %>%                                                     # filter to long attempts
+                         pull(Attempt.ID) %>% unique()                                                    # get unique attempt.ids to flag
+        # Flag attempts
+        rows <- which(data$Attempt.ID %in% temp)
         data$Flagged.Attempt[rows] <- "FLAGGED"
+        rm(temp)
+
+
+      } else if (m == "l") {
+        # L. Trim trailing nest checks post fledge/fail
+        # Create a column to designate if each attempt had or did not have live young at any point
+        temp <- temp %>% group_by(Attempt.ID) %>% mutate(had_young = any(Live.Host.Young.Count > 0, na.rm = TRUE))
+
+        # If young were present:
+        temp_1 <- temp %>% filter(had_young == TRUE)
+        temp_1 <- temp_1 %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime) %>%        # group checks by attempt and arrange by date
+          mutate(ZeroCount = cumsum(Live.Host.Young.Count == 0)) %>%  # Count occurrences of 0 young
+          filter(!(ZeroCount > 1 & Live.Host.Young.Count == 0)) %>%   # Remove rows after 1 zero (observed fledge/fail date)
+          select(-ZeroCount)
+        # If young were not present:
+        temp_2 <- temp %>% filter(had_young == FALSE)
+        temp_2 <- temp_2 %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime) %>%      # group checks by attempt and arrange by date
+          mutate(ZeroCount = cumsum(Host.Eggs.Count == 0)) %>%      # Count occurrences of 0
+          filter(!(ZeroCount > 2 & Host.Eggs.Count == 0)) %>%       # Remove rows after 1 zeros
+          select(-ZeroCount) %>%                                    # Clean up temporary column
+          mutate(period_length = as.numeric(max(Visit.Datetime) -   # calc nesting period in # days
+                                              min(Visit.Datetime)))
+
+
       } # end last method code chunk
 
 
