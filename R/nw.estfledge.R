@@ -10,7 +10,7 @@
 #' should consider if they want to estimate fledge dates based on estimated hatch or lay dates. The function estimates fledge date by counting
 #' forward from the hatch date (if available) the average number of nestling days (provided by the user). If hatch date is not available, the
 #' function estimates fledge date based on first lay date, countersign forward the number of egg-laying-days based on clutch size (if available,
-#' or user-provided average clutch size) and eggs-per-day of the species. #'
+#' or user-provided average clutch size) and eggs-per-day of the species.
 #'
 #' @param data dataframe; A dataframe containing merged NestWatch attempts and visits data.
 #' @param phenology dataframe; A dataframe one row of phenological data for each species to be estimated. Data columns as follows:
@@ -20,7 +20,6 @@
 #'     \item \code{Eggs.per.Day}: Average number of eggs laid per day by each species.
 #'     \item \code{Incubation}: Average number of days spent in incubation (days between clutch complete and hatch).
 #'     \item \code{Nestling}: Average number of days spent in nestling period (days between hatch and fledge).
-#'     \item \code{Total}: Average number of days between first lay date and fledge date.
 #'     }
 #' @param output character; An optional character string to custom name the output dataframe
 #'
@@ -47,8 +46,7 @@
 #'                         Clutch.Size  = c(4),
 #'                         Eggs.per.Day = c(1),
 #'                         Incubation   = c(16),
-#'                         Nestling     = c(13),
-#'                         Total = c(40))
+#'                         Nestling     = c(13))
 #'
 #' nw.estfledge(data = data, phenology = phenology)
 nw.estfledge <- function(data, phenology, output = NULL) {
@@ -69,7 +67,7 @@ nw.estfledge <- function(data, phenology, output = NULL) {
   if(!is.data.frame(phenology)){
     stop("Augument 'phenology' must be a dataframe, see ?nw.estfirstlay() for details.")
   }
-  needed_columns <- c("Species", "Clutch.Size", "Eggs.per.Day", "Incubation", "Nestling", "Total")
+  needed_columns <- c("Species", "Clutch.Size", "Eggs.per.Day", "Incubation", "Nestling")
   if (!all(tolower(needed_columns) %in% tolower(colnames(phenology)))) {
     stop("Augument 'phenology' must be a dataframe, see ?nw.estfirstlay() for details.")
   }
@@ -106,7 +104,6 @@ nw.estfledge <- function(data, phenology, output = NULL) {
     eggs.per.day <- spp_phen[[grep("eggs.per.day", colnames(spp_phen), ignore.case = TRUE)]]
     inc <- spp_phen[[grep("incubation", colnames(spp_phen), ignore.case = TRUE)]]
     nestling <- spp_phen[[grep("nestling", colnames(spp_phen), ignore.case = TRUE)]]
-    total <- spp_phen[[grep("total", colnames(spp_phen), ignore.case = TRUE)]]
 
 
     # Filter to a single species with no fledge date data

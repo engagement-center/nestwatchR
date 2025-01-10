@@ -23,7 +23,6 @@
 #'     \item \code{Eggs.per.Day}: Average number of eggs laid per day by each species.
 #'     \item \code{Incubation}: Average number of days spent in incubation (days between clutch complete and hatch).
 #'     \item \code{Nestling}: Average number of days spent in nestling period (days between hatch and fledge).
-#'     \item \code{Total}: Average number of days between first lay date and fledge date.
 #'     }
 #' @param output character; An optional character string to custom name the output dataframe
 #'
@@ -48,8 +47,7 @@
 #'                         Clutch.Size  = c(4),
 #'                         Eggs.per.Day = c(1),
 #'                         Incubation   = c(16),
-#'                         Nestling     = c(13),
-#'                         Total = c(40))
+#'                         Nestling     = c(13))
 #'
 #' # Run function
 #' nw.esthatch(data = data, phenology = phenology)
@@ -70,7 +68,7 @@ nw.esthatch <- function(data, phenology, output = NULL) {
   if(!is.data.frame(phenology)){
     stop("Augument 'phenology' must be a dataframe, see ?nw.estfirstlay() for details.")
   }
-  needed_columns <- c("Species", "Clutch.Size", "Eggs.per.Day", "Incubation", "Nestling", "Total")
+  needed_columns <- c("Species", "Clutch.Size", "Eggs.per.Day", "Incubation", "Nestling")
   if (!all(tolower(needed_columns) %in% tolower(colnames(phenology)))) {
     stop("Augument 'phenology' must be a dataframe, see ?nw.estfirstlay() for details.")
   }
@@ -103,8 +101,6 @@ nw.esthatch <- function(data, phenology, output = NULL) {
     eggs.per.day <- spp_phen[[grep("eggs.per.day", colnames(spp_phen), ignore.case = TRUE)]]
     inc <- spp_phen[[grep("incubation", colnames(spp_phen), ignore.case = TRUE)]]
     nestling <- spp_phen[[grep("nestling", colnames(spp_phen), ignore.case = TRUE)]]
-    total <- spp_phen[[grep("total", colnames(spp_phen), ignore.case = TRUE)]]
-
 
     # Filter to a single species
     sp_data <- data %>% filter(Species.Code == s & is.na(Hatch.Date))
