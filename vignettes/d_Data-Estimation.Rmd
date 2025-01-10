@@ -62,8 +62,7 @@ phenology <- data.frame(Species = c("bewwre", "carwre"),
                         Clutch.Size  = c(5, 4),
                         Eggs.per.Day = c(1, 1),
                         Incubation   = c(16, 16),
-                        Nestling     = c(16, 13),
-                        Total.Nesting.Period = c(50, 40))
+                        Nestling     = c(16, 13))
 
 DT::datatable(phenology, options = list(paging = F, scrollX = T, searching  = F))
 ```
