@@ -277,7 +277,7 @@ nw.cleandata  <- function(data, mode, methods, output = NULL) {
         rm(temp)
 
       } else if (m == "k") {
-        # J. Flag attempts where the # days between the first check and the last check are < 365 days (Snowy Albatross nest span)
+        # J. Flag attempts where the # days between the first check and the last check are > 365 days (Snowy Albatross nest span)
         # or where year of summary dates is not in the check year
         temp <- data %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime) %>%                             # group by attempt
                          mutate(date_span = as.numeric(max(Visit.Datetime) - min(Visit.Datetime))) %>%    # calc max check date span
