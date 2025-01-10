@@ -5,7 +5,7 @@
 #' \strong{The user should consider their research objectives/species life histories and read the full documentation below and in the vignette.}
 #'
 #' @details NestWatch data in the database should be considered "raw" and the user should consider their system and research objectives when
-#' deciding what cleaning procedures to conduct. This function contains 10 cleaning procedures \code{a:j}. \cr
+#' deciding what cleaning procedures to conduct. This function contains 11 cleaning procedures \code{a:k}. \cr
 #' \cr
 #'     \strong{Cleaning Procedure Details}:
 #'       \itemize{
@@ -51,7 +51,7 @@
 #'
 #' @param data dataframe; A dataframe containing NestWatch data.
 #' @param mode \code{"flag"} or \code{"remove"}; A character string defining if the user wants the identified nesting attempts to be flagged with "FLAGGED" in a new column. Or removed from the dataset.
-#' @param methods character vector; A vector containing any of the letters \code{a:j} (not case- or order-sensitive), identifying each cleaning procedure to be conducted on the data. See \strong{Details} below and the vignette for details on each procedure.
+#' @param methods character vector; A vector containing any of the letters \code{a:k} (not case- or order-sensitive), identifying each cleaning procedure to be conducted on the data. See \strong{Details} below and the vignette for details on each procedure.
 #' @param output character; An optional character string to custom name the output dataframe.
 #'
 #' @importFrom stringr str_detect
@@ -89,7 +89,7 @@ nw.cleandata  <- function(data, mode, methods, output = NULL) {
     stop("Invalid 'methods'. See ?nw.cleandata for descriptions.")
   }
   # If 'methods' contains any invalid characters, stop the function.
-  valid_methods <- c(letters[1:12], LETTERS[1:12])
+  valid_methods <- c(letters[1:12], LETTERS[1:11])
   if (!all(methods %in% valid_methods)) {
     stop("Invalid 'methods'. See ?nw.cleandata for descriptions.")
   }# end of parameter check
