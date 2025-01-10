@@ -76,12 +76,12 @@ ex2
 
 # Clean Data
 
-The function `nw.cleandata()` is a collection of 10 common cleaning procedures which NestWatch staff have identified to assist users in cleaning NestWatch data at a coarse scale. You will need to specify which procedures to run, lettered `a:j`, and should read the function documentation and the following examples while considering your analyses before selecting which procedures to run. After these coarse scale cleanings are completed, the user should continue cleaning the data at a finer scale including considering spatial and phenological filtering. See the filtering vignette and `nw.filterspatial()` and `nw.filterphenology()` functions.
+The function `nw.cleandata()` is a collection of 11 common cleaning procedures which NestWatch staff have identified to assist users in cleaning NestWatch data at a coarse scale. You will need to specify which procedures to run, lettered `a:k` (not case sensitive), and should read the function documentation and the following examples while considering your analyses before selecting which procedures to run. After these coarse scale cleanings are completed, the user should continue cleaning the data at a finer scale including considering spatial and phenological filtering. See the filtering vignette and `nw.filterspatial()` and `nw.filterphenology()` functions.
 
 The function `nw.cleandata()` takes a NestWatch dataframe as `data =` and allows you to specify the function's `mode = ` as either `"flag"` or `"remove"`. When mode is set to flag, nest attempts which do not meet the cleaning criteria will be noted in a new column `Flagged.Attempt` with the value `FLAGGED` or `NA`. If mode is set to remove, these flagged attempts are removed from the output. 
 
 > ![NOTE]
-> If you are only interested in a subset of species, or RAM usage and processing time are a concern, you may choose to subset the data to those species prior to running `nw.cleandata`.  
+> If you are only interested in a subset of species, or RAM usage and processing time are a concern, you may choose to subset the data to those species prior to running `nw.cleandata()`.  
 
 ```{r cleandata 1, eval = F, echo = T}
 # Example of subsetting to 2 focal species: Carolina and Bewick's Wrens
@@ -113,6 +113,8 @@ a.  **More fledged young than hatched young:**  Flag/remove attempt if # fledged
 <br>
 a.  **Unmapped Region Code:**  Flag/remove attempts for which NestWatch failed to identify a region (Subnational.Code == “XX-”). Subnational.Code is automatically assigned based on coordinates supplied by the participant. Many attempts identified as XX- likely resulted from nests being located in water bodies and/or participants entering incorrect coordinates. Consider removing the “XX” attempts if the coordinates are implausible for the focal species and consider inclusion if analyzing coastal or water-nesting species (e.g., Osprey nesting on channel markers).<br>
 <br>
+a.  **Decrease-then-increase Eggs/Young:** Flag/remove attempts where the number of eggs or young decrease and then subsequently increases. This may happen if a nest fails and a new attempt is started at the same location, which should be two individual nesting attempts. If the analyst is looking at host response to depredation events or egg dumping you may choose to retain these records.
+<br>
 a.  **Impossibly long attempts:**  Flag attempts with impossible nesting periods. Incorrect years are sometimes entered between date summary fields by participants. This may produce impossibly long nesting periods. To account for nesting phenologies in all hemispheres, this procedure identifies attempts in which (1) Fledge Date - First Lay Date > 365 days, (2) Hatch Date - First Lay Date > 84 days, or (3) Fledge Date - Hatch Date > 300 days. These dates represent the maximum nest phenological period for any bird species and are not realistic for the majority of the NestWatch dataset. We encourage users to determine reasonable phenologies for their species of interest and use `nw.filterphenology()` to run a finer filter on nest phenology dates.<br>
 <br>
 a.  **Year errors in visits:**  Flag/remove attempts where the # days between the first and the last visit are > 365 days. Additional check to identify nest attempts where year portion of dates between nest visits were likely incorrectly entered. A user may choose to review these attempts individually to verify if a typo occurred.<br>
@@ -134,8 +136,8 @@ nw.cleandata(data = merged.data, mode = "remove", methods = "a", output = "no_bn
 length(unique(no_bnhcow$Attempt.ID))
 # > 648540    # Attempts after cleaning
 
-# Remove attempts using "i" and "j"
-nw.cleandata(data = merged.data, mode = "remove", methods = c("i", "j"), output = "no_longnests")
+# Remove attempts using "j" and "k"
+nw.cleandata(data = merged.data, mode = "remove", methods = c("j", "k"), output = "no_longnests")
 length(unique(no_longnests$Attempt.ID))
 # > 646753    # Attempts after cleaning
 ```
