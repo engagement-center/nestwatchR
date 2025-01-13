@@ -28,28 +28,28 @@ library(nestwatchR)
 
 # Background {#background}
 
-Our ability to allocate conservation efforts for the natural world depends on detailed information about the life histories, distributions, abundances, and population trends of species over time. The goal of the [NestWatch project](https://nestwatch.org), administered by [The Cornell Lab of Ornithology](https://www.birds.cornell.edu/home/), is to preserve data collected by members of the global participatory science community and researchers to enable the study of nest location, survival, and phenology for the world’s bird populations. NestWatch is designed to track status and trends in the reproductive biology of birds, including when nesting occurs, number of eggs laid, how many eggs hatch, and how many hatchlings survive. Our database is intended to be used to study the current condition of breeding bird populations and how they may be changing over time as a result of climate change, habitat degradation and loss, expansion of urban areas, and the introduction of non-native plants and animals.
+Our ability to allocate conservation efforts for the natural world depends on detailed information about the life histories, distributions, abundances, and population trends of species over time. The goal of the [NestWatch project](https://nestwatch.org), administered by [The Cornell Lab of Ornithology](https://www.birds.cornell.edu/home/), is to preserve data collected by members of the global participatory science community and researchers to enable the study of nest location, survival, and phenology for the world’s bird populations. NestWatch is designed to track status and trends in the reproductive biology of birds, including when nesting occurs, number of eggs laid, how many eggs hatch, and how many hatchlings survive to fledging. Our database is intended to be used to study the current condition of breeding bird populations and how they may be changing over time as a result of climate change, habitat degradation and loss, expansion of urban areas, and the introduction of non-native plants and animals.
 
-This vignette gives an overview of the NestWatch Open Dataset, which represents both nest-level parameters and individual nest checks. Knowledge of the structure of the database is critical for proper interpretation of the dataset. This example will discuss some of the 54 data fields, but we ask all data usersto  review the field explanations in the data paper [Bailey et al. 2024](https://doi.org/10.1002/ecy.4230).
+This vignette gives an overview of the [NestWatch Open Dataset](https://data.mendeley.com/datasets/wjf794z7gc), which represents both nest-level parameters and individual nest checks. Knowledge of the structure of the database is critical for proper interpretation of the dataset. This example will discuss some of the 54 data fields, but we ask all data users to review the field explanations found in the Nest Watch data paper, [Bailey et al. 2024](https://doi.org/10.1002/ecy.4230).
 
 
 
 # Data Access {#access}
 
-The NestWatch Open Dataset is freely accessible via a [Mendeley data repository](https://data.mendeley.com/datasets/wjf794z7gc), the [NestWatch website](https://nestwatch.org/explore/nestwatch-open-dataset-downloads/), or the `nestwatchR::nw.getdata()` function and is licensed under [CC BY-NC 4.0](http://creativecommons.org/licenses/by-nc/4.0/?ref=chooser-v1). Users are free to access and modify the data for non-commercial use with proper citation. By downloading the data, the user agrees to the below terms of use prior to use. 
+The NestWatch Open Dataset is freely accessible via a [Mendeley data repository](https://data.mendeley.com/datasets/wjf794z7gc), the [NestWatch website](https://nestwatch.org/explore/nestwatch-open-dataset-downloads/), or the [`nestwatchR::nw.getdata()`](https://engagement-center.github.io/nestwatchR/reference/nw.getdata.html) function and is licensed under [CC BY-NC 4.0](http://creativecommons.org/licenses/by-nc/4.0/?ref=chooser-v1). Users are free to access and modify the data for non-commercial use with proper citation. By downloading the data, the user agrees to the below terms of use prior to use. 
 
 <blockquote>
-**Terms of Use:** The NestWatch raw data are provided “as is.” The Cornell Lab of Ornithology, NestWatch, their affiliated and related entities, and their content providers shall not be held responsible or liable to any person, firm, or corporation for any loss, damage, injury, claim, or liability of any kind or character based on or resulting from any use of any NestWatch data. Further, none of the aforementioned parties shall be held liable for improper or incorrect use of the data. 
+**Terms of Use:** The NestWatch raw data are provided “as is.” Cornell Lab of Ornithology, NestWatch, their affiliated and related entities, and their content providers shall not be held responsible or liable to any person, firm, or corporation for any loss, damage, injury, claim, or liability of any kind or character based on or resulting from any use of any NestWatch data. Further, none of the aforementioned parties shall be held liable for improper or incorrect use of the data. 
 </blockquote>
 
 ## Download NestWatch Data
 
-There are two data products available for download via the function `nestwatchR::nw.getdata()`. The only argument, `version = `, to this function defines the version of the dataset to be downloaded and defaults to the latest version if left blank. This function will download, unzip, and import two dataframes to the global environment. Depending on your connection speed, this may take a few minutes. 
+There are two data products available for download via the function [`nestwatchR::nw.getdata()`](https://engagement-center.github.io/nestwatchR/reference/nw.getdata.html). The only argument, `version = `, to this function defines the version of the dataset to be downloaded and defaults to the latest version if left blank. This function will download, unzip, and import two dataframes to the global environment. Depending on your connection speed, this may take a few minutes. 
 
 
 ```{=gfm}
 > [!NOTE]
-> This function depends on the library `reticulate` which requires `Python` to be installed on your machine. See the [installation instructions](https://github.com/engagement-center/2024-NestWatch-Package-Internal?tab=readme-ov-file#installation-computer) for more information.
+> This function depends on the library [`reticulate`](https://rstudio.github.io/reticulate/) which requires `Python` to be installed on your machine. See the [installation instructions](https://engagement-center.github.io/nestwatchR/index.html#installation-computer) for more information.
 ```
 
 
@@ -64,7 +64,7 @@ nw.getdata(version = 1)
 
 ```
 
-This function creates a virtual instance of Python within R to access the Mendeley data archive. Once run, two dataframes will be available in the global environment: `NW.attempts` and `NW.checks`. These dataframes are not saved to your machine--you may wish to use `write.csv()` to access again without the need to re-download the dataset. 
+This function uses Python within R to access the Mendeley data archive and download the Nest Watch datasets. Once run, two dataframes will be available in the global environment: `NW.attempts` and `NW.checks`. These dataframes are yet not saved to your machine--you may wish to use [`write.csv()`](https://www.rdocumentation.org/packages/AlphaPart/versions/0.9.8/topics/write.csv) or [saveRDS()](https://rdrr.io/r/base/readRDS.html) to access these data again without the need to re-download the datasets. 
 
 # Data Structure
 
@@ -74,7 +74,6 @@ For this example, we will inspect the sample datasets included within the packag
 # Read in sample datasets
 NW.attempts <- nestwatchR::exNWattempts
 NW.checks <- nestwatchR::exNWchecks
-
 ```
 
 ## Attempts Data
@@ -86,7 +85,7 @@ datatable(NW.attempts, options = list(paging = F, scrollX = T, searching  = F))
 ```
 
 <details>
-<summary>Click for Field Descriptions</summary>
+<summary>`r kableExtra::text_spec("**Click for Field Descriptions**", color = "#FF9417")`</summary>
 
 * **Attempt ID:** assigned; categorical; A unique identification assigned to individual nest attempts.
 * **Location ID:** assigned; categorical; A unique identification assigned to individual nest locations. May be repeated within and across years.
@@ -128,6 +127,7 @@ holeExtender, no, noelGuard, other.
 into database).
 
 </details>
+<br>
 
 ## Checks Data
 
@@ -140,7 +140,7 @@ datatable(NW.checks, options = list(paging = F, scrollX = T, searching  = F, scr
 
 
 <details>
-<summary>Click for Field Descriptions</summary>
+<summary>`r kableExtra::text_spec("**Click for Field Descriptions**", color = "#FF9417")`</summary>
 
 * **Attempt ID:** assigned; categorical; See prior description.
 * **Visit ID:** assigned; categorical; Identifier assigned for individual visits to nest attempts. A nest attempt will have as many Visit ID values as there were nest checks reported for that attempt.
@@ -177,10 +177,11 @@ Parasite Dead Young Count > 0 or Brood Parasite Dead Young Present Uncounted = 1
 NestWatch website (field value indicates various versions of "Web" entry), the mobile app (field value indicates various versions of "Mobile" entry), or bulk upload (field value indicates date of uploading into database).
 
 </details>
+<br>
 
 # Data Preparation
 
-Some analyses may only require use of data contained in `NW.attempts`. However, we suggest users merge the two dataframes on their shared `Attempt.ID` to have all the available data on-hand. Some of the suggested data-cleaning processes require use of data in both dataframes, and having a single merged dataset more easily facilitates these steps. The two dataframes can be merged using `nestwatchR::nw.mergedata()`. This function has three arguments: `attempts =` and `checks =` are used to define the appropriate dataframe and the optional `output =` can be used to specify the name of the resulting merged dataframe.
+Some analyses may only require use of data contained in `NW.attempts`. However, we suggest users merge the two dataframes on their shared `Attempt.ID` to have all the available data on-hand. Some of the suggested data-cleaning processes require use of data in both dataframes, and having a single merged dataset more easily facilitates these steps. The two dataframes can be merged using [`nestwatchR::nw.mergedata()`](https://engagement-center.github.io/nestwatchR/reference/nw.mergedata.html). This function has three arguments: `attempts =` and `checks =` are used to define the appropriate dataframe and the optional `output =` can be used to specify the name of the resulting merged dataframe.
 
 ```{r merge data, eval = F}
 library(dplyr)
