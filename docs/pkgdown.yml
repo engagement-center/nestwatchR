@@ -1,5 +1,7 @@
 pandoc: '3.2'
 pkgdown: 2.1.0
+template:
+  bootstrap: 5
 pkgdown_sha: ~
 articles:
   a_Intro-and-Data-Access: a_Intro-and-Data-Access.html
