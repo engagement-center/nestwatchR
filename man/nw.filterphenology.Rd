@@ -4,35 +4,36 @@
 \alias{nw.filterphenology}
 \title{Filter Nesting Attempts Based on Expected Nest Phenological Periods}
 \usage{
-nw.filterphenology(data, mode, phenology, output = NULL)
+nw.filterphenology(data, mode, max_phenology, trim_to_active, output = NULL)
 }
 \arguments{
 \item{data}{dataframe; A dataframe of merged NestWatch attempt and visits data. Date columns must have class \code{Date}
 and Datetime columns must have class \code{POSIXct}.}
 
-\item{mode}{\code{"flag"} or \code{"remove"}; A character string defining if the user wants the identified nesting attempts to be
-flagged with "FLAGGED" in a new column. Or removed from the dataset.}
+\item{mode}{\code{"flag"} or \code{"remove"}; A character string defining if the analyst wants the identified nesting attempts to be
+flagged with "FLAGGED" in a new column, or removed from the dataset.}
 
-\item{phenology}{dataframe; A simple dataframe with one row for each species of interest and the following column structure:
+\item{max_phenology}{dataframe; A simple dataframe with one row for each species of interest and the following column structure:
 \itemize{
- \item \strong{Species}: Species for which this row of data represents. Must be a 6-letter species code.
  \item \strong{Lay}: The number of days representing the maximum expected laying period for each species.
  \item \strong{Incubation}: The number of days representing the maximum expected incubation period (between clutch complete and hatch) for each species.
  \item \strong{Nestling}: The number of days representing the maximum expected nesting period (hatch and last fledge) for each species.
- \item \strong{Total Nesting Period}: The number of days representing the maximum expected nesting period (spanning first lay to last fledge) for each species.
+ \item \strong{Total Nesting Period}: The number of days representing the maximum expected nesting period (spanning first initial nest building to last fledge) for each species.
  }}
 
-\item{output}{character; An optional character string to custom name the output dataframe}
+\item{trim_to_active}{logical; TRUE or FALSE indicating if nest check data should be trimmed to include only those rows where the nest was active
+(in build, lay, incubation, presence of life young). The first check observing a fledge or fail event is retained, but subsequent checks would be
+targeted for flag/removal. Flag/removal follows \code{mode}.}
 
-\item{sp}{character vector; A character vector containing the species code for one or more species for which to filter the data.}
+\item{output}{character; An optional character string to custom name the output dataframe}
 }
 \value{
 dataframe
 }
 \description{
-To provide additional checks on data quality before analysis, a user may want to filter out nesting attempts which were
-recorded to have nesting phenologies of unexpected lengths. This function allows a user to specify specie-specific values for nest phenologies
-using expected days in the lay, incubation, nestling, and total nesting periods. By defining these allowable time frames a user can flag or
+To provide additional checks on data quality before analysis, an analyst may want to filter out nesting attempts which were
+recorded to have nesting phenologies of unexpectedly long lengths. This function allows an analyst to specify species-specific values for nest phenologies
+using expected days in the lay, incubation, nestling, and total nesting periods. By defining these allowable time frames an analyst can flag or
 remove "run-on" nest attempts or nests which do not match the specie's life history.
 }
 \details{
@@ -40,10 +41,9 @@ This function calculates the number of days between \code{First.Lay.Date}, \code
 each to the user-provided acceptable date spans for each nest phase. Not all attempts contain these summary dates. An analyst may choose to explore
 \link[nestwatchR]{nw.estclutchsize}, \link[nestwatchR]{nw.estfirstlay}, \link[nestwatchR]{nw.esthatch}, and \link[nestwatchR]{nw.estfledge} functions
 to estimate these summary dates from the individual nest visit data prior to using this function. As an additional check, this function calculates
-the date span between the first and second to last nest check and compares this to the user-provided "total nesting period" value. The second to last
-date is used because participants may not check a nest when close to fledgling. For example, a participant may attempt to confirm a successful
-fledged nest when emptying a nets box at the end of the nesting season. In this case the last "nest check" may be weeks to months after the last
-activity at that nest.
+the date span between the first occurrence of an incomplete nest, complete nest, observed egg, or observed young and last active date (either the last
+observation of eggs/live young or the first 0-egg/young count indicating fail/fledge) and compares this date span to the user-provided "total nesting
+period" value.
 }
 \examples{
 # Create phenology dataframe
@@ -55,7 +55,7 @@ phenology <- data.frame(species = c("carwre"),
 
 
 # Simplified NestWatch dataset with nest summary dates
-# Attempts 3 & 4 should be flagged (too long in incuation and nestling phases respectively)
+# Attempts 3 & 4 should be flagged (too long in incubation and nestling phases respectively)
 data <- data.frame(Attempt.ID = c("1", "2", "3", "4"),
                    Species.Code = rep("carwre", 4),
                    First.Lay.Date = as.Date(c("2024-05-01", "2024-05-01",

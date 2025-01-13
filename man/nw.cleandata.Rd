@@ -11,7 +11,7 @@ nw.cleandata(data, mode, methods, output = NULL)
 
 \item{mode}{\code{"flag"} or \code{"remove"}; A character string defining if the user wants the identified nesting attempts to be flagged with "FLAGGED" in a new column. Or removed from the dataset.}
 
-\item{methods}{character vector; A vector containing any of the letters \code{a:j} (not case- or order-sensitive), identifying each cleaning procedure to be conducted on the data. See \strong{Details} below and the vignette for details on each procedure.}
+\item{methods}{character vector; A vector containing any of the letters \code{a:k} (not case- or order-sensitive), identifying each cleaning procedure to be conducted on the data. See \strong{Details} below and the vignette for details on each procedure.}
 
 \item{output}{character; An optional character string to custom name the output dataframe.}
 }
@@ -25,7 +25,7 @@ This function provides several common procedures that NestWatch staff have ident
 }
 \details{
 NestWatch data in the database should be considered "raw" and the user should consider their system and research objectives when
-deciding what cleaning procedures to conduct. This function contains 10 cleaning procedures \code{a:j}. \cr
+deciding what cleaning procedures to conduct. This function contains 11 cleaning procedures \code{a:k}. \cr
 \cr
     \strong{Cleaning Procedure Details}:
       \itemize{
@@ -55,15 +55,18 @@ deciding what cleaning procedures to conduct. This function contains 10 cleaning
         from nests being located in water bodies and/or participants entering incorrect coordinates. Consider removing the “XX” attempts if the
         coordinates are implausible for the focal species and consider inclusion if analyzing coastal or water-nesting species (e.g., Osprey
         nesting on channel markers).
-       \item \code{i}: Flag/remove attempts with impossible nesting periods. Incorrect years are sometimes entered between date summary fields
+       \item \code{i}: Flag/remove attempts where the number of eggs or young decrease and then subsequently increase. This may happen if
+       a nest fails and a new attempt is started at the same location, which should be two individual nesting attempts. If the analyst is
+       looking at host response to depredation events or egg dumping you may choose to retain these records.
+       \item \code{j}: Flag/remove attempts with impossible nesting periods. Incorrect years are sometimes entered between date summary fields
        by participants. This may produce impossibly long nesting periods. To account for nesting phenologies in all hemispheres, this procedure
        identifies attempts in which (1) Fledge Date - First Lay Date > 365 days, (2) Hatch Date - First Lay Date > 84 days, or (3) Fledge Date
         - Hatch Date > 300 days. These dates represent the maximum nest phenological period for any bird species and are not realistic for the
        majority of the NestWatch dataset. We encourage users to determine reasonable phenologies for their species of interest and use
-       \code{\link[nestwatchR:nw.filterphenology]{nw.filterphenology}} to run a finer filter on nest phenology dates.
-       \item \code{j}: Flag/remove attempts where the # days between the first and the last visit are > 365 days. Additional check to identify
-       nest attempts where year portion of dates between nest visits were likely incorrectly entered. A user may choose to review these attempts
-       individually to verify if a typo occurred.
+       \code{\link[nestwatchR:nw.filterphenology]{nw.filterphenology}} to run a finer filter on nest phenology dates by species.
+       \item \code{k}: Flag/remove attempts where the # days between the first and the last visit are > 365 days or where the year of a summary
+       dates (Lay, Hatch, Fledge) does not overlap the year in the nest checks data. Additional check to identify nest attempts where year portion
+       of dates between nest visits were likely incorrectly entered. An analyst may choose to review these attempts individually to verify if a typo occurred.
 }
 }
 \examples{
@@ -74,7 +77,7 @@ wrens <- nestwatchR::wren_quickstart
 nw.cleandata(data = wrens, mode = "flag",
              methods = c("e", "f", "g", "h"))
 
-# Remove data not meeting procedures i or j.
+# Remove data not meeting procedures j or k.
 nw.cleandata(data = wrens, mode = "remove",
-             methods = c("i", "j"))
+             methods = c("j", "k"))
 }

@@ -16,7 +16,6 @@ nw.esthatch(data, phenology, output = NULL)
  \item \code{Eggs.per.Day}: Average number of eggs laid per day by each species.
  \item \code{Incubation}: Average number of days spent in incubation (days between clutch complete and hatch).
  \item \code{Nestling}: Average number of days spent in nestling period (days between hatch and fledge).
- \item \code{Total}: Average number of days between first lay date and fledge date.
  }}
 
 \item{output}{character; An optional character string to custom name the output dataframe}
@@ -58,8 +57,7 @@ phenology <- data.frame(Species = c("carwre"),
                         Clutch.Size  = c(4),
                         Eggs.per.Day = c(1),
                         Incubation   = c(16),
-                        Nestling     = c(13),
-                        Total = c(40))
+                        Nestling     = c(13))
 
 # Run function
 nw.esthatch(data = data, phenology = phenology)

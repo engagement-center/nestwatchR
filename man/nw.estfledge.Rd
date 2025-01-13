@@ -16,7 +16,6 @@ nw.estfledge(data, phenology, output = NULL)
  \item \code{Eggs.per.Day}: Average number of eggs laid per day by each species.
  \item \code{Incubation}: Average number of days spent in incubation (days between clutch complete and hatch).
  \item \code{Nestling}: Average number of days spent in nestling period (days between hatch and fledge).
- \item \code{Total}: Average number of days between first lay date and fledge date.
  }}
 
 \item{output}{character; An optional character string to custom name the output dataframe}
@@ -36,7 +35,7 @@ Precision of the fledge date estimates depend on what data is used to estimate t
 should consider if they want to estimate fledge dates based on estimated hatch or lay dates. The function estimates fledge date by counting
 forward from the hatch date (if available) the average number of nestling days (provided by the user). If hatch date is not available, the
 function estimates fledge date based on first lay date, countersign forward the number of egg-laying-days based on clutch size (if available,
-or user-provided average clutch size) and eggs-per-day of the species. #'
+or user-provided average clutch size) and eggs-per-day of the species.
 }
 \examples{
 # Simplified NestWatch data with missing data
@@ -58,8 +57,7 @@ phenology <- data.frame(Species = c("carwre"),
                         Clutch.Size  = c(4),
                         Eggs.per.Day = c(1),
                         Incubation   = c(16),
-                        Nestling     = c(13),
-                        Total = c(40))
+                        Nestling     = c(13))
 
 nw.estfledge(data = data, phenology = phenology)
 }
