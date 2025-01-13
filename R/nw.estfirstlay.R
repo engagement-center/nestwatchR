@@ -69,7 +69,7 @@ nw.estfirstlay <- function(data, phenology, output = NULL) {
   }
   needed_columns <- c("Species", "Clutch.Size", "Eggs.per.Day", "Incubation", "Nestling")
   if (!all(tolower(needed_columns) %in% tolower(colnames(phenology)))) {
-    stop("Augument 'phenology' must be a dataframe, see ?nw.estfirstlay() for details.")
+    stop("Augument 'phenology' must be a dataframe, with the following columns: 'Species', 'Clutch.Size', 'Eggs.per.Day', 'Incubation', 'Nestling' See ?nw.estfirstlay() for more details.")
   }
 
   ###########################
