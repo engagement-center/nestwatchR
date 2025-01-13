@@ -73,7 +73,7 @@
 #'                    Outcome = c("s1", "s1", "s1", "s1"),
 #'                    Nest.Status = rep(NA, 4))
 #' nw.filterphenology(data = data, phenology = phenology, mode = "flag")
-nw.filterphen_test <- function(data, mode, max_phenology, trim_to_active, output = NULL){
+nw.filterphenology <- function(data, mode, max_phenology, trim_to_active, output = NULL){
 
   #####################################
   ###   Function Parameters Check   ###
