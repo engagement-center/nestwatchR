@@ -40,8 +40,7 @@
 #'
 #' @examples
 #' # Create phenology dataframe
-#' phenology <- data.frame(species = c("carwre"),
-#'                         lay = c(7),          # max observed
+#' phenology <- data.frame(lay = c(7),          # max observed
 #'                         incubation = c(20),  # mean plus some extra
 #'                         nestling = c(20),    # mean plus some extra
 #'                         total = c(50))       # mean plus some extra
@@ -68,7 +67,9 @@
 #'                    First.Lay.Date = as.Date(rep(NA, 4)),
 #'                    Hatch.Date = as.Date(rep(NA, 4)),
 #'                    Fledge.Date = as.Date(rep(NA, 4)),
-#'                    Visit.Datetime = as.POSIXct(c("2024-05-01", "2024-06-15", "2024-05-01", "2024-07-30")),
+#'                    Visit.Datetime =
+#'                    as.POSIXct(c("2024-05-01", "2024-06-15",
+#'                                 "2024-05-01", "2024-07-30")),
 #'                    Outcome = c("s1", "s1", "s1", "s1"),
 #'                    Nest.Status = rep(NA, 4))
 #' nw.filterphenology(data = data, phenology = phenology, mode = "flag")
