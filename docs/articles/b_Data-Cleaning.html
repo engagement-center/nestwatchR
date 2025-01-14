@@ -4,107 +4,77 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Conduct Common NestWatch Data Cleaning Procedures • nestwatchR</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
-<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Conduct Common NestWatch Data Cleaning Procedures">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Conduct Common NestWatch Data Cleaning Procedures">
 </head>
-<body data-spy="scroll" data-target="#toc">
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <div class="container template-article">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">nestwatchR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.100</span>
-      </span>
-    </div>
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="../reference/index.html">Reference</a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Articles
+    <a class="navbar-brand me-2" href="../index.html">nestwatchR</a>
 
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="../articles/a_Intro-and-Data-Access.html">Introduction to NestWatch Data and Data Access</a>
-    </li>
-    <li>
-      <a href="../articles/b_Data-Cleaning.html">Conduct Common NestWatch Data Cleaning Procedures</a>
-    </li>
-    <li>
-      <a href="../articles/c_Data-Filtering.html">Filter NestWatch Data on Finer Scales</a>
-    </li>
-    <li>
-      <a href="../articles/d_Data-Estimation.html">Estimate NestWatch Summary Dates</a>
-    </li>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.100</small>
+
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="active nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-vignettes" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Vignettes</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-vignettes">
+<li><a class="dropdown-item" href="../articles/a_Intro-and-Data-Access.html">Introduction to NestWatch Data and Data Access</a></li>
+    <li><a class="dropdown-item" href="../articles/b_Data-Cleaning.html">Conduct Common NestWatch Data Cleaning Procedures</a></li>
+    <li><a class="dropdown-item" href="../articles/c_Data-Filtering.html">Filter NestWatch Data on Finer Scales</a></li>
+    <li><a class="dropdown-item" href="../articles/d_Data-Estimation.html">Estimate NestWatch Summary Dates</a></li>
   </ul>
 </li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Function Reference</a></li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/engagement-center/nestwatchR/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/engagement-center/nestwatchR/" aria-label="github"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
-<!--/.nav-collapse -->
+
+
   </div>
-<!--/.container -->
-</div>
-<!--/.navbar -->
+</nav><div class="container template-article">
 
 
 
-      </header><div class="row">
-  <div class="col-md-9 contents">
-    <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Conduct Common NestWatch Data Cleaning
-Procedures</h1>
+
+<div class="row">
+  <main id="main" class="col-md-9"><div class="page-header">
+
+      <h1>Conduct Common NestWatch Data Cleaning Procedures</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/engagement-center/nestwatchR/blob/HEAD/vignettes/b_Data-Cleaning.Rmd" class="external-link"><code>vignettes/b_Data-Cleaning.Rmd</code></a></small>
-      <div class="hidden name"><code>b_Data-Cleaning.Rmd</code></div>
-
+      <div class="d-none name"><code>b_Data-Cleaning.Rmd</code></div>
     </div>
 
     
     
 <p>This vignette will cover several different methods for cleaning data
-found within the NestWatch Open Dataset. NestWatch data are collected by
-volunteer participants (researchers and the public) and are known to
-contain some common errors and inconsistencies. Thus, these data should
-be considered as “raw”, and the user should consider their individual
-study system and research objectives when deciding what cleaning
-procedures to conduct. This package contains two functions to provide
-coarse-scale cleaning procedures that NestWatch staff have identified in
-order to help the user clean NestWatch data for analysis. Please read
-the full function documentation and this vignette prior to cleaning the
-data.</p>
+found within the <a href="https://data.mendeley.com/datasets/wjf794z7gc/2" class="external-link">NestWatch Open
+Dataset</a>. NestWatch data are collected by volunteer participants
+(researchers and the public) and are known to contain some common errors
+and inconsistencies. Thus, these data should be considered as “raw”, and
+the analyst should consider their individual study system and research
+objectives when deciding what cleaning procedures to conduct. This
+package contains two functions to provide coarse-scale cleaning
+procedures that NestWatch staff have identified in order to help
+analysts clean NestWatch data for analysis. Please read the full
+function documentation and this vignette prior to cleaning the data.</p>
 <div class="section level2">
 <h2 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
 </h2>
@@ -117,27 +87,27 @@ instance, if a participant enters the number of eggs incorrectly but the
 typo in clutch size is still biologically possible, no feedback will be
 given. Even if real-time feedback is given, the participant may override
 the warning if they feel the entry they have made is accurate.
-Participants do occasionally observe unusually large clutch sizes, or
+Participants do occasionally observe unusually large clutch sizes or
 nests that have occurred well outside of the traditional nesting period
 for the focal species. It is up to each analyst to decide if these
 observations are relevant. Importantly, these initial biological filters
 have not been established for species nesting outside of the U.S. and
 Canada or for species that are seldom reported.</p>
 <p>NestWatch additionally implements geographic filters on real-time
-entered species, which are curated by eBird. In other words, a
-participant should not be able to report a nest from a species that is
-extremely rare in that region; thus, many species misidentifications are
-prevented. However, for similar sympatric species, incorrect
-identifications are still possible (e.g., a Black-capped Chickadee may
-be misidentified as a Carolina Chickadee in regions of range overlap).
-However, older reports, including historic data migrated to the
-NestWatch database, not subjected to the same rigorous filters.
-Additionally, errors in reporting can mimic errors in identification.
-Participants may intend to report one species but enter their
-information for the wrong species. We recommend that data analysts map
-nest locations and screen for likely errors. See the
-<code><a href="../reference/nw.filterspatial.html">nw.filterspatial()</a></code> and Filtering vignettes for more
-information on spatial filtering.</p>
+entered species, which are curated by <a href="https://ebird.org/home" class="external-link">eBird</a>. For example, a participant
+should not be able to report a nest from a species that is extremely
+rare in that region, preventing many species misidentifications.
+However, for similar sympatric species, incorrect identifications are
+still possible (e.g., a Black-capped Chickadee may be misidentified as a
+Carolina Chickadee in regions of range overlap). However, older reports,
+including historic data migrated to the NestWatch database for archival,
+are not subjected to the same rigorous filters. Additionally, errors in
+reporting can mimic errors in identification. Participants may intend to
+report one species but enter the data for the wrong species. We
+recommend that data analysts map nest locations and screen for likely
+errors. See the <a href="https://engagement-center.github.io/nestwatchR/reference/nw.filterspatial.html"><code>nw.filterspatial()</code></a>
+and <a href="https://engagement-center.github.io/nestwatchR/articles/c_Data-Filtering.html">Filtering
+Vignette</a> for more information on spatial filtering.</p>
 </div>
 <div class="section level2">
 <h2 id="clean-taxa">Clean Taxa<a class="anchor" aria-label="anchor" href="#clean-taxa"></a>
@@ -147,46 +117,47 @@ taxonomy</a> to standardize species’ names. This allows participants to
 select any available eBird taxonomic unit, including “spuhs” (i.e.,
 “chickadee sp.”), slashes (i.e., “Tree/Violet-green Swallow”), hybrids
 (i.e., “Mallard x American Black Duck (hybrid)”), and subspecies/forms
-(i.e., “House Wren (northern)”). The function <code>nw.cleantaxa</code>
+(i.e., “Downy Woodpecker (eastern)”). The function <a href="https://engagement-center.github.io/nestwatchR/reference/nw.cleantaxa.html"><code>nw.cleantaxa()</code></a>
 helps filter out and/or “roll up” these taxonomic units. This function
 uses a NestWatch dataframe as <code>data =</code> and has logical
 arguments <code>spuh =</code>, <code>slash =</code>,
 <code>hybrid =</code>, and <code>rollsubspecies =</code> where
 <code>T</code> removes attempts with those designations and
-subspecies/forms are “rolled up” to the species level (i.e., “House Wren
-(northern)” → “House Wren”). If arguments are set to <code>F</code> or
-<code>NULL</code> the filtering and/or roll up are not performed. The
-resulting dataframe may be optionally named with <code>output =</code>.
-This function changes both the common name and the species code to
-reflect the changes made to the taxonomic unit.</p>
+subspecies/forms are “rolled up” to the species level (i.e., “Downy
+Woodpecker (eastern)” → “Downy Woodpecker”). If arguments are set to
+<code>F</code> or <code>NULL</code> the filtering and/or roll up are not
+performed. The resulting dataframe may be optionally named with
+<code>output =</code>. This function changes both the common names and
+the species codes to reflect the changes made to the taxonomic unit.</p>
 <p>Taxonomy updates to the participant interface and internal database
-are implemented concurrently with updates from
-<code><a href="https://cornelllabofornithology.github.io/auk/reference/ebird_taxonomy.html" class="external-link">auk::ebird_taxonomy</a></code>. However, new versions of the NestWatch
-Open Dataset are published in January and may be taxonomically outdated
-for short periods of time (this typically affects a very low number of
-records). Previous versions of the NestWatch Open Dataset are not
-updated for taxonomic or other corrections; we encourage the use of the
-most recent version. For more information, see <a href="https://cornelllabofornithology.github.io/auk/reference/ebird_taxonomy.html" class="external-link"><code>auk::ebird_taxonomy</code></a>
+are implemented concurrently with updates from <a href="https://cornelllabofornithology.github.io/auk/reference/get_ebird_taxonomy.html" class="external-link"><code>auk::get_ebird_taxonomy()</code></a>.
+However, new versions of the NestWatch Open Dataset are published in
+January and may be taxonomically outdated for short periods of time
+(this typically affects a very low number of records). Previous versions
+of the NestWatch Open Dataset are not updated for taxonomic or other
+corrections; we encourage the use of the most recent version. For more
+information, see <a href="https://cornelllabofornithology.github.io/auk/reference/ebird_taxonomy.html" class="external-link"><code>auk::ebird_taxonomy</code></a>
 and <a href="https://science.ebird.org/en/use-ebird-data/the-ebird-taxonomy" class="external-link">eBird
 Taxonomy</a>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Simple example dataframe</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Attempt.ID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span>,</span>
-<span>                 Species.Name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"House Wren (northern)"</span>, <span class="st">"House Wren (northern)"</span>,</span>
+<span>                 Species.Name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Downy Woodpecker (Eastern)"</span>, <span class="st">"Downy Woodpecker (Eastern)"</span>,</span>
 <span>                                 <span class="st">"chickadee sp."</span>, <span class="st">"Tree/Violet-green Swallow"</span>,</span>
 <span>                                 <span class="st">"Mallard x American Black Duck (hybrid)"</span><span class="op">)</span>,</span>
-<span>                 Species.Code <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"houwre1"</span>, <span class="st">"houwre1"</span>, <span class="st">"chicka1"</span>, <span class="st">"y00701"</span>, <span class="st">"x00004"</span><span class="op">)</span><span class="op">)</span></span>
+<span>                 Species.Code <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dowwoo1"</span>, <span class="st">"dowwoo1"</span>, <span class="st">"chicka1"</span>, <span class="st">"y00701"</span>, <span class="st">"x00004"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
 <span><span class="va">df</span></span>
 <span><span class="co">#&gt;   Attempt.ID                           Species.Name Species.Code</span></span>
-<span><span class="co">#&gt; 1          1                  House Wren (northern)      houwre1</span></span>
-<span><span class="co">#&gt; 2          1                  House Wren (northern)      houwre1</span></span>
+<span><span class="co">#&gt; 1          1             Downy Woodpecker (Eastern)      dowwoo1</span></span>
+<span><span class="co">#&gt; 2          1             Downy Woodpecker (Eastern)      dowwoo1</span></span>
 <span><span class="co">#&gt; 3          2                          chickadee sp.      chicka1</span></span>
 <span><span class="co">#&gt; 4          3              Tree/Violet-green Swallow       y00701</span></span>
 <span><span class="co">#&gt; 5          4 Mallard x American Black Duck (hybrid)       x00004</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="spuhs-and-slashes">Spuhs and Slashes<a class="anchor" aria-label="anchor" href="#spuhs-and-slashes"></a>
 </h4>
-<p>Correct usage of a spuh would, for example, be if a participant
+<p>Correct usage of a “spuh” would, for example, be if a participant
 observed a chickadee nesting in a region of Black-capped/Carolina
 Chickadee range overlap and was unable to confirm the exact species with
 certainty. The same would be true if a participant monitored a nest box
@@ -198,10 +169,11 @@ omit spuhs and slashes as species is not known with certainty:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Remove spuhs and slashes</span></span>
 <span><span class="fu"><a href="../reference/nw.cleantaxa.html">nw.cleantaxa</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">df</span>, spuh <span class="op">=</span> <span class="cn">T</span>, slash <span class="op">=</span> <span class="cn">T</span>, output <span class="op">=</span> <span class="st">"ex1"</span><span class="op">)</span></span>
+<span></span>
 <span><span class="va">ex1</span></span>
 <span><span class="co">#&gt;   Attempt.ID                           Species.Name Species.Code</span></span>
-<span><span class="co">#&gt; 1          1                  House Wren (northern)      houwre1</span></span>
-<span><span class="co">#&gt; 2          1                  House Wren (northern)      houwre1</span></span>
+<span><span class="co">#&gt; 1          1             Downy Woodpecker (Eastern)      dowwoo1</span></span>
+<span><span class="co">#&gt; 2          1             Downy Woodpecker (Eastern)      dowwoo1</span></span>
 <span><span class="co">#&gt; 5          4 Mallard x American Black Duck (hybrid)       x00004</span></span></code></pre></div>
 </div>
 <div class="section level4">
@@ -214,10 +186,10 @@ participant are unknown and the participant may not have selected the
 correct designation from the pre-populated list of possible species.
 Consider whether or not there may be biologically relevant differences
 in nesting behavior, phenology, or other parameters between different
-subspecies/forms before cleaning or analyzing these data. If these
-potential differences are not biologically relevant to the analysis, the
-analyst may opt to <code>rollsubspecies = T</code> to combine subspecies
-and/or forms to the species level.</p>
+subspecies/forms before analyzing data at that level. If these potential
+differences are not biologically relevant to the analysis, the analyst
+may opt to <code>rollsubspecies = T</code> to combine subspecies and/or
+forms to the species level.</p>
 <p>Documentation of nesting attempts between different parent species, a
 hybrid parent, or two hybrid parents are very uncommon. The NestWatch
 database has no way to easily differentiate between these three cases.
@@ -227,15 +199,17 @@ with certainty. Additionally, participants may incorrectly select a
 hybrid species when they should have selected a spuh or slash species
 designation. If you are interested in validating attempts labeled with
 hybrid status, you may <a href="https://data.nestwatch.org/nw/contact" class="external-link">request additional
-information</a> NestWatch staff from “notes” fields which may contain
-additional information not exported in the public dataset.</p>
+information</a> from NestWatch staff asking for the “notes” fields which
+may contain additional information not exported in the public
+dataset.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Remove hybrids and roll up subspecies</span></span>
 <span><span class="fu"><a href="../reference/nw.cleantaxa.html">nw.cleantaxa</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">df</span>, hybrid <span class="op">=</span> <span class="cn">T</span>, rollsubspecies <span class="op">=</span> <span class="cn">T</span>, output <span class="op">=</span> <span class="st">"ex2"</span><span class="op">)</span></span>
+<span></span>
 <span><span class="va">ex2</span></span>
 <span><span class="co">#&gt;   Attempt.ID              Species.Name Species.Code</span></span>
-<span><span class="co">#&gt; 1          1                House Wren       houwre</span></span>
-<span><span class="co">#&gt; 2          1                House Wren       houwre</span></span>
+<span><span class="co">#&gt; 1          1          Downy Woodpecker       dowwoo</span></span>
+<span><span class="co">#&gt; 2          1          Downy Woodpecker       dowwoo</span></span>
 <span><span class="co">#&gt; 3          2             chickadee sp.      chicka1</span></span>
 <span><span class="co">#&gt; 4          3 Tree/Violet-green Swallow       y00701</span></span></code></pre></div>
 </div>
@@ -243,40 +217,43 @@ additional information not exported in the public dataset.</p>
 <div class="section level2">
 <h2 id="clean-data">Clean Data<a class="anchor" aria-label="anchor" href="#clean-data"></a>
 </h2>
-<p>The function <code><a href="../reference/nw.cleandata.html">nw.cleandata()</a></code> is a collection of 10 common
-cleaning procedures which NestWatch staff have identified to assist
-users in cleaning NestWatch data at a coarse scale. You will need to
-specify which procedures to run, lettered <code>a:j</code>, and should
-read the function documentation and the following examples while
-considering your analyses before selecting which procedures to run.
-After these coarse scale cleanings are completed, the user should
-continue cleaning the data at a finer scale including considering
-spatial and phenological filtering. See the filtering vignette and
-<code><a href="../reference/nw.filterspatial.html">nw.filterspatial()</a></code> and <code><a href="../reference/nw.filterphenology.html">nw.filterphenology()</a></code>
+<p>The function <a href="https://engagement-center.github.io/nestwatchR/reference/nw.cleandata.html"><code>nw.cleandata()</code></a>
+is a collection of 11 common cleaning procedures which NestWatch staff
+have identified to assist analysts in cleaning NestWatch data at a
+coarse scale. You will need to specify which procedures to run, lettered
+<code>a:k</code> (not case sensitive), and we highly suggest you read
+the function documentation and the following examples while considering
+your analyses before selecting which procedures to run. After these
+coarse scale cleanings are completed, the user should continue cleaning
+the data at a finer scale including considering spatial and phenological
+filtering. See the <a href="https://engagement-center.github.io/nestwatchR/articles/c_Data-Filtering.html">Filtering
+Vignette</a> and <a href="https://engagement-center.github.io/nestwatchR/reference/nw.filterspatial.html"><code>nw.filterspatial()</code></a>
+and <a href="https://engagement-center.github.io/nestwatchR/reference/nw.filterphenology.html"><code>nw.filterphenology()</code></a>
 functions.</p>
-<p>The function <code><a href="../reference/nw.cleandata.html">nw.cleandata()</a></code> takes a NestWatch dataframe
-as <code>data =</code> and allows you to specify the function’s
-<code>mode =</code> as either <code>"flag"</code> or
-<code>"remove"</code>. When mode is set to flag, nest attempts which do
-not meet the cleaning criteria will be noted in a new column
+<p>The function <a href="https://engagement-center.github.io/nestwatchR/reference/nw.cleandata.html"><code>nw.cleandata()</code></a>
+takes a NestWatch dataframe as <code>data =</code> and allows you to
+specify the function’s <code>mode =</code> as either <code>"flag"</code>
+or <code>"remove"</code>. When mode is set to flag, nest attempts which
+do not meet the cleaning criteria will be noted in a new column
 <code>Flagged.Attempt</code> with the value <code>FLAGGED</code> or
 <code>NA</code>. If mode is set to remove, these flagged attempts are
 removed from the output.</p>
 <blockquote>
 <p>![NOTE] If you are only interested in a subset of species, or RAM
 usage and processing time are a concern, you may choose to subset the
-data to those species prior to running <code>nw.cleandata</code>.</p>
+data to those species prior to running <a href="https://engagement-center.github.io/nestwatchR/reference/nw.cleandata.html"><code>nw.cleandata()</code></a>.</p>
 </blockquote>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Example of subsetting to 2 focal species: Carolina and Bewick's Wrens</span></span>
-<span><span class="co"># Using output from `nw.mergedata`</span></span>
+<span><span class="co"># Using output "merged.data" from `nw.mergedata()`</span></span>
 <span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">merged.data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Species.Code</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"carwre"</span>, <span class="st">"bewwre"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Clean data function parameters</span></span>
 <span><span class="fu"><a href="../reference/nw.cleandata.html">nw.cleandata</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">df</span>, mode <span class="op">=</span> <span class="st">"flag"</span>, methods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span><span class="op">)</span> , output <span class="op">=</span> <span class="st">"cleaned.data"</span><span class="op">)</span></span></code></pre></div>
 <p>Individual cleaning procedures are specified in a character vector of
-lowercase letters <code>a:j</code>. An optional <code>output =</code>
-argument is included to rename the resulting dataframe as well.</p>
+lowercase letters <code>a:k</code>. An optional <code>output =</code>
+argument is included to optionally rename the resulting dataframe as
+well.</p>
 <div class="section level3">
 <h3 id="cleaning-procedure-definitions">Cleaning Procedure Definitions<a class="anchor" aria-label="anchor" href="#cleaning-procedure-definitions"></a>
 </h3>
@@ -350,6 +327,15 @@ if analyzing coastal or water-nesting species (e.g., Osprey nesting on
 channel markers).<br><br>
 </li>
 <li>
+<strong>Decrease-then-increase Eggs/Young:</strong> Flag/remove
+attempts where the number of eggs or young decrease and then
+subsequently increases. This may happen if a nest fails and a new
+attempt is started at the same location, which should be two individual
+nesting attempts. If the analyst is looking at host response to
+depredation events or egg dumping you may choose to retain these
+records. <br><br>
+</li>
+<li>
 <strong>Impossibly long attempts:</strong> Flag attempts with
 impossible nesting periods. Incorrect years are sometimes entered
 between date summary fields by participants. This may produce impossibly
@@ -360,8 +346,8 @@ days, or (3) Fledge Date - Hatch Date &gt; 300 days. These dates
 represent the maximum nest phenological period for any bird species and
 are not realistic for the majority of the NestWatch dataset. We
 encourage users to determine reasonable phenologies for their species of
-interest and use <code><a href="../reference/nw.filterphenology.html">nw.filterphenology()</a></code> to run a finer filter
-on nest phenology dates.<br><br>
+interest and use <a href="https://engagement-center.github.io/nestwatchR/reference/nw.filterphenology.html"><code>nw.filterphenology()</code></a>
+to run a finer filter on nest phenology dates. <br><br>
 </li>
 <li>
 <strong>Year errors in visits:</strong> Flag/remove attempts where
@@ -394,35 +380,28 @@ questionable outcome codes).</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">no_bnhcow</span><span class="op">$</span><span class="va">Attempt.ID</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># &gt; 648540    # Attempts after cleaning</span></span>
 <span></span>
-<span><span class="co"># Remove attempts using "i" and "j"</span></span>
-<span><span class="fu"><a href="../reference/nw.cleandata.html">nw.cleandata</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">merged.data</span>, mode <span class="op">=</span> <span class="st">"remove"</span>, methods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"i"</span>, <span class="st">"j"</span><span class="op">)</span>, output <span class="op">=</span> <span class="st">"no_longnests"</span><span class="op">)</span></span>
+<span><span class="co"># Remove attempts using "j" and "k"</span></span>
+<span><span class="fu"><a href="../reference/nw.cleandata.html">nw.cleandata</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">merged.data</span>, mode <span class="op">=</span> <span class="st">"remove"</span>, methods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"j"</span>, <span class="st">"k"</span><span class="op">)</span>, output <span class="op">=</span> <span class="st">"no_longnests"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">no_longnests</span><span class="op">$</span><span class="va">Attempt.ID</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># &gt; 646753    # Attempts after cleaning</span></span></code></pre></div>
 </div>
 </div>
-  </div>
-
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-
-      </div>
-
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
 
-      <footer><div class="copyright">
-  <p></p>
-<p>Developed by Kim Savides, Robyn Bailey, David Bonter.</p>
+    <footer><div class="pkgdown-footer-left">
+  <p>Developed by Kim Savides, Robyn Bailey, David Bonter.</p>
 </div>
 
-<div class="pkgdown">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+<div class="pkgdown-footer-right">
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
-
 
 
 

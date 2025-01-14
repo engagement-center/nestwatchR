@@ -15,11 +15,6 @@ Badge](https://img.shields.io/badge/Code%20License-GPL%20v3-blue)
 This repository is in early development with plans to add additional
 functions to create an R package to facilitate accessibility.
 
-🔲 Modify nw.filterphenology() to more properly handle run-on nesting
-attempts
-
-🔲 Finish phenological filtering example in “filter” vignette
-
 🔲 Internal testing
 
 ## Overview :pushpin:
@@ -61,23 +56,7 @@ knowledge of R is necessary for using these products. A function in this
 collection also depends on the program `Python`, which needs to be
 [installed](https://www.python.org/downloads/) on your machine prior to
 using the function. No prior knowledge of Python or manual setup of the
-program is needed. Use the following code chunk to check if Python is
-already installed on your machine and follow the resulting link if not
-already installed:
-
-``` r
-# Check to see if you already have Python installed
-check_python_installation <- function() {
-  python_installed <- system("python --version", intern = TRUE)
-  if (length(python_installed) > 0) {
-    print("Python is installed.")
-  } else {
-    message("Python is not installed.")
-    message("Please download and install Python from https://www.python.org/downloads/")
-  }
-}
-check_python_installation()
-```
+program is needed.
 
 These functions also depend on several `R` libraries. If you do not
 already have these packages installed, we suggest installing them during

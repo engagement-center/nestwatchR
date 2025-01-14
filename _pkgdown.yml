@@ -1,0 +1,32 @@
+url: https://engagement-center.github.io/nestwatchR/
+template:
+  bootstrap: 5
+
+navbar:
+  structure:
+    left: [home, articles, reference]
+    right: [github]
+  components:
+    articles:
+      text: Vignettes
+      menu:
+      - text: Introduction to NestWatch Data and Data Access
+        href: articles/a_Intro-and-Data-Access.html
+      - text: Conduct Common NestWatch Data Cleaning Procedures
+        href: articles/b_Data-Cleaning.html
+      - text: Filter NestWatch Data on Finer Scales
+        href: articles/c_Data-Filtering.html
+      - text: Estimate NestWatch Summary Dates
+        href: articles/d_Data-Estimation.html
+    reference:
+      text: Function Reference
+      href: reference/index.html
+    github:
+      icon: fab fa-github fa-lg
+      href: https://github.com/engagement-center/nestwatchR/
+      aria-label: github
+
+authors:
+  Kim Savides:
+  Robyn Bailey:
+  David Bonter:
