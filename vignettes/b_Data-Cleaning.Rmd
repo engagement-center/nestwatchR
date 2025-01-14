@@ -2,7 +2,7 @@
 title: "Conduct Common NestWatch Data Cleaning Procedures"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Coduct Common NestWatch Data Cleaning Procedures}
+  %\VignetteIndexEntry{Conduct Common NestWatch Data Cleaning Procedures}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
