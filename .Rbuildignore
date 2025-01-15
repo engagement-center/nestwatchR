@@ -7,5 +7,4 @@
 ^docs$
 ^pkgdown$
 ^inst/CITATION.cff
-00-testing-zone.R
-R/__helper_for_filterphenology.R
+^python-env
