@@ -67,7 +67,8 @@ data <- data.frame(Attempt.ID = c("1", "2", "3", "4"),
 nw.filterphenology(data = data, phenology = phenology, mode = "flag")
 
 
-# Simplified NestWatch dataset without nest summary dates (will look at total nest attempt duration from visit dates)
+# Simplified NestWatch dataset without nest summary dates
+# (will look at total nest attempt duration from visit dates)
 # Attempt "2" should be flagged as being too long.
 data <- data.frame(Attempt.ID = c("1", "1", "2", "2"),
                    Species.Code = rep("carwre", 4),

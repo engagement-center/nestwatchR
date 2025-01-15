@@ -180,13 +180,15 @@ nw.estclutchsize <- function(data, output = NULL){
   ####        Output data       ####
   ##################################
 
-  # Assign output
+  # Export resulting dataframe
   if (is.null(output)) {
-    return(out)  # Return 'out' directly if 'output' is NULL
+    filtered.data <- NULL
+    assign("filtered.data", out, envir = envir)
   } else {
-    assign(output, out, envir = .GlobalEnv)  # Assign to specified name in global environment
-    invisible(out)  # Return invisibly so the function doesn’t print the data frame
+    assign(paste0(output), out, envir = envir)
   }
 
+
 } # end of function
+
 

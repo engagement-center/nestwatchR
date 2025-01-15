@@ -312,7 +312,7 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active, output
 
     # Export resulting dataframe
     if (is.null(output)) {
-      cleaned.data <- NULL
+      filtered.data <- NULL
       assign("filtered.data", data, envir = envir)
     } else {
       assign(paste0(output), data, envir = envir)
