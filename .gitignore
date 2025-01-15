@@ -5,3 +5,5 @@
 inst/doc
 R/__*.R
 python-env/
+vignettes/python-env
+vignettes/temp-dir
