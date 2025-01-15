@@ -29,7 +29,8 @@ Imports:
     magrittr,
     reticulate,
     sf,
-    stringr
+    stringr,
+    lubridate
 URL: https://engagement-center.github.io/nestwatchR
 BugReports: https://github.com/engagement-center/nestwatchR/issues
 Suggests: 
