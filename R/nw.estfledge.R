@@ -80,7 +80,7 @@ nw.estfledge <- function(data, phenology, output = NULL) {
   ###########################
 
   # Initiate column names
-  Species <- Species.Code <- Attempt.ID <- Eggs.per.Day <- Incubation <- Netsling <- Clutch.Size <- NULL
+  Species <- species <- Species.Code <- Attempt.ID <- Eggs.per.Day <- Incubation <- Netsling <- Clutch.Size <- NULL
   Fledge.Date <- First.Lay.Date <- Hatch.Date <- Outcome <- Fledge <- First.Lay <- NULL
 
 

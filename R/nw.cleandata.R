@@ -106,7 +106,8 @@ nw.cleandata  <- function(data, mode, methods, output = NULL) {
   # Initalize Column Names
   Attempt.ID <- Visit.Datetime <- max_date <- min_date <- Flagged.Attempt <- Species.Code <- Outcome <- NULL
   Young.Total <- Clutch.Size <- Young.Fledged <- Subnational.Code <- date_diff <- First.Lay.Date <- NULL
-  Fledge.Date <- Hatch.Date <- NULL
+  Fledge.Date <- Hatch.Date <- Unacceptable <- Live.Host.Young.Count <- Host.Eggs.Count <- NULL
+  date_span <- all_dates_match_year <- NULL
 
   # Prep dataframe
   data <- data %>% mutate(Flagged.Attempt = NA) %>%                           # Make new column to hold flag code

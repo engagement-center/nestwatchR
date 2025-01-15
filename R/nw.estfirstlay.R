@@ -76,7 +76,7 @@ nw.estfirstlay <- function(data, phenology, output = NULL) {
   ####  Setup            ####
   ###########################
   # Initiate column names
-  Species <- Species.Code <- Attempt.ID <- Visit.Datetime <- Host.Eggs.Count <- Visited.During.Egg.Laying <- Eggs.per.Day <- NULL
+  Species <- species <- Species.Code <- Attempt.ID <- Visit.Datetime <- Host.Eggs.Count <- Visited.During.Egg.Laying <- Eggs.per.Day <- NULL
   Incubation <- Netsling <- Clutch.Size <- Hatch.Date <- Fledge.Date <- Species <- Days.of.Lay <- First.Lay.Date <- NULL
   Host.Eggs.Increases <- LayVisit <- eggs_on_date <- NULL
 

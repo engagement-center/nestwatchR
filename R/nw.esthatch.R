@@ -77,7 +77,7 @@ nw.esthatch <- function(data, phenology, output = NULL) {
   ####  Setup            ####
   ###########################
   # Initiate column names
-  Species <- Species.Code <- Attempt.ID <- Eggs.per.Day <- Incubation <- Netsling <- Clutch.Size <- NULL
+  Species <- species <- Species.Code <- Attempt.ID <- Eggs.per.Day <- Incubation <- Netsling <- Clutch.Size <- NULL
   Hatch.Date <- Fledge.Date <- Species <- Days.of.Lay <- First.Lay.Date <- Young.Total <- Outcome <- NULL
   First.Lay <- Clutch <- Hatch <- Fledge <- Fledge.Date.Estimated <- NULL
 

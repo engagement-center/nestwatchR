@@ -126,7 +126,9 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active, output
   # Initiate column names
   Flagged.Attempt <- Flagged.Check <- Attempt.ID <- Species.Code <- First.Lay.Date <- Hatch.Date <- Fledge.Date <- NA
   Visit.Datetime <- max_date <- min_date <- date_difference <- Live.Host.Young.Count <- Host.Egg.Count <- NA
-  toflag <- NULL
+  toflag <- species <- Host.Eggs.Count <- CumulativeMax <- is_positive <- first_zero_after_positive <- NA
+  keep <- Visit.ID <- had_young <- Nest.Status <- Host.Eggs.Present.Uncounted <- NA
+  first_valid_row <- period_length <- Live.Host.Young.Present.Uncounted <- NA
 
   # Prep dataframe
   data <- data %>% mutate(Flagged.Attempt = NA, Flagged.Check = NA) %>%         # Make new columns to hold flag codes
