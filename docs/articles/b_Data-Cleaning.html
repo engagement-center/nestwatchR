@@ -75,6 +75,7 @@ package contains two functions to provide coarse-scale cleaning
 procedures that NestWatch staff have identified in order to help
 analysts clean NestWatch data for analysis. Please read the full
 function documentation and this vignette prior to cleaning the data.</p>
+<p><br></p>
 <div class="section level2">
 <h2 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
 </h2>
@@ -108,6 +109,7 @@ recommend that data analysts map nest locations and screen for likely
 errors. See the <a href="https://engagement-center.github.io/nestwatchR/reference/nw.filterspatial.html"><code>nw.filterspatial()</code></a>
 and <a href="https://engagement-center.github.io/nestwatchR/articles/c_Data-Filtering.html">Filtering
 Vignette</a> for more information on spatial filtering.</p>
+<p><br></p>
 </div>
 <div class="section level2">
 <h2 id="clean-taxa">Clean Taxa<a class="anchor" aria-label="anchor" href="#clean-taxa"></a>
@@ -212,6 +214,7 @@ dataset.</p>
 <span><span class="co">#&gt; 2          1          Downy Woodpecker       dowwoo</span></span>
 <span><span class="co">#&gt; 3          2             chickadee sp.      chicka1</span></span>
 <span><span class="co">#&gt; 4          3 Tree/Violet-green Swallow       y00701</span></span></code></pre></div>
+<p><br></p>
 </div>
 </div>
 <div class="section level2">
@@ -239,9 +242,9 @@ do not meet the cleaning criteria will be noted in a new column
 <code>NA</code>. If mode is set to remove, these flagged attempts are
 removed from the output.</p>
 <blockquote>
-<p>![NOTE] If you are only interested in a subset of species, or RAM
-usage and processing time are a concern, you may choose to subset the
-data to those species prior to running <a href="https://engagement-center.github.io/nestwatchR/reference/nw.cleandata.html"><code>nw.cleandata()</code></a>.</p>
+<p>⚠️ If you are only interested in a subset of species, or RAM usage
+and processing time are a concern, you may choose to subset the data to
+those species prior to running <a href="https://engagement-center.github.io/nestwatchR/reference/nw.cleandata.html"><code>nw.cleandata()</code></a>.</p>
 </blockquote>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Example of subsetting to 2 focal species: Carolina and Bewick's Wrens</span></span>
@@ -254,6 +257,7 @@ data to those species prior to running <a href="https://engagement-center.github
 lowercase letters <code>a:k</code>. An optional <code>output =</code>
 argument is included to optionally rename the resulting dataframe as
 well.</p>
+<p><br></p>
 <div class="section level3">
 <h3 id="cleaning-procedure-definitions">Cleaning Procedure Definitions<a class="anchor" aria-label="anchor" href="#cleaning-procedure-definitions"></a>
 </h3>

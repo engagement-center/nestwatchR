@@ -83,6 +83,7 @@ on the most proximal event to that being estimated or based off the
 event with the least general variability in birds (see each section
 below). Though these functions aim to use the best available data, the
 precision of the resulting estimates cannot be guaranteed.</p>
+<p><br></p>
 <div class="section level2">
 <h2 id="estimate-clutch-size">Estimate Clutch Size<a class="anchor" aria-label="anchor" href="#estimate-clutch-size"></a>
 </h2>
@@ -126,6 +127,7 @@ have been higher depending on the exact (unobserved) failure date.</p>
 <span><span class="va">still_empty</span> <span class="op">&lt;-</span> <span class="va">estimated.clutch</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">Clutch.Size</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">still_empty</span><span class="op">$</span><span class="va">Attempt.ID</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># &gt; [1] 376     # number of clutch sizes not estimated</span></span></code></pre></div>
+<p><br></p>
 </div>
 <div class="section level2">
 <h2 id="estimate-first-lay-date">Estimate First Lay Date<a class="anchor" aria-label="anchor" href="#estimate-first-lay-date"></a>
@@ -180,6 +182,7 @@ species to estimate first lay dates for each.</p>
 <span><span class="va">still_empty</span> <span class="op">&lt;-</span> <span class="va">estimated.lay</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">First.Lay.Date</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">still_empty</span><span class="op">$</span><span class="va">Attempt.ID</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># &gt; [1] 2392     # number of first lay dates not estimated</span></span></code></pre></div>
+<p><br></p>
 </div>
 <div class="section level2">
 <h2 id="estimate-hatch-date">Estimate Hatch Date<a class="anchor" aria-label="anchor" href="#estimate-hatch-date"></a>
@@ -217,6 +220,7 @@ between observers, this function does not utilize these data.</p>
 <span><span class="va">still_empty</span> <span class="op">&lt;-</span> <span class="va">estimated.hatch</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">Hatch.Date</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">still_empty</span><span class="op">$</span><span class="va">Attempt.ID</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># &gt; [1] 3207     # number of hatch dates not estimated</span></span></code></pre></div>
+<p><br></p>
 </div>
 <div class="section level2">
 <h2 id="estimate-fledge-date">Estimate Fledge Date<a class="anchor" aria-label="anchor" href="#estimate-fledge-date"></a>

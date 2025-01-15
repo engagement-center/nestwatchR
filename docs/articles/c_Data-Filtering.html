@@ -69,6 +69,7 @@ filtering in order to clean the NestWatch dataset after running <a href="https:/
 This may include selecting certain species, identifying specific nest
 phenology dates (i.e., incubation should not last longer than X days for
 species Y), or limiting nest attempts to a certain geographic area.</p>
+<p><br></p>
 <div class="section level2">
 <h2 id="filter-species">Filter Species<a class="anchor" aria-label="anchor" href="#filter-species"></a>
 </h2>
@@ -95,6 +96,7 @@ filtering to species from scratch.</p>
 <p><br> This “wrens” data subset is also included within the package for
 quick access using
 <code>wrens &lt;- nestwatchR::wren_quickstart</code>:</p>
+<p><br></p>
 </div>
 <div class="section level2">
 <h2 id="filter-spatially">Filter Spatially<a class="anchor" aria-label="anchor" href="#filter-spatially"></a>
@@ -181,7 +183,7 @@ location). You may also need to modify the year in the code belo
 depending on what Status &amp; Trends data product is available.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Obtain and set an ebird access key</span></span>
-<span><span class="fu"><a href="https://ebird.github.io/ebirdst/reference/set_ebirdst_access_key.html" class="external-link">set_ebirdst_access_key</a></span><span class="op">(</span><span class="st">"pasteyourkeyhere"</span><span class="op">)</span>      <span class="co"># you only need to do this once, R will remember it</span></span>
+<span><span class="fu">set_ebirdst_access_key</span><span class="op">(</span><span class="st">"pasteyourkeyhere"</span><span class="op">)</span>      <span class="co"># you only need to do this once, R will remember it</span></span>
 <span></span>
 <span><span class="co"># Define what species you want to download by their 6-letter code</span></span>
 <span><span class="va">spp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bewwre"</span>, <span class="st">"carwre"</span><span class="op">)</span></span>
@@ -192,7 +194,7 @@ depending on what Status &amp; Trends data product is available.</p>
 <span></span>
 <span><span class="co"># Download range maps by species</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="va">spp</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://ebird.github.io/ebirdst/reference/ebirdst_download_status.html" class="external-link">ebirdst_download_status</a></span><span class="op">(</span>species <span class="op">=</span> <span class="va">i</span>, download_abundance <span class="op">=</span> <span class="cn">FALSE</span>, </span>
+<span>  <span class="fu">ebirdst_download_status</span><span class="op">(</span>species <span class="op">=</span> <span class="va">i</span>, download_abundance <span class="op">=</span> <span class="cn">FALSE</span>, </span>
 <span>                          download_ranges <span class="op">=</span> <span class="cn">TRUE</span>, pattern <span class="op">=</span> <span class="st">"_smooth_27km_"</span>, </span>
 <span>                          path <span class="op">=</span> <span class="va">spatialdata_path</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
@@ -203,7 +205,7 @@ depending on what Status &amp; Trends data product is available.</p>
 <span>  <span class="co"># Generate the path to the .gpkg files</span></span>
 <span>  <span class="va">file_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">spatialdata_path</span>, <span class="st">"/2022/"</span>, <span class="va">i</span>, <span class="st">"/ranges/"</span>, <span class="va">i</span>, <span class="st">"_range_smooth_27km_2022.gpkg"</span><span class="op">)</span></span>
 <span>  <span class="co"># Read in the .gpkg file</span></span>
-<span>  <span class="va">range_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="va">file_path</span><span class="op">)</span></span>
+<span>  <span class="va">range_data</span> <span class="op">&lt;-</span> <span class="fu">st_read</span><span class="op">(</span><span class="va">file_path</span><span class="op">)</span></span>
 <span>  <span class="co"># Generate the name for the object</span></span>
 <span>  <span class="va">object_name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">i</span>, <span class="st">"_range"</span><span class="op">)</span></span>
 <span>  <span class="co"># Assign the value to the dynamically-generated object name</span></span>
@@ -218,11 +220,11 @@ depending on what Status &amp; Trends data product is available.</p>
 <span>    <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/get.html" class="external-link">get</a></span><span class="op">(</span><span class="va">i</span>, envir <span class="op">=</span> <span class="va">.GlobalEnv</span><span class="op">)</span></span>
 <span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">season</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"breeding"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>      <span class="va">data</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">season</span> <span class="op">==</span> <span class="st">"breeding"</span><span class="op">)</span></span>
-<span>      <span class="va">data</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">nest_points</span>, crs <span class="op">=</span> <span class="va">prj</span><span class="op">)</span></span>
+<span>      <span class="va">data</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">st_transform</span><span class="op">(</span><span class="va">nest_points</span>, crs <span class="op">=</span> <span class="va">prj</span><span class="op">)</span></span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/assign.html" class="external-link">assign</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span>, <span class="va">data</span>, envir <span class="op">=</span> <span class="va">.GlobalEnv</span><span class="op">)</span></span>
 <span>    <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
 <span>      <span class="va">data</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">season</span> <span class="op">==</span> <span class="st">"resident"</span><span class="op">)</span></span>
-<span>      <span class="va">data</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">nest_points</span>, crs <span class="op">=</span> <span class="va">prj</span><span class="op">)</span></span>
+<span>      <span class="va">data</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">st_transform</span><span class="op">(</span><span class="va">nest_points</span>, crs <span class="op">=</span> <span class="va">prj</span><span class="op">)</span></span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/assign.html" class="external-link">assign</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span>, <span class="va">data</span>, envir <span class="op">=</span> <span class="va">.GlobalEnv</span><span class="op">)</span><span class="op">}</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
@@ -327,6 +329,7 @@ outside of our defined range.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Remove flagged attempts</span></span>
 <span><span class="va">nests_cleanlocs</span> <span class="op">&lt;-</span> <span class="va">flagged_nests</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Flagged.Location</span> <span class="op">==</span> <span class="st">"In-Range"</span><span class="op">)</span></span></code></pre></div>
+<p><br></p>
 </div>
 </div>
 <div class="section level2">
@@ -463,7 +466,7 @@ trimmed.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">55</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span>, linewidth <span class="op">=</span> <span class="fl">2</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="external-link">annotate</a></span><span class="op">(</span><span class="st">"text"</span>, x <span class="op">=</span> <span class="fl">85</span>, y <span class="op">=</span> <span class="fl">4500</span>, label <span class="op">=</span> <span class="st">"55 day limit"</span>, color <span class="op">=</span> <span class="st">"black"</span>, vjust <span class="op">=</span> <span class="op">-</span><span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="c_Data-Filtering_files/figure-html/visualize%20filtering-1.png" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="c_Data-Filtering_files/figure-html/visualize%20filtering-1.png" alt="A histogram displaying the distrubution of nesting periods before and after filtering." width="100%" style="display: block; margin: auto;"></p>
 <p>We can see that there were more than a few nests with long nesting
 periods before filtering. After filtering out 448 attempts deemed “too
 long”, we are left with 2,539 attempts to continue an analysis with.</p>

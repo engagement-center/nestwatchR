@@ -23,6 +23,8 @@ library(nestwatchR)
 
 Before analysis, analysts should consider conducting finer-scale filtering in order to clean the NestWatch dataset after running [`nw.cleandata()`](https://engagement-center.github.io/nestwatchR/reference/nw.cleandata.html). This may include selecting certain species, identifying specific nest phenology dates (i.e., incubation should not last longer than X days for species Y), or limiting nest attempts to a certain geographic area.
 
+<br>
+
 ## Filter Species
 
 Limiting the dataset to just a few species can easily be done using the pipe (`%>%`). If you are unfamiliar with "piping", see the [`migritrr`](https://magrittr.tidyverse.org/) package. Below we will subset the version 2 of the NestWatch dataset to include only attempts for Bewick's Wren ("bewwre") and Carolina Wren ("carwre"). The code below walks through download, merging, and filtering to species from scratch.
@@ -50,6 +52,8 @@ unique(wrens$Species.Name)
 library(dplyr)
 wrens <- nestwatchR::wren_quickstart
 ```
+
+<br>
 
 ## Filter Spatially
 
@@ -230,6 +234,8 @@ We can now quickly filter out those nests with flagged locations outside of our 
 nests_cleanlocs <- flagged_nests %>% filter(Flagged.Location == "In-Range")
 
 ```
+
+<br>
 
 ## Filter Using Nest Phenology
 
