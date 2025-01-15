@@ -56,6 +56,8 @@
 #'
 #' @importFrom stringr str_detect
 #' @importFrom stats complete.cases
+#' @importFrom stats na.omit
+#' @importFrom lubridate year
 #' @return a dataframe
 #' @export
 #'
