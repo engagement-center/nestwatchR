@@ -64,7 +64,7 @@ data <- data.frame(Attempt.ID = c("1", "2", "3", "4"),
                    Visit.Datetime = c(rep(NA, 4)),
                    Outcome = c("s1", "f", "s1", "s1"),
                    Nest.Status = rep(NA, 4))
-nw.filterphenology(data = data, phenology = phenology, mode = "flag")
+nw.filterphenology(data = data, max_phenology = phenology, mode = "flag")
 
 
 # Simplified NestWatch dataset without nest summary dates
@@ -80,5 +80,5 @@ data <- data.frame(Attempt.ID = c("1", "1", "2", "2"),
                                 "2024-05-01", "2024-07-30")),
                    Outcome = c("s1", "s1", "s1", "s1"),
                    Nest.Status = rep(NA, 4))
-nw.filterphenology(data = data, phenology = phenology, mode = "flag")
+nw.filterphenology(data = data, max_phenology = phenology, mode = "flag")
 }
