@@ -135,11 +135,11 @@ test_that("Method 'i'", {
                      Hatch.Date =     c("2024-05-10", "2024-05-10", NA,           "2025-05-10", "2024-05-10", "2024-05-10"),
                      Fledge.Date =    c("2024-05-20", "2024-05-20", "2025-05-20", "2024-05-20", "2025-05-20", "2024-05-20"),
                      Visit.Datetime = rep("2024-01-01 12:12:12", 6))
-  nw.cleandata(data = data, mode = "remove", methods = "i", output = "inspect")
+  nw.cleandata(data = data, mode = "remove", methods = "j", output = "inspect")
   expect_equal(length(unique(inspect$Attempt.ID)), 2)
 })
 
-test_that("Method 'j'", {
+test_that("Method 'k'", {
   data <- data.frame(Attempt.ID = c(1, 1, 2, 2, 3, 3),
                      Species.Code = c("norcar", "norcar", "carwre", "carwre", "btwb", "btbwar"),
                      Subnational.Code = c("US-TX", "US-TX", "US-GA", "US-GA", "US-NY", "US-NY"),
@@ -153,7 +153,7 @@ test_that("Method 'j'", {
                      Visit.Datetime = c("2024-05-01 12:12:12", "2022-05-10 12:12:12",
                                         "2024-05-01 12:12:12", "2024-05-10 12:12:12",
                                         "2024-05-01 12:12:12", "2024-05-12 12:12:12"))
-  nw.cleandata(data = data, mode = "remove", methods = "j", output = "inspect")
+  nw.cleandata(data = data, mode = "remove", methods = "k", output = "inspect")
   expect_equal(length(unique(inspect$Attempt.ID)), 2)
 })
 
