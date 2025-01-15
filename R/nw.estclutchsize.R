@@ -67,7 +67,7 @@ nw.estclutchsize <- function(data, output = NULL){
   # Initiate Column Names
   Clutch.Size <- Attempt.ID <- Host.Eggs.Count <- Unhatched.Eggs <- Young.Total <- Live.Host.Young.Count <- NA
   Dead.Host.Young.Count <- Young.Fledged <- Clutch.Size.Estimated <- Clutch.Size.x <- Clutch.Size.y <- NA
-  Young.in.Nest <- est1 <- est2 <- est3 <- NA
+  Young.in.Nest <- est1 <- est2 <- est3 <- envir <- NA
 
   # If clutch size is reported give estimated column a 0
   data <- data %>% mutate(Clutch.Size.Estimated = ifelse(!is.na(Clutch.Size), 0, NA)) %>%
