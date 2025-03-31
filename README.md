@@ -24,7 +24,7 @@ functions to create an R package to facilitate accessibility.
 [NestWatch](http://www.nestwatch.org) is a participatory science project
 operated by [Cornell Lab of Ornithology](bird.cornell.edu). Since 1965,
 members of the public have been following a standardized protocol for
-observing and reporting birds’ nests in the United States and Canada
+observing and reporting on nesting attempts by birds in the United States and Canada
 (and more recently, globally). This dataset contains raw nest records
 submitted to NestWatch, including millions of nest check
 observations from hundreds of thousands of nest attempts (>750,000 in 2025). The purpose of
