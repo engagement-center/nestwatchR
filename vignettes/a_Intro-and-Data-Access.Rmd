@@ -29,21 +29,19 @@ library(nestwatchR)
 
 # Background {#background}
 
-Our ability to allocate conservation efforts for the natural world
+Our ability to inform conservation efforts
 depends on detailed information about the life histories, distributions,
 abundances, and population trends of species over time. The goal of the
-[NestWatch project](https://nestwatch.org), administered by [The Cornell
-Lab of Ornithology](https://www.birds.cornell.edu/home/), is to preserve
-data collected by members of the global participatory science community
-and researchers to enable the study of nest location, survival, and
-phenology for the world’s bird populations. NestWatch is designed to
+[NestWatch](https://nestwatch.org), administered by [The Cornell
+Lab of Ornithology](https://www.birds.cornell.edu/home/), is to serve as a global, open access repository for data on the rproductive success of birds. NestWatch preserves data collected by members of the global participatory science community
+as well as professional researchers. The dataset, and these R tools, are freely available to enable the study of a suite of nesting parameters. NestWatch is designed to
 track status and trends in the reproductive biology of birds, including
 when nesting occurs, number of eggs laid, how many eggs hatch, and how
 many hatchlings survive to fledging. Our database is intended to be used
 to study the current condition of breeding bird populations and how they
 may be changing over time as a result of climate change, habitat
 degradation and loss, expansion of urban areas, and the introduction of
-non-native plants and animals.
+non-native plants and animals. Researchers or members of the public interested in archiving nesting data for current and future use should visit the NestWatch web site. Large datasets may be uploaded by contacting the [NestWatch team}(mailto:nestwatch@cornell.edu).
 
 This vignette gives an overview of the [NestWatch Open
 Dataset](https://data.mendeley.com/datasets/wjf794z7gc), which
