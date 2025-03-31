@@ -21,7 +21,7 @@ functions to create an R package to facilitate accessibility.
 
 ## Overview :pushpin:
 
-[NestWatch](http://www.nestwatch.org) is a participatroy science project
+[NestWatch](http://www.nestwatch.org) is a participatory science project
 operated by [Cornell Lab of Ornithology](bird.cornell.edu). Since 1965,
 members of the public have been following a standardized protocol for
 observing and reporting birds’ nests in the United States and Canada
