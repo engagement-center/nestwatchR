@@ -146,7 +146,7 @@ covering introductory usage of NestWatch data, please see the following
 Vignettes:
 
 - [Introduction to NestWatch Data and Data
-  Access](https://engagement-center.github.io/nestwatchR/articles/a_Into-and-Data-Access.html):
+  Access](https://engagement-center.github.io/nestwatchR/articles/a_Intro-and-Data-Access.html):
   covers data access, available data products, and introduction to
   structure and format of data files
 - [Conduct Common NestWatch Data Cleaning
