@@ -21,13 +21,13 @@ functions to create an R package to facilitate accessibility.
 
 ## Overview :pushpin:
 
-[NestWatch](http://www.nestwatch.org) is a community science project
+[NestWatch](http://www.nestwatch.org) is a participatroy science project
 operated by [Cornell Lab of Ornithology](bird.cornell.edu). Since 1965,
 members of the public have been following a standardized protocol for
 observing and reporting birds’ nests in the United States and Canada
 (and more recently, globally). This dataset contains raw nest records
-submitted to NestWatch. The dataset contains millions of nest check
-observations from hundreds of thousands of nest attempts. The purpose of
+submitted to NestWatch, including millions of nest check
+observations from hundreds of thousands of nest attempts (>750,000 in 2025). The purpose of
 this repository is to provide a collection of functions to aid in
 accessing and analyzing the wealth of nesting data contained in the
 NestWatch database.
