@@ -41,7 +41,7 @@ many hatchlings survive to fledging. Our database is intended to be used
 to study the current condition of breeding bird populations and how they
 may be changing over time as a result of climate change, habitat
 degradation and loss, expansion of urban areas, and the introduction of
-non-native plants and animals. Researchers or members of the public interested in archiving nesting data for current and future use should visit the NestWatch web site. Large datasets may be uploaded by contacting the [NestWatch team}(mailto:nestwatch@cornell.edu).
+non-native plants and animals. Researchers or members of the public interested in archiving nesting data for current and future use should visit the [NestWatch web site](https://nestwatch.org). Large datasets may be uploaded by contacting the [NestWatch team](mailto:nestwatch@cornell.edu).
 
 This vignette gives an overview of the [NestWatch Open
 Dataset](https://data.mendeley.com/datasets/wjf794z7gc), which
