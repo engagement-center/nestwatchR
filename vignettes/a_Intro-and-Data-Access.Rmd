@@ -109,7 +109,7 @@ nw.getdata(version = 1)
 This function uses Python within R to access the Mendeley data archive
 and download the Nest Watch datasets. Once run, two dataframes will be
 available in the global environment: `NW.attempts` and `NW.checks`.
-These dataframes are yet not saved to your machine--you may wish to use
+These dataframes are not yet saved to your machine--you may wish to use
 [`write.csv()`](https://www.rdocumentation.org/packages/AlphaPart/versions/0.9.8/topics/write.csv)
 or [`saveRDS()`](https://rdrr.io/r/base/readRDS.html) to access these
 data again without the need to re-download the datasets.
