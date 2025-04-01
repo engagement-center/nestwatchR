@@ -22,15 +22,15 @@ functions to create an R package to facilitate accessibility.
 ## Overview :pushpin:
 
 [NestWatch](http://www.nestwatch.org) is a participatory science project
-operated by [Cornell Lab of Ornithology](bird.cornell.edu). Since 1965,
-members of the public have been following a standardized protocol for
-observing and reporting on nesting attempts by birds in the United States and Canada
-(and more recently, globally). This dataset contains raw nest records
-submitted to NestWatch, including millions of nest check
-observations from hundreds of thousands of nest attempts (>750,000 in 2025). The purpose of
-this repository is to provide a collection of functions to aid in
-accessing and analyzing the wealth of nesting data contained in the
-NestWatch database.
+operated by the [Cornell Lab of Ornithology](bird.cornell.edu). Since
+1965, members of the public have been following a standardized protocol
+for observing and reporting the nests of birds in the United States and
+Canada (and more recently, globally). This data set contains raw nest
+records submitted to NestWatch, including millions of nest check
+observations from hundreds of thousands of nest attempts (\>750,000 in
+2025). The purpose of this repository is to provide a collection of
+functions to aid in accessing and analyzing the wealth of nesting data
+contained in the NestWatch database.
 
 **The metadata paper associated with this dataset [(Bailey et
 al. 2023)](https://doi.org/10.1002/ecy.4230) is critical for
@@ -45,8 +45,8 @@ here](https://nestwatch.org/explore/nestwatch-open-dataset-downloads/).
 This package is under active development and is likely to have bugs and
 unexpected issues. Presently, the package exists off-CRAN in the public
 [`engagement-center/nestwatchR`](https://github.com/engagement-center/nestwatchR)
-GitHub repository. To install the package on your local machine, either
-run the following code:
+GitHub repository. To install the package on your local machine, run the
+following code:
 
 ``` r
 if (!requireNamespace("remotes", quietly = TRUE)) {
@@ -78,7 +78,7 @@ if(isTRUE(install_status)){
 
 ## Data access :globe_with_meridians:
 
-Data from NestWatch is free to access either from the
+Data from NestWatch are free to access either from the
 [`nw.getdata()`](https://engagement-center.github.io/nestwatchR/reference/nw.getdata.html)
 function in R or as a direct download from the [Mendeley Data
 Archive](https://data.mendeley.com/datasets/wjf794z7gc/2) or NestWatch
@@ -146,9 +146,9 @@ covering introductory usage of NestWatch data, please see the following
 Vignettes:
 
 - [Introduction to NestWatch Data and Data
-  Access](https://engagement-center.github.io/nestwatchR/articles/a_Intro-and-Data-Access.html):
-  covers data access, available data products, and introduction to
-  structure and format of data files
+  Access](https://engagement-center.github.io/nestwatchR/articles/a_Into-and-Data-Access.html):
+  covers data access, available data products, definitions of data
+  fields, and an introduction to structure and format of data files
 - [Conduct Common NestWatch Data Cleaning
   Procedures](https://engagement-center.github.io/nestwatchR/articles/b_Data-Cleaning.html):
   demonstrates how and when to use a variety of common data cleaning
