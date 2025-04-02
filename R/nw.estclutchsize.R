@@ -180,6 +180,12 @@ nw.estclutchsize <- function(data, output = NULL){
   ####        Output data       ####
   ##################################
 
+  # Prep for and Export resulting dataframe
+  pos <- 1
+  envir = as.environment(pos)
+
+
+
   # Export resulting dataframe
   if (is.null(output)) {
     filtered.data <- NULL
