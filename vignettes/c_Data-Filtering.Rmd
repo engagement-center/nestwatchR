@@ -34,7 +34,7 @@ library(nestwatchR)
 library(dplyr)
 
 # Download and merge datasets
-nw.getdata(version = 2)
+nw.getdata(version = 1)
 nw.mergedata(attempts = NW.attemps, checks = NW.checks, output = "merged.data")
 
 # Filter data to include only carwre and bewwre
@@ -308,7 +308,7 @@ length(unique(flagged$Attempt.ID))
 
 <br>
 
-This function also has the logical argument `trim_to_active`. This argument specifies if nest checks before a nest was active (before building activity, observed eggs, observed young) or after nest fledge/failure should be noted for flagging or removal. By setting this argument to `TRUE`, individual nest checks outside the active period will be removed if `mode = "remove"` or noted with a `"FLAGGED"` tag in the new `Flagged.Check` column for you to manually inspect.
+This function also has the logical argument `trim_to_active` (used in the above example). This argument specifies if nest checks before a nest was active (before building activity, observed eggs, observed young) or after nest fledge/failure should be noted for flagging or removal. By setting this argument to `TRUE`, individual nest checks outside the active period will be removed if `mode = "remove"` or noted with a `"FLAGGED"` tag in the new `Flagged.Check` column for you to manually inspect.
 
 <br> We can visualize the distribution of active nesting periods of Carolina Wrens in our example before and after being filtered and trimmed.
 

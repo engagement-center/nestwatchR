@@ -168,7 +168,12 @@ Vignettes:
 
 This quick start guide shows how to download data and plot the first lay
 dates of two species from the NestWatch Open Dataset: Carolina and
-Bewick’s wrens.
+Bewick’s wrens. Note that here we force the download of Version 1 of the
+NestWatch dataset for reproducibility. When running your own analyses,
+you will likely want to download the latest version of the NestWatch
+data (see
+[`nw.getdata()`](https://engagement-center.github.io/nestwatchR/reference/nw.getdata.html)
+for more information).
 
 ``` r
 # Load NestWatch Package
@@ -274,3 +279,9 @@ ggplot(data, aes(x = First.Lay.Date, fill = Species.Name)) +
 ```
 
 <img src="man/figures/README-plot-1.png" alt="A histogram displaying the distrubution of first lay dates for Bewick's Wren (blue) and Carolina Wren (green)." width="100%" />
+
+Here we plot two histograms to inspect the distribution of First Lay
+Dates between Bewick’s and Carolina Wrens. Note that the NestWatch
+dataset continues to grow with each breeding season, so the numbers
+shown in the examples on this site will likely be different from what
+you see using the most current version of the Open Dataset.

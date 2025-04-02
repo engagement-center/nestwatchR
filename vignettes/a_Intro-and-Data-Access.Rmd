@@ -143,13 +143,10 @@ library(DT)
 datatable(NW.attempts, options = list(paging = F, scrollX = T, searching  = F))
 ```
 
-<details>
 
-<summary>`r kableExtra::text_spec("**Click for Field Descriptions**", color = "#FF9417")`</summary>
-
--   **Attempt ID:** assigned; categorical; A unique identification
-    assigned to individual nest attempts.
--   **Location ID:** assigned; categorical; A unique identification
+> -   **Attempt ID:** assigned; categorical; A unique identification
+     assigned to individual nest attempts.
+ -  **Location ID:** assigned; categorical; A unique identification
     assigned to individual nest locations. May be repeated within and
     across years.
 -   **Latitude:** participant provided; numeric; Nest coordinate in
@@ -275,7 +272,7 @@ datatable(NW.attempts, options = list(paging = F, scrollX = T, searching  = F))
     of "Mobile" entry), or bulk upload (field value indicates date of
     uploading into database).
 
-</details>
+
 
 <br>
 
@@ -290,11 +287,8 @@ datatable(NW.checks, options = list(paging = F, scrollX = T, searching  = F, scr
 
 ```
 
-<details>
 
-<summary>`r kableExtra::text_spec("**Click for Field Descriptions**", color = "#FF9417")`</summary>
-
--   **Attempt ID:** assigned; categorical; See prior description.
+> -   **Attempt ID:** assigned; categorical; See prior description.
 -   **Visit ID:** assigned; categorical; Identifier assigned for
     individual visits to nest attempts. A nest attempt will have as many
     Visit ID values as there were nest checks reported for that attempt.
@@ -400,7 +394,6 @@ datatable(NW.checks, options = list(paging = F, scrollX = T, searching  = F, scr
     of "Mobile" entry), or bulk upload (field value indicates date of
     uploading into database).
 
-</details>
 
 <br>
 
