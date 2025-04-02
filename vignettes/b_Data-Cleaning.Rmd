@@ -120,7 +120,7 @@ df <- data.frame(Attempt.ID = c(1, 1, 2, 3, 4),
 df
 ```
 
-### Spuhs and Slashes
+### Spuhs & Slashes
 
 Correct usage of a "spuh" would, for example, be if a participant
 observed a chickadee nesting in a region of Black-capped/Carolina

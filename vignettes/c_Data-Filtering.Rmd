@@ -25,7 +25,7 @@ Before analysis, researchers should consider conducting finer-scale filtering in
 
 <br>
 
-## Filter Species
+## Filtering Species
 
 Limiting the dataset to just a few species can easily be done using the pipe (`%>%`). If you are unfamiliar with "piping", see the [`migritrr`](https://magrittr.tidyverse.org/) package. Below we will subset the version 2 of the NestWatch dataset to include only attempts for Bewick's Wren ("bewwre") and Carolina Wren ("carwre"). The code below walks through download, merging, and filtering to species from scratch.
 
