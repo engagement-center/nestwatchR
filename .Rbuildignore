@@ -8,3 +8,4 @@
 ^pkgdown$
 ^inst/CITATION.cff
 ^python-env
+^vignettes

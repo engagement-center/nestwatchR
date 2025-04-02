@@ -64,14 +64,14 @@
 
     
     
-<p>Before analysis, analysts should consider conducting finer-scale
+<p>Before analysis, researchers should consider conducting finer-scale
 filtering in order to clean the NestWatch dataset after running <a href="https://engagement-center.github.io/nestwatchR/reference/nw.cleandata.html"><code>nw.cleandata()</code></a>.
 This may include selecting certain species, identifying specific nest
 phenology dates (i.e., incubation should not last longer than X days for
 species Y), or limiting nest attempts to a certain geographic area.</p>
 <p><br></p>
 <div class="section level2">
-<h2 id="filter-species">Filter Species<a class="anchor" aria-label="anchor" href="#filter-species"></a>
+<h2 id="filtering-species">Filtering Species<a class="anchor" aria-label="anchor" href="#filtering-species"></a>
 </h2>
 <p>Limiting the dataset to just a few species can easily be done using
 the pipe (<code>%&gt;%</code>). If you are unfamiliar with “piping”, see
@@ -104,10 +104,10 @@ quick access using
 <p>Spatial filters are a flexible way to limit data to a predefined
 geographic area. You may choose to limit an analysis to nesting attempts
 within a certain area, like a single <a href="https://nabci-us.org/resources/bird-conservation-regions-map/" class="external-link">Bird
-Conservation Region</a> or a select number of states. Or one may choose
-to clean potentially misidentified species by using a range map to
-filter out nesting attempts. If those filtering criteria are easily
-subset from the dataset, like states and countries (via
+Conservation Region</a> or a select political jurisdiction. Or you may
+choose to remove potentially misidentified species by using a range map
+to filter out nesting attempts. If those filtering criteria are easily
+subset from the dataset, like states/provinces and countries (via
 <code>Subnational.Code</code>), you can quickly use subsetting rules to
 filter the data for analysis. But, if those criteria are not already
 easily subset-able, a spatial filter can be a good option.</p>
@@ -179,7 +179,7 @@ range layer. Note: You only need to input your access key once (R will
 store it for you!) and you only need to download the range maps once
 (you may get an error if you rerun <a href="https://ebird.github.io/ebirdst/reference/ebirdst_download_status.html" class="external-link"><code>ebirdst_download_status()</code></a>
 when the data already exists at the <code>spatialdata_path</code>
-location). You may also need to modify the year in the code belo
+location). You may also need to modify the year in the code below
 depending on what Status &amp; Trends data product is available.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Obtain and set an ebird access key</span></span>
@@ -232,9 +232,9 @@ depending on what Status &amp; Trends data product is available.</p>
 <span></span>
 <span><span class="co"># Clean up intermediate objects</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">file_path</span>, <span class="va">i</span>, <span class="va">object_name</span>, <span class="va">object_names</span>, <span class="va">spatialdata_path</span><span class="op">)</span></span></code></pre></div>
-<p><br> Now that we have range polygons for Bewick’s and Carolina Wrens,
-we can add them to our map and investigate our nest locations a bit
-closer. Let’s plot just the Bewick’s Wren data.</p>
+<p><br> Now that we have range polygons for Bewick’s Wrens and Carolina
+Wrens, we can add them to our map and investigate our nest locations a
+bit closer. Let’s plot just the Bewick’s Wren data.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Subset nest locations to Bewick's Wrens</span></span>
 <span><span class="va">bewwre</span> <span class="op">&lt;-</span> <span class="va">nest_points</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Species.Code</span> <span class="op">==</span> <span class="st">"bewwre"</span><span class="op">)</span></span>
@@ -280,7 +280,7 @@ projection using <code>proj =</code> and inputting a PROJ.4 string. If
 not provided the function will default to the Lambert Conformal Conic
 which is well suited for plotting the majority of NestWatch data at this
 time. Finally, the optional <code>output =</code> argument can be used
-to name the resulting spatially-cleaned spatial dataframe.</p>
+to name the resulting spatially-cleaned dataframe.</p>
 <p>If we zoom in to central Colorado, we can see there are a few
 Bewick’s Wren nests just outside the range border.</p>
 <div class="float">
@@ -302,7 +302,7 @@ well outside the expected range:</p>
 <span>                 proj <span class="op">=</span> <span class="st">"+proj=lcc +lon_0=-90 +lat_1=33 +lat_2=45"</span>,   <span class="co"># LCC from above</span></span>
 <span>                 output <span class="op">=</span> <span class="st">"flagged_nests"</span><span class="op">)</span>           <span class="co"># define the output name</span></span></code></pre></div>
 <p><br> We can plot the results to see which points were flagged for
-review (and would be removed if mode was ste to “remove”):</p>
+review (and would be removed if mode was set to “remove”):</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Relabel nests within range for nice map symbology</span></span>
 <span><span class="va">flagged_nests</span><span class="op">$</span><span class="va">Flagged.Location</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">flagged_nests</span><span class="op">$</span><span class="va">Flagged.Location</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"In-Range"</span></span>

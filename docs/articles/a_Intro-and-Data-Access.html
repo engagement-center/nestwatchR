@@ -72,27 +72,29 @@
 <div class="section level2">
 <h2 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
 </h2>
-<p>Our ability to allocate conservation efforts for the natural world
-depends on detailed information about the life histories, distributions,
-abundances, and population trends of species over time. The goal of the
-<a href="https://nestwatch.org" class="external-link">NestWatch project</a>, administered by
-<a href="https://www.birds.cornell.edu/home/" class="external-link">The Cornell Lab of
-Ornithology</a>, is to preserve data collected by members of the global
-participatory science community and researchers to enable the study of
-nest location, survival, and phenology for the world’s bird populations.
-NestWatch is designed to track status and trends in the reproductive
-biology of birds, including when nesting occurs, number of eggs laid,
-how many eggs hatch, and how many hatchlings survive to fledging. Our
-database is intended to be used to study the current condition of
-breeding bird populations and how they may be changing over time as a
-result of climate change, habitat degradation and loss, expansion of
-urban areas, and the introduction of non-native plants and animals.</p>
+<p>The goal of the <a href="https://nestwatch.org" class="external-link">NestWatch</a>,
+administered by <a href="https://www.birds.cornell.edu/home/" class="external-link">The
+Cornell Lab of Ornithology</a>, is to serve as a global, open access
+repository for data on the reproductive success of birds. NestWatch
+preserves data collected by members of the global participatory science
+community as well as professional researchers. The dataset, and these R
+tools, are freely available to enable the study of a suite of nesting
+parameters. NestWatch is designed to record data on the reproductive
+biology of birds, including when and where nesting occurs, the number of
+eggs laid, how many eggs hatch, and how many offspring survive to
+fledging. Our database may be useful for studying reproductive success
+and how it may be changing over time as a result of climate change,
+habitat alterations, urbanization, the spread of non-native plants and
+animals, and other topics. Researchers or members of the public
+interested in archiving nesting data for current and future use should
+visit the <a href="https://nestwatch.org" class="external-link">NestWatch web site</a>. Large
+data sets may be uploaded by contacting the <a href="mailto:nestwatch@cornell.edu">NestWatch Team</a>.</p>
 <p>This vignette gives an overview of the <a href="https://data.mendeley.com/datasets/wjf794z7gc" class="external-link">NestWatch Open
 Dataset</a>, which represents both nest-level parameters and individual
 nest checks. Knowledge of the structure of the database is critical for
 proper interpretation of the dataset. This example will discuss some of
 the 54 data fields, but we ask all data users to review the field
-explanations found in the Nest Watch data paper, <a href="https://doi.org/10.1002/ecy.4230" class="external-link">Bailey et al. 2024</a>.</p>
+explanations found in the NestWatch data paper, <a href="https://doi.org/10.1002/ecy.4230" class="external-link">Bailey et al. 2024</a>.</p>
 <p><br><br></p>
 </div>
 <div class="section level2">
@@ -142,7 +144,7 @@ instructions</a> for more information.</p>
 <p>This function uses Python within R to access the Mendeley data
 archive and download the Nest Watch datasets. Once run, two dataframes
 will be available in the global environment: <code>NW.attempts</code>
-and <code>NW.checks</code>. These dataframes are yet not saved to your
+and <code>NW.checks</code>. These dataframes are not yet saved to your
 machine–you may wish to use <a href="https://www.rdocumentation.org/packages/AlphaPart/versions/0.9.8/topics/write.csv" class="external-link"><code>write.csv()</code></a>
 or <a href="https://rdrr.io/r/base/readRDS.html" class="external-link"><code>saveRDS()</code></a> to
 access these data again without the need to re-download the
@@ -335,7 +337,7 @@ into database).</li>
 </ul></details><p><br></p>
 </div>
 <div class="section level3">
-<h3 id="checks-data">Checks Data<a class="anchor" aria-label="anchor" href="#checks-data"></a>
+<h3 id="nest-visit-nest-check-data">Nest Visit (Nest Check) Data<a class="anchor" aria-label="anchor" href="#nest-visit-nest-check-data"></a>
 </h3>
 <p><code>NW.checks</code> contains information about the status and
 contents of the the nest during each individual nest check, including
@@ -482,10 +484,10 @@ of uploading into database).</li>
 <p>Some analyses may only require use of data contained in
 <code>NW.attempts</code>. However, we suggest users merge the two
 dataframes on their shared <code>Attempt.ID</code> to have all the
-available data on-hand. Some of the suggested data-cleaning processes
+available data on-hand. Some of the suggested data cleaning processes
 require use of data in both dataframes, and having a single merged
-dataset more easily facilitates these steps. The two dataframes can be
-merged using <a href="https://engagement-center.github.io/nestwatchR/reference/nw.mergedata.html"><code>nestwatchR::nw.mergedata()</code></a>.
+dataset facilitates these steps. The two dataframes can be merged using
+<a href="https://engagement-center.github.io/nestwatchR/reference/nw.mergedata.html"><code>nestwatchR::nw.mergedata()</code></a>.
 This function has three arguments: <code>attempts =</code> and
 <code>checks =</code> are used to define the appropriate dataframe and
 the optional <code>output =</code> can be used to specify the name of
