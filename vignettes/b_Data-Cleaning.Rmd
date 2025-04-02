@@ -24,8 +24,8 @@ knitr::opts_chunk$set(eval = nzchar(Sys.getenv("BUILD_VIGNETTES")))
 library(nestwatchR)
 ```
 
-This vignette will cover several different methods for cleaning data
-found within the [NestWatch Open
+This data cleaning vignette will cover several different methods for
+cleaning data found within the [NestWatch Open
 Dataset](https://data.mendeley.com/datasets/wjf794z7gc/2). NestWatch
 data are collected by volunteer participants (researchers and the
 public) and are known to contain some common errors and inconsistencies.
