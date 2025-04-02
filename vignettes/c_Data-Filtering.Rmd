@@ -153,7 +153,7 @@ rm(file_path, i, object_name, object_names, spatialdata_path)
 
 ```
 
-<br> Now that we have range polygons for Bewick's and Carolina Wrens, we can add them to our map and investigate our nest locations a bit closer. Let's plot just the Bewick's Wren data.
+<br> Now that we have range polygons for Bewick's Wrens and Carolina Wrens, we can add them to our map and investigate our nest locations a bit closer. Let's plot just the Bewick's Wren data.
 
 ```{r read in range polygon from package, eval = T, echo = F, results='hide'}
 path <- invisible(system.file("exdata", "bewwre_range.shp", package = "nestwatchR"))
