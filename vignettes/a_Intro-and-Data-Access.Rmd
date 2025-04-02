@@ -29,19 +29,23 @@ library(nestwatchR)
 
 # Background {#background}
 
-Our ability to inform conservation efforts
-depends on detailed information about the life histories, distributions,
-abundances, and population trends of species over time. The goal of the
-[NestWatch](https://nestwatch.org), administered by [The Cornell
-Lab of Ornithology](https://www.birds.cornell.edu/home/), is to serve as a global, open access repository for data on the rproductive success of birds. NestWatch preserves data collected by members of the global participatory science community
-as well as professional researchers. The dataset, and these R tools, are freely available to enable the study of a suite of nesting parameters. NestWatch is designed to
-track status and trends in the reproductive biology of birds, including
-when nesting occurs, number of eggs laid, how many eggs hatch, and how
-many hatchlings survive to fledging. Our database is intended to be used
-to study the current condition of breeding bird populations and how they
-may be changing over time as a result of climate change, habitat
-degradation and loss, expansion of urban areas, and the introduction of
-non-native plants and animals. Researchers or members of the public interested in archiving nesting data for current and future use should visit the [NestWatch web site](https://nestwatch.org). Large datasets may be uploaded by contacting the [NestWatch team](mailto:nestwatch@cornell.edu).
+The goal of the [NestWatch](https://nestwatch.org), administered by [The
+Cornell Lab of Ornithology](https://www.birds.cornell.edu/home/), is to
+serve as a global, open access repository for data on the reproductive
+success of birds. NestWatch preserves data collected by members of the
+global participatory science community as well as professional
+researchers. The dataset, and these R tools, are freely available to
+enable the study of a suite of nesting parameters. NestWatch is designed
+to record data on the reproductive biology of birds, including when and
+where nesting occurs, the number of eggs laid, how many eggs hatch, and
+how many offspring survive to fledging. Our database may be useful for
+studying reproductive success and how it may be changing over time as a
+result of climate change, habitat alterations, urbanization, the spread
+of non-native plants and animals, and other topics. Researchers or
+members of the public interested in archiving nesting data for current
+and future use should visit the [NestWatch web
+site](https://nestwatch.org). Large data sets may be uploaded by
+contacting the [NestWatch Team](mailto:nestwatch@cornell.edu).
 
 This vignette gives an overview of the [NestWatch Open
 Dataset](https://data.mendeley.com/datasets/wjf794z7gc), which
@@ -49,7 +53,7 @@ represents both nest-level parameters and individual nest checks.
 Knowledge of the structure of the database is critical for proper
 interpretation of the dataset. This example will discuss some of the 54
 data fields, but we ask all data users to review the field explanations
-found in the Nest Watch data paper, [Bailey et al.
+found in the NestWatch data paper, [Bailey et al.
 2024](https://doi.org/10.1002/ecy.4230).
 
 <br> <br>
@@ -275,7 +279,7 @@ datatable(NW.attempts, options = list(paging = F, scrollX = T, searching  = F))
 
 <br>
 
-## Checks Data
+## Nest Visit (Nest Check) Data
 
 `NW.checks` contains information about the status and contents of the
 the nest during each individual nest check, including number of eggs,
@@ -405,9 +409,9 @@ datatable(NW.checks, options = list(paging = F, scrollX = T, searching  = F, scr
 Some analyses may only require use of data contained in `NW.attempts`.
 However, we suggest users merge the two dataframes on their shared
 `Attempt.ID` to have all the available data on-hand. Some of the
-suggested data-cleaning processes require use of data in both
-dataframes, and having a single merged dataset more easily facilitates
-these steps. The two dataframes can be merged using
+suggested data cleaning processes require use of data in both
+dataframes, and having a single merged dataset facilitates these steps.
+The two dataframes can be merged using
 [`nestwatchR::nw.mergedata()`](https://engagement-center.github.io/nestwatchR/reference/nw.mergedata.html).
 This function has three arguments: `attempts =` and `checks =` are used
 to define the appropriate dataframe and the optional `output =` can be
