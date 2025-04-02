@@ -33,9 +33,9 @@ Thus, these data should be considered as "raw", and the analyst should
 consider their individual study system and research objectives when
 deciding what cleaning procedures to conduct. This package contains two
 functions to provide coarse-scale cleaning procedures that NestWatch
-staff have identified in order to help analysts clean NestWatch data for
-analysis. Please read the full function documentation and this vignette
-prior to cleaning the data.
+staff have identified in order to help analysts prepare NestWatch data
+for analysis. Please read the full function documentation and this
+vignette prior to cleaning the data.
 
 <br>
 
@@ -57,19 +57,17 @@ relevant. Importantly, these initial biological filters have not been
 established for species nesting outside of the U.S. and Canada or for
 species that are seldom reported.
 
-NestWatch additionally implements geographic filters on real-time
-entered species, which are curated by [eBird](https://ebird.org/home).
+NestWatch additionally implements a geographic review of species
+location based on filters curated by [eBird](https://ebird.org/home).
 For example, a participant should not be able to report a nest from a
-species that is extremely rare in that region, preventing many species
-misidentifications. However, for similar sympatric species, incorrect
-identifications are still possible (e.g., a Black-capped Chickadee may
-be misidentified as a Carolina Chickadee in regions of range overlap).
-However, older reports, including historic data migrated to the
-NestWatch database for archival, are not subjected to the same rigorous
-filters. Additionally, errors in reporting can mimic errors in
-identification. Participants may intend to report one species but enter
-the data for the wrong species. We recommend that data analysts map nest
-locations and screen for likely errors. See the
+species that is extremely rare at the locale, preventing many species
+idenitfication errors. Note that for similar sympatric species,
+incorrect identifications are not flagged by this process (e.g., a
+Black-capped Chickadee may be misidentified as a Carolina Chickadee in
+regions of range overlap). However, older reports, including historic
+data migrated to the NestWatch database, are not subjected to the same
+review process. We recommend that data analysts map nest locations and
+screen for likely location errors. See the
 [`nw.filterspatial()`](https://engagement-center.github.io/nestwatchR/reference/nw.filterspatial.html)
 and [Filtering
 Vignette](https://engagement-center.github.io/nestwatchR/articles/c_Data-Filtering.html)
@@ -77,7 +75,7 @@ for more information on spatial filtering.
 
 <br>
 
-# Clean Taxa
+# Filtering & consolidating taxonomic units
 
 The NestWatch platform uses [eBird
 taxonomy](https://science.ebird.org/en/use-ebird-data/the-ebird-taxonomy)
@@ -103,7 +101,7 @@ implemented concurrently with updates from
 [`auk::get_ebird_taxonomy()`](https://cornelllabofornithology.github.io/auk/reference/get_ebird_taxonomy.html).
 However, new versions of the NestWatch Open Dataset are published in
 January and may be taxonomically outdated for short periods of time
-(this typically affects a very low number of records). Previous versions
+(this typically affects a limited number of records). Previous versions
 of the NestWatch Open Dataset are not updated for taxonomic or other
 corrections; we encourage the use of the most recent version. For more
 information, see
@@ -132,8 +130,8 @@ of a swallow species and never saw the adults at a site where both Tree
 and Violet-green Swallows were present. In both cases, either a slash or
 spuh could be appropriate.
 
-When certainty of a specie(s) is needed, the analyst may decide to omit
-spuhs and slashes as species is not known with certainty:
+When reasonable certainty of a specie(s) identity is needed, the analyst
+may decide to omit spuhs and slashes:
 
 ```{r cleantaxa 2, eval = T, echo = T}
 # Remove spuhs and slashes
@@ -144,10 +142,10 @@ ex1
 
 ### Subspecies/forms & Hybrids
 
-Some subspecies or forms are easily differentiated and may be specified
-by a participant. Caution should be taken when using these
-subspecies/form designations as the identification skills of the
-participant are unknown and the participant may not have selected the
+Some subspecies or forms are easily differentiated and may be reported
+as such by a participant. Caution should be taken when using these
+subspecies/form designations because the identification skills of
+participants are unknown and the participant may not have selected the
 correct designation from the pre-populated list of possible species.
 Consider whether or not there may be biologically relevant differences
 in nesting behavior, phenology, or other parameters between different
@@ -156,15 +154,14 @@ differences are not biologically relevant to the analysis, the analyst
 may opt to `rollsubspecies = T` to combine subspecies and/or forms to
 the species level.
 
-Documentation of nesting attempts between different parent species, a
-hybrid parent, or two hybrid parents are very uncommon. The NestWatch
-database has no way to easily differentiate between these three cases.
-Thus, if a hybrid species was selected for an attempt, the parent
-specie(s) of the nest vs the resulting young specie will not be known
-with certainty. Additionally, participants may incorrectly select a
-hybrid species when they should have selected a spuh or slash species
-designation. If you are interested in validating attempts labeled with
-hybrid status, you may [request additional
+Nesting attempts involving parents of different species, a hybrid
+parent, or two hybrid parents, are very uncommon. The NestWatch database
+has no way to easily differentiate between these three cases. Thus, if a
+hybrid species code was entered for a nest attempt, the species identity
+of the parents is uncertain. Additionally, participants may incorrectly
+select a hybrid species when they should have selected a spuh or slash
+species designation. If you are interested in validating attempts
+labeled with hybrid status, you may [request additional
 information](https://data.nestwatch.org/nw/contact) from NestWatch staff
 asking for the “notes” fields which may contain additional information
 not exported in the public dataset.
@@ -183,14 +180,13 @@ ex2
 The function
 [`nw.cleandata()`](https://engagement-center.github.io/nestwatchR/reference/nw.cleandata.html)
 is a collection of 11 common cleaning procedures which NestWatch staff
-have identified to assist analysts in cleaning NestWatch data at a
-coarse scale. You will need to specify which procedures to run, lettered
-`a:k` (not case sensitive), and we highly suggest you read the function
-documentation and the following examples while considering your analyses
-before selecting which procedures to run. After these coarse scale
-cleanings are completed, the user should continue cleaning the data at a
-finer scale including considering spatial and phenological filtering.
-See the [Filtering
+have identified to assist analysts in cleaning NestWatch data. You will
+need to specify which procedures to run, lettered `a:k` (not case
+sensitive), and we highly suggest you read the function documentation
+and the following examples before selecting which procedures to run.
+After these coarse scale cleaning procedures are completed, the user
+should continue reviewing the data at a finer scale including
+considering spatial and phenological filtering. See the [Filtering
 Vignette](https://engagement-center.github.io/nestwatchR/articles/c_Data-Filtering.html)
 and
 [`nw.filterspatial()`](https://engagement-center.github.io/nestwatchR/reference/nw.filterspatial.html)
@@ -209,7 +205,7 @@ the output.
 
 > ⚠️ If you are only interested in a subset of species, or RAM usage and
 > processing time are a concern, you may choose to subset the data to
-> those species prior to running
+> your focal species prior to running
 > [`nw.cleandata()`](https://engagement-center.github.io/nestwatchR/reference/nw.cleandata.html).
 
 ```{r cleandata 1, eval = F, echo = T}
@@ -238,9 +234,8 @@ a.  **Brown-headed Cowbirds:** Flag/remove attempts with `Species.Name`
 b.  **No Nesting Activity:** Flag/remove attempts with Outcome of "no
     breeding behavior observed" (u3), "inactive" (i), and "not
     monitored" (n). These data likely represent nests or nest boxes
-    which never received eggs or were unmonitored. Users may choose to
-    include these data if looking at habitat or location data without
-    measures of phenology or success. <br> <br>
+    where eggs were not laid, or nests that were not monitored. <br>
+    <br>
 c.  **Invasive Species Management:** Flag/remove attempts with Outcome
     of “invasive species management” (f5). For these attempts, the
     participant chose to remove/alter eggs or nests of invasive species.
@@ -249,18 +244,14 @@ c.  **Invasive Species Management:** Flag/remove attempts with Outcome
     clutch size, first lay date), they might consider skipping this
     method with the understanding that the outcome code is interpreted
     as “failure due to human interference” and standard nest survival
-    estimates would not be meaningful. Note: “Invasive species
-    management” may also be incorrectly chosen by participants trying to
-    indicate nest failure caused by an invasive species, in which case
-    it would still be prudent to flag or remove such records. <br> <br>
+    estimates would not be meaningful. <br> <br>
 d.  **Failed but fledged?:** Flag/remove attempts if outcome is a
     failure code (f, f1, f2, f3, f6, f7) but recorded fledged host young
     \> 0. In this case, a participant may have either characterized the
     nest's outcome incorrectly, recorded the presence of fledged host
-    young incorrectly, or mischaracterized brood parasite young as host.
-    Discerning the true outcome may not be possible or expedient. If an
-    attempt produces any number of fledged host young, the attempt is
-    considered successful.<br> <br>
+    young incorrectly, or mischaracterized brood parasite young as host
+    young. If an attempt produces any number of fledged host young, the
+    attempt is considered successful.<br> <br>
 e.  **Successful but didn't fledge?:** Flag/remove attempt if Outcome is
     success (s1), but recorded fledged host young = 0. Inverse of d.<br>
     <br>
@@ -288,7 +279,7 @@ i.  **Decrease-then-increase Eggs/Young:** Flag/remove attempts where
     attempts. If the analyst is looking at host response to depredation
     events or egg dumping you may choose to retain these records. <br>
     <br>
-j.  **Impossibly long attempts:** Flag attempts with impossible nesting
+j.  **Impossibly long attempts:** Flag attempts with implausible nesting
     periods. Incorrect years are sometimes entered between date summary
     fields by participants. This may produce impossibly long nesting
     periods. To account for nesting phenologies in all hemispheres, this
@@ -305,11 +296,10 @@ k.  **Year errors in visits:** Flag/remove attempts where the \# days
     between the first and the last visit are \> 365 days. Additional
     check to identify nest attempts where year portion of dates between
     nest visits were likely incorrectly entered. A user may choose to
-    review these attempts individually to verify if a typo occurred.<br>
-    <br>
+    review these attempts individually to identify typos.<br> <br>
 
 Depending on what cleaning procedures you choose to run, the sample size
-of nests may decrease to varying degrees. If your species has a small
+of nests will decrease to varying degrees. If your species has a small
 sample size after using `mode = "remove"` you may consider rerunning
 with `mode = "flag"` and inspecting which attempts were removed and if
 each cleaning method was appropriate for your analysis. Particularly for
