@@ -116,7 +116,7 @@ archive](https://data.mendeley.com/datasets/wjf794z7gc/2).
 
 <br> <br>
 
-## Citation :book:
+## Citations :book:
 
 If you use the NestWatch Open Dataset or this R package, please cite:
 
@@ -124,11 +124,12 @@ If you use the NestWatch Open Dataset or this R package, please cite:
 
 **Dataset (replace with appropriate version \# and year):**</br> Bailey,
 R., L. Larson, D. Bonter. 2025. “NestWatch Open Dataset.” Mendeley Data,
-V3. doi: 10.17632/wjf794z7gc</a>
+V4. DOI: [10.17632/wjf794z7gc](https://doi.org/10.17632/wjf794z7gc)</a>
 
 **Data Paper:**</br> Bailey, R. L., L. Larson, and D. N. Bonter. 2024.
 “NestWatch: An Open-Access, Long-Term Data Set on Avian Reproductive
-Success.” Ecology 105(2): e4230. https://doi.org/10.1002/ecy.4230</a>
+Success.” Ecology 105(2): e4230. DOI:
+[10.1002/ecy.4230](https://doi.org/10.1002/ecy.4230)</a>
 
 **NestWatch R Package (replace appropriate version \# and year):**<br>
 Savides, K., R. Bailey, & D. Bonter. 2025. NestWatch Data Products
@@ -175,7 +176,7 @@ library(nestwatchR)
 library(dplyr)
 
 # Download NestWatch dataset by version
-nw.getdata(version = 2)
+nw.getdata(version = 1)
 # nw.getdata()  # no argument will default to downloading the latest version 
 
 # Merge the Attempts and Checks files
@@ -258,16 +259,18 @@ data <- wrens %>% filter(!is.na(First.Lay.Date)) %>%
                   mutate(First.Lay.Date = as.Date(paste0("2024-", format(First.Lay.Date, "%m-%d"))))
   
 # Plot the data in ggplot
-ggplot(data, aes(x = First.Lay.Date, fill = Species.Name, color = Species.Name)) +
-  geom_histogram(binwidth = 7, position = "stack") + 
-  scale_fill_manual(values = c("#457999", "#8DCA8B"), name = "Species") + # fill colors
-  scale_color_manual(values = c("#69A0C2", "grey85")) +  # Outline colors
-  labs(x = "First Lay Date", y = "Nest Count", title = "First Lay Date by Species") +
-  scale_x_date( # display nice month labels
+ggplot(data, aes(x = First.Lay.Date, fill = Species.Name)) +
+  geom_histogram(binwidth = 14, color = "grey60") + 
+  facet_wrap(~Species.Name, ncol = 2) +  # Two side-by-side plots
+  scale_fill_manual(values = c("#8DCA8B", "#457999")) +  # Fill colors
+  scale_x_date(                          # Display nice month labels
     breaks = seq(as.Date("2024-02-01"), as.Date("2024-08-01"), by = "month"),
-    labels = c("Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug")) +
+    labels = c("Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug")) + 
+  labs(x = "First Lay Date", y = "Nest Count", fill = "Species:") +
   theme_minimal() +
-  guides(color = "none") # simplify legend
+  theme(legend.position = "bottom",      # Single legend at the bottom
+        strip.text = element_blank(),    # Removes facet titles
+        panel.spacing = unit(1, "cm"))   # Adds space between facet panels
 ```
 
 <img src="man/figures/README-plot-1.png" alt="A histogram displaying the distrubution of first lay dates for Bewick's Wren (blue) and Carolina Wren (green)." width="100%" />

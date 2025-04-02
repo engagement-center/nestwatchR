@@ -61,7 +61,7 @@ NestWatch additionally implements a geographic review of species
 location based on filters curated by [eBird](https://ebird.org/home).
 For example, a participant should not be able to report a nest from a
 species that is extremely rare at the locale, preventing many species
-idenitfication errors. Note that for similar sympatric species,
+identification errors. Note that for similar sympatric species,
 incorrect identifications are not flagged by this process (e.g., a
 Black-capped Chickadee may be misidentified as a Carolina Chickadee in
 regions of range overlap). However, older reports, including historic
