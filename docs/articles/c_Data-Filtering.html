@@ -84,7 +84,7 @@ filtering to species from scratch.</p>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co"># Download and merge datasets</span></span>
-<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">nw.getdata</span>(<span class="at">version =</span> <span class="dv">2</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">nw.getdata</span>(<span class="at">version =</span> <span class="dv">1</span>)</span>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="fu">nw.mergedata</span>(<span class="at">attempts =</span> NW.attemps, <span class="at">checks =</span> NW.checks, <span class="at">output =</span> <span class="st">"merged.data"</span>)</span>
 <span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a></span>
 <span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="co"># Filter data to include only carwre and bewwre</span></span>
@@ -429,14 +429,14 @@ use NestWatch data for Bewick’s Wren and Carolina Wren:</p>
 <span><span class="co"># &gt; [1] 769       # number of checks which were flagged</span></span></code></pre></div>
 <p><br></p>
 <p>This function also has the logical argument
-<code>trim_to_active</code>. This argument specifies if nest checks
-before a nest was active (before building activity, observed eggs,
-observed young) or after nest fledge/failure should be noted for
-flagging or removal. By setting this argument to <code>TRUE</code>,
-individual nest checks outside the active period will be removed if
-<code>mode = "remove"</code> or noted with a <code>"FLAGGED"</code> tag
-in the new <code>Flagged.Check</code> column for you to manually
-inspect.</p>
+<code>trim_to_active</code> (used in the above example). This argument
+specifies if nest checks before a nest was active (before building
+activity, observed eggs, observed young) or after nest fledge/failure
+should be noted for flagging or removal. By setting this argument to
+<code>TRUE</code>, individual nest checks outside the active period will
+be removed if <code>mode = "remove"</code> or noted with a
+<code>"FLAGGED"</code> tag in the new <code>Flagged.Check</code> column
+for you to manually inspect.</p>
 <p><br> We can visualize the distribution of active nesting periods of
 Carolina Wrens in our example before and after being filtered and
 trimmed.</p>
