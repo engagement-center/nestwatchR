@@ -82,11 +82,11 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active, output
 
   # stop if dataframe is not provided
   if(missing(data)){
-    stop("Augument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
+    stop("Argument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
   }
   # Stop if dataframe is not a NW merged dataframe
   if (all(!(c("Species.Code", "Visit.ID") %in% names(data)))){
-    stop("Augument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
+    stop("Argument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
   }
   # Stops Function if 'mode' is not specified.
   if (missing(mode)) {

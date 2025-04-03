@@ -28,7 +28,7 @@ nw.filterspatial(
 
 \item{buffer_output}{logical; Optionally export the generated buffered polygon to the global enviornment.}
 
-\item{proj}{a PROJ.4 sting; Optional definition for map projection. Defaults to Lambert Conformal Conic.}
+\item{proj}{a PROJ.4 string; Optional definition for map projection. Defaults to Lambert Conformal Conic.}
 
 \item{output}{character; An optional character string to custom name the output spatial dataframe.}
 }

@@ -62,16 +62,22 @@ knowledge of R is necessary for using these products. A function in this
 collection also depends on the program `Python`, which needs to be
 [installed](https://www.python.org/downloads/) on your machine prior to
 using the function. No prior knowledge of Python or manual setup of the
-program is needed. To check if Python is installed on your machine run
-the following code chunk:
+program is needed. To check if Python 3.3 or later is installed on your
+machine run the following code chunk:
 
 ``` r
 install_status <- nzchar(Sys.which("python"))
-if(isTRUE(install_status)){
-  print("Python is installed.")
+
+if (isTRUE(install_status)) {
+  venv_status <- system("python -m venv --help", intern = TRUE, ignore.stderr = TRUE)
+  if (length(venv_status) > 0) {
+    print("Python is installed and supported.")
+  } else {
+    print("Python is either not installed or the version is not supported. Please go to <https://www.python.org/downloads/> to install the latest version of Python and then restart your R session.")}
 } else {
-  print("Python is not installed. Please go to <https://www.python.org/downloads/> to install Python.")
-}
+  print("Python is not installed. Please go to <https://www.python.org/downloads/> to install Python.")}
+
+rm(install_status)
 ```
 
 <br> <br>

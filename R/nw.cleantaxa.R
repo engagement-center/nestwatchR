@@ -1,6 +1,6 @@
 #' Perform Cleaning Actions on Species Names & Codes
 #'
-#' @description This function can optionally remove attempts for species identified as hybrids, "spuhs", or "slashes" and  preform
+#' @description This function can optionally remove attempts for species identified as hybrids, "spuhs", or "slashes" and  perform
 #' a "taxonomic roll up" of subspecies to the species level.
 #'
 #' @details The NestWatch platform uses eBird taxonomy to help users auto-complete species names. This allows users to select any
@@ -36,7 +36,7 @@
 #' Uses the current eBird taxonomy as in \code{\link[auk:ebird_taxonomy]{auk::ebird_taxonomy}}.
 #'  \itemize{
 #'   \item if \code{NULL}, the default, retains original Species.Names and Species.Codes.
-#'   \item if \code{TRUE}, preforms taxonomic roll up for all attempts with subspecies/form designation and updates Species.Code.
+#'   \item if \code{TRUE}, performs taxonomic roll up for all attempts with subspecies/form designation and updates Species.Code.
 #'   \item if \code{FALSE}, retains original Species.Names and Species.Codes.
 #' }
 #' @param output character; An optional character string to custom name the output dataframe
@@ -84,7 +84,7 @@ nw.cleantaxa <- function(data, spuh = FALSE, slash = FALSE, hybrid = FALSE, roll
 
     # Get row numbers of subsps
     rows <- grep("^(?!.*hybrid).*\\(", data$Species.Name, perl = TRUE)
-    # Strip subsp info if not hybird
+    # Strip subsp info if not hybrid
     data$Species.Name <- ifelse(grepl("\\bhybrid\\b", data$Species.Name),
                                 data$Species.Name,
                                 sub(" \\(.*", "", data$Species.Name))
