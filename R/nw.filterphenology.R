@@ -12,6 +12,7 @@
 #' flagged with "FLAGGED" in a new column, or removed from the dataset.
 #' @param max_phenology dataframe; A simple dataframe with one row for each species of interest and the following column structure:
 #'  \itemize{
+#'   \item \strong{Species}: The 6-letter species code for each species.
 #'   \item \strong{Lay}: The number of days representing the maximum expected laying period for each species.
 #'   \item \strong{Incubation}: The number of days representing the maximum expected incubation period (between clutch complete and hatch) for each species.
 #'   \item \strong{Nestling}: The number of days representing the maximum expected nesting period (hatch and last fledge) for each species.
@@ -40,7 +41,8 @@
 #'
 #' @examples
 #' # Create phenology dataframe
-#' phenology <- data.frame(lay = c(7),          # max observed
+#' phenology <- data.frame(species = c("carwre"),
+#'                         lay = c(7),          # max observed
 #'                         incubation = c(20),  # mean plus some extra
 #'                         nestling = c(20),    # mean plus some extra
 #'                         total = c(50))       # mean plus some extra
