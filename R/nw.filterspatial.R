@@ -9,7 +9,7 @@
 #' @param buffer numeric; Optional distance to buffer around the polygon
 #' @param buffer_units \code{"km"} or \code{"mi"}; A character string defining the buffer distance units as either kilometers or miles.
 #' @param buffer_output logical; Optionally export the generated buffered polygon to the global enviornment.
-#' @param proj a PROJ.4 sting; Optional definition for map projection. Defaults to Lambert Conformal Conic.
+#' @param proj a PROJ.4 string; Optional definition for map projection. Defaults to Lambert Conformal Conic.
 #' @param output character; An optional character string to custom name the output spatial dataframe.
 #'
 #' @importFrom sf st_transform

@@ -59,25 +59,25 @@ nw.esthatch <- function(data, phenology, output = NULL) {
 
   # Check the dataframe is merged NW data
   if (missing(data)){
-    stop("Augument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
+    stop("Argument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
   }
   if (all(!(c("Species.Code", "Visit.ID") %in% names(data)))){
-    stop("Augument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
+    stop("Argument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
   }
   # Check phenology is a dataframe, has correct column names
   if(!is.data.frame(phenology)){
-    stop("Augument 'phenology' must be a dataframe, see ?nw.estfirstlay() for details.")
+    stop("Argument 'phenology' must be a dataframe, see ?nw.estfirstlay() for details.")
   }
   needed_columns <- c("Species", "Clutch.Size", "Eggs.per.Day", "Incubation", "Nestling")
   if (!all(tolower(needed_columns) %in% tolower(colnames(phenology)))) {
-    stop("Augument 'phenology' must be a dataframe, see ?nw.estfirstlay() for details.")
+    stop("Argument 'phenology' must be a dataframe, see ?nw.estfirstlay() for details.")
   }
 
   ###########################
   ####  Setup            ####
   ###########################
   # Initiate column names
-  Species <- species <- Species.Code <- Attempt.ID <- Eggs.per.Day <- Incubation <- Netsling <- Clutch.Size <- NULL
+  Species <- species <- Species.Code <- Attempt.ID <- Eggs.per.Day <- Incubation <- Nestling <- Clutch.Size <- NULL
   Hatch.Date <- Fledge.Date <- Species <- Days.of.Lay <- First.Lay.Date <- Young.Total <- Outcome <- NULL
   First.Lay <- Clutch <- Hatch <- Fledge <- Fledge.Date.Estimated <- NULL
 

@@ -12,6 +12,7 @@
 #' flagged with "FLAGGED" in a new column, or removed from the dataset.
 #' @param max_phenology dataframe; A simple dataframe with one row for each species of interest and the following column structure:
 #'  \itemize{
+#'   \item \strong{Species}: The 6-letter species code for each species.
 #'   \item \strong{Lay}: The number of days representing the maximum expected laying period for each species.
 #'   \item \strong{Incubation}: The number of days representing the maximum expected incubation period (between clutch complete and hatch) for each species.
 #'   \item \strong{Nestling}: The number of days representing the maximum expected nesting period (hatch and last fledge) for each species.
@@ -40,7 +41,8 @@
 #'
 #' @examples
 #' # Create phenology dataframe
-#' phenology <- data.frame(lay = c(7),          # max observed
+#' phenology <- data.frame(species = c("carwre"),
+#'                         lay = c(7),          # max observed
 #'                         incubation = c(20),  # mean plus some extra
 #'                         nestling = c(20),    # mean plus some extra
 #'                         total = c(50))       # mean plus some extra
@@ -82,11 +84,11 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active, output
 
   # stop if dataframe is not provided
   if(missing(data)){
-    stop("Augument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
+    stop("Argument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
   }
   # Stop if dataframe is not a NW merged dataframe
   if (all(!(c("Species.Code", "Visit.ID") %in% names(data)))){
-    stop("Augument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
+    stop("Argument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
   }
   # Stops Function if 'mode' is not specified.
   if (missing(mode)) {

@@ -9,9 +9,13 @@
 #'
 #' @details The NestWatch dataset consists of two large files and this function might take several minutes to run depending on your connection speed. Presently, there is no option to subset the data prior to download.
 #'
-#' @import reticulate
-#' @importFrom utils read.csv
-#' @importFrom utils unzip
+#' @importFrom readr read_csv
+#' @importFrom httr GET
+#' @importFrom httr content
+#' @importFrom httr http_status
+#' @importFrom jsonlite fromJSON
+#' @importFrom utils download.file
+#'
 #' @examples
 #'\dontrun{
 #' # Download version 1 of the data
@@ -20,49 +24,71 @@
 #' # Download most recent version
 #' nw.getdata()
 #' }
-nw.getdata <- function(version = NULL) {                                        # define getdata function, with one optional argument to change data version
+nw.getdata <- function(version = NULL) {
 
-  ### 1. Define version of dataset to be downloaded and prep for download
-  if (is.null(version)) {
-    DOI <- "10.17632/wjf794z7gc"
-  } else {
-    DOI <- paste("10.17632/wjf794z7gc", version, sep = ".")                   # add version to base DOI
+  ### 1. Define DOI and download location
+  doi <- "wjf794z7gc"
+  output_folder <- "temp-dir"
+
+
+  ### 2. Call to Mendeley API for file information
+  base_api_url <- "https://data.mendeley.com/public-api/datasets/"  # Mendeley API call
+
+  # Get dataset versions
+  versions_url <- paste0(base_api_url, doi, "/versions")
+  versions_response <- GET(versions_url)
+  versions <- fromJSON(content(versions_response, "text"))
+
+  # Get a particular data version
+  v <- version
+  if(!is.null(version)){      # if version is provided
+    v <- v
+  } else {v <- max(as.numeric(versions$version))}  # if not get the latest version
+
+  # Get dataset files
+  files_url <- paste0(base_api_url, doi, "/files?folder_id=root&version=", v)
+  files_response <- GET(files_url)
+
+  if (http_status(files_response)$category != "Success") {
+    stop("Failed to retrieve dataset files.")
   }
 
-  dir.create("temp-dir")                                             # create temporary directory for data to download to
-  venv <- file.path(getwd(), "python-env")                           # path to the virtual python instance
+  files <- fromJSON(content(files_response, "text"))
 
-
-  ### 2. Download the data using Reticulate and DataHugger
-  if(!dir.exists(venv)){                               # if a virtual instance of python is not in the wd,
-    reticulate::virtualenv_create(envname = venv)      # create the virtual instance
-  }
-  reticulate::use_virtualenv(virtualenv = venv, required = T)   # tell R to use this instance of python
-
-  reticulate::virtualenv_install(envname = venv, packages = "datahugger", pip_options = character())  # virtually install DataHugger to retrieve Mendeley Data
-  reticulate::virtualenv_install(envname = venv, packages = "pandas", pip_options = character())  # virtually install pandas to help
-  datahugger <- reticulate::import("datahugger")
-  datahugger$get(DOI, unzip = T, "temp-dir")
-
-
-
-  ### 3. Unzip datafiles, add to global environment, remove temp directory
-  files <- list.files("temp-dir")                                             # get list of files in the temporary directory
-  for (i in files) {                                                          # loop over files to unzip and store as .csv
-    unzip(paste("temp-dir", i, sep = "/"), exdir = "temp-dir")
+  # Create output folder if it doesn't exist
+  if (!dir.exists(output_folder)) {
+    dir.create(output_folder, recursive = TRUE)
   }
 
-  message("... NestWatch data files are being unzipped and extracted to your Global Enviorment. This may take a minute ...")
+
+
+
+  ### 3. Download the files
+  for(i in 1:nrow(files)){
+    file_url  <- files$content_details$download_url[i]
+    file_dest <- file.path(output_folder, paste0(sub("\\.csv.zip$", "", files$filename[i]), ".csv"))
+
+    cat("Downloading:", files$filename[i], "\n")
+
+    download.file(file_url, file_dest, mode = "wb")
+  }
+
+
 
   ### 4. Prep for and output
   pos <- 1
   envir = as.environment(pos)
 
-  files <- list.files("temp-dir", pattern = "\\.csv$", full.names = TRUE)     # get list of .csv files
-  NW.attempts <- read.csv(grep("attempt", files, value = TRUE))              # filter to get Attempt/Location dataset and move to Global Environment
-  NW.checks   <- read.csv(grep("check",   files, value = TRUE))              # filter to get Nest Visits dataset and move to Global Environment
+  files <- list.files("temp-dir", pattern = "\\.csv$", full.names = TRUE)    # get list of .csv files
+  NW.attempts <- suppressMessages(readr::read_csv(grep("attempt", files, value = TRUE)))     # filter to get Attempt/Location dataset and move to Global Environment
+  NW.checks   <- suppressMessages(readr::read_csv(grep("check",   files, value = TRUE)))    # filter to get Nest Visits dataset and move to Global Environment
   assign("NW.attempts", NW.attempts, envir = envir)
   assign("NW.checks", NW.checks, envir = envir)
 
   unlink("temp-dir", recursive = TRUE)                              # remove the temporary directory
-}
+
+  message(paste0("NestWatch Open Dataset (v", v, ") have been loaded to your global environment."))
+
+
+
+} # end get data function

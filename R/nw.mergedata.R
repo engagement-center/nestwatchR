@@ -37,7 +37,7 @@ nw.mergedata <- function(attempts, checks, output = NULL) {
   clean_col_names <- gsub("\\.x$|\\.y$", "", col_names)
   colnames(data) <- clean_col_names
 
-  # Reorder columns in a logical manor
+  # Reorder columns in a logical manner
   data <- data %>% relocate(Species.Name, .after = Subnational.Code) %>%
     relocate(Species.Code, .after = Species.Name) %>%
     relocate(Year, .after = Species.Code) %>%

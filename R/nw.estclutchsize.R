@@ -17,7 +17,7 @@
 #' @param data dataframe; A dataframe containing merged NestWatch attempts and visits data.
 #' @param output character; An optional character vector to rename the resulting output.
 #'
-#' @return dataframe; A dataframe with an additional binary column \code{Clutch.Szie.Estimated} where \code{1} denotes the clutch size was
+#' @return dataframe; A dataframe with an additional binary column \code{Clutch.Size.Estimated} where \code{1} denotes the clutch size was
 #' estimated by the function and \code{0} denotes the clutch size was provided by the participant.
 #' @export
 #'
@@ -51,14 +51,14 @@ nw.estclutchsize <- function(data, output = NULL){
 
   # Check the dataframe is merged NW data
   if (missing(data)){
-    stop("Augument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
+    stop("Argument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
   }
   if (all(!(c("Species.Code", "Visit.ID") %in% names(data)))){
-    stop("Augument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
+    stop("Argument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
   }
   # Check output is character vector
   if(!is.null(output) & !inherits(output, "character"))
-    stop("Augument 'output' must be a character vector.")
+    stop("Argument 'output' must be a character vector.")
 
   ###########################
   ####       Setup       ####

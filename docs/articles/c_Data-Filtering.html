@@ -258,8 +258,8 @@ outside.</div>
 <p><br></p>
 <p>We can now see that there are more than a few nests outside of the
 typical Bewick’s Wren range. But a few of these nests are also close to
-the range border and <em>may</em> truly belong to a Bewick’s Wren. We
-can use <a href="https://engagement-center.github.io/nestwatchR/reference/nw.filterspatial.html"><code>nw.filterspatial()</code></a>
+the range border and <em>may</em> truly belong to Bewick’s Wrens. We can
+use <a href="https://engagement-center.github.io/nestwatchR/reference/nw.filterspatial.html"><code>nw.filterspatial()</code></a>
 to help us identify and/or remove nest attempts outside of the range
 polygon (or any other shapefile you may want to filter by).</p>
 <p><a href="https://engagement-center.github.io/nestwatchR/reference/nw.filterspatial.html"><code>nw.filterspatial()</code></a>
@@ -276,11 +276,12 @@ using <code>buffer_units = "km"</code> or <code>= "mi"</code>. The
 resulting buffer polygon may be optionally exported to the global
 environment for saving or plotting using the logical
 <code>buffer_output = T</code>. The user may also define their desired
-projection using <code>proj =</code> and inputting a PROJ.4 string. If
-not provided the function will default to the Lambert Conformal Conic
-which is well suited for plotting the majority of NestWatch data at this
-time. Finally, the optional <code>output =</code> argument can be used
-to name the resulting spatially-cleaned dataframe.</p>
+projection using <code>proj =</code> and inputting a PROJ.4 string. If a
+projection is not provided, then the function will default to the
+Lambert Conformal Conic which is well suited for plotting the majority
+of NestWatch data at this time. Finally, the optional
+<code>output =</code> argument can be used to name the resulting
+spatially-cleaned dataframe.</p>
 <p>If we zoom in to central Colorado, we can see there are a few
 Bewick’s Wren nests just outside the range border.</p>
 <div class="float">
@@ -318,10 +319,10 @@ review (and would be removed if mode was set to “remove”):</p>
 <span>            border.col <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span>    </span>
 <span><span class="va">map</span></span></code></pre></div>
 <div class="float">
-<img src="plot-buffered.png" alt="Map of the United States overlayed with Bewick’s Wren typical range with an added 50km buffer zone with and points representing the locations of Bewick’s Wren nests. Nests outside the buffer are red while those inside are blue."><div class="figcaption">Map of the United States overlayed with Bewick’s
+<img src="plot-buffered.png" alt="Map of the United States overlayed with Bewick’s Wren typical range with an added 50km buffer zone with and points representing the reported locations of Bewick’s Wren nests. Nests outside the buffer are red while those inside are blue."><div class="figcaption">Map of the United States overlayed with Bewick’s
 Wren typical range with an added 50km buffer zone with and points
-representing the locations of Bewick’s Wren nests. Nests outside the
-buffer are red while those inside are blue.</div>
+representing the reported locations of Bewick’s Wren nests. Nests
+outside the buffer are red while those inside are blue.</div>
 </div>
 <p><br></p>
 <p>We can now quickly filter out those nests with flagged locations
@@ -353,7 +354,9 @@ number of days for each different period in the nesting cycle, or for
 the whole nesting cycle. The function <a href="https://engagement-center.github.io/nestwatchR/reference/nw.filterphenology.html"><code>nw.filterphenology()</code></a>
 uses both the data in the attempt summary info (data originating from
 the “Attempts” dataset) and the individual visits data (originating from
-the “Checks” dataset). Because this function uses both summary and
+the “Checks” dataset). Note that NestWatch participants do not always
+provide the summary info, but the key dates may be inferred from the
+series of nest check data. Because the function uses both summary and
 checks data, we highly recommend running the series of estimation
 functions provided in the package to estimate summary dates where they
 were not specifically provided by the participant (see: <a href="https://engagement-center.github.io/nestwatchR/reference/nw.estclutchsize.html"><code>nw.estclutchsize()</code></a>,
@@ -365,8 +368,8 @@ available for phenologic filtering.</p>
 <p>For this function, a small user-created dataframe in the following
 format is needed. These values represent the <em>maximum</em> allowable
 number of days a nest of a particular species can be in each nesting
-stage. “Total” refers to the number of days spanning the initiation of
-nest building though fledging. In this example we will continue using
+stage. “Total” refers to the maximum number of days from the initiation
+of nest building though fledging. In this example we will continue using
 use NestWatch data for Bewick’s Wren and Carolina Wren:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## 1. Load, Clean, &amp; Estimate Data </span></span>
@@ -384,7 +387,7 @@ use NestWatch data for Bewick’s Wren and Carolina Wren:</p>
 <span>             output <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Run summary date estimation functions</span></span>
-<span><span class="co"># Create average phenological dates df by species</span></span>
+<span><span class="co"># Missing summary data will be populated, when possible, by using AVERAGE values for the focal species.  Update the values below with the average clutch size, number of eggs laid per day, incubation period (in days), and nestling period (in days).</span></span>
 <span><span class="va">avg_phen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bewwre"</span>, <span class="st">"carwre"</span><span class="op">)</span>,</span>
 <span>                       Clutch.Size  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">4</span><span class="op">)</span>,</span>
 <span>                       Eggs.per.Day <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
@@ -397,16 +400,17 @@ use NestWatch data for Bewick’s Wren and Carolina Wren:</p>
 <span><span class="fu"><a href="../reference/nw.estfledge.html">nw.estfledge</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span>, phenology <span class="op">=</span> <span class="va">avg_phen</span>, output <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span></code></pre></div>
 <p><br></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## 2. Filter Data using Max Phenologies</span></span>
+<code class="sourceCode R"><span><span class="co">## 2. Phenologically filter data by limiting dataset to nests with dates within the maximum possible range.</span></span>
 <span></span>
-<span><span class="co"># Create simple df with maximum allowable # days in each nest phase for Bewick's and Carolina Wrens</span></span>
-<span><span class="co"># You can provide data for a single species or multiple species to be run at the same time:</span></span>
+<span><span class="co"># Create simple df with maximum allowable # days in each nest phase for Bewick's and Carolina Wrens.</span></span>
+<span><span class="co"># You can provide data for a single species or multiple species to be run at the same time.</span></span>
+<span><span class="co"># We suggest adding a few days of buffer to the average incubation, nesting, and total nesting period lengths. This is your judgement call based on the biology of the focal species.</span></span>
 <span><span class="va">max_days</span> <span class="op">&lt;-</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>species <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bewwre"</span>, <span class="st">"carwre"</span><span class="op">)</span>,</span>
-<span>             lay <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">8</span>, <span class="fl">6</span><span class="op">)</span>,           <span class="co"># here we chose max recorded clutch size</span></span>
-<span>             incubation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">20</span><span class="op">)</span>,  <span class="co"># here means plus a bit of buffer</span></span>
-<span>             nestling <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">20</span><span class="op">)</span>,    <span class="co"># here means plus a bit of buffer</span></span>
-<span>             total <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">60</span>, <span class="fl">55</span><span class="op">)</span><span class="op">)</span>       <span class="co"># here means (build-to-fledge, plus a bit of buffer)</span></span>
+<span>             lay <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">8</span>, <span class="fl">6</span><span class="op">)</span>,           <span class="co"># max recorded clutch size for focal species</span></span>
+<span>             incubation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">20</span><span class="op">)</span>,  <span class="co"># means plus a bit of buffer</span></span>
+<span>             nestling <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">20</span><span class="op">)</span>,    <span class="co"># means plus a bit of buffer</span></span>
+<span>             total <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">60</span>, <span class="fl">55</span><span class="op">)</span><span class="op">)</span>       <span class="co"># means (build-to-fledge) plus a bit of buffer</span></span>
 <span></span>
 <span><span class="co"># Filter attempts based on nesting phenology</span></span>
 <span><span class="fu"><a href="../reference/nw.filterphenology.html">nw.filterphenology</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span>,</span>
@@ -414,7 +418,6 @@ use NestWatch data for Bewick’s Wren and Carolina Wren:</p>
 <span>                   max_phenology <span class="op">=</span> <span class="va">max_days</span>, </span>
 <span>                   trim_to_active <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                   output <span class="op">=</span> <span class="st">"flagged_phenology"</span><span class="op">)</span></span>
-<span></span>
 <span></span>
 <span><span class="co"># How many attempts were flagged?</span></span>
 <span><span class="va">flagged</span> <span class="op">&lt;-</span> <span class="va">flagged_phenology</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Flagged.Attempt</span> <span class="op">==</span> <span class="st">"FLAGGED"</span><span class="op">)</span></span>

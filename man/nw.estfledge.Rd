@@ -40,7 +40,7 @@ or user-provided average clutch size) and eggs-per-day of the species.
 \examples{
 # Simplified NestWatch data with missing data
 # All fledge dates if nest fledged (Outcome = s1) should be 2024-06-03
-# Notem Attemp.ID "4" failed to fledged (outcome = "f"), so a fledge date is not estimated
+# Note Attemp.ID "4" failed to fledged (outcome = "f"), so a fledge date is not estimated
 data <- data.frame(Attempt.ID = c("1", "2", "3", "4"),
                    Species.Code = rep("carwre", 4),
                    First.Lay.Date = as.Date(c("2024-05-01", "2024-05-02",

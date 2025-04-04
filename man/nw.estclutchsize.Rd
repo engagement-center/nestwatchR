@@ -12,7 +12,7 @@ nw.estclutchsize(data, output = NULL)
 \item{output}{character; An optional character vector to rename the resulting output.}
 }
 \value{
-dataframe; A dataframe with an additional binary column \code{Clutch.Szie.Estimated} where \code{1} denotes the clutch size was
+dataframe; A dataframe with an additional binary column \code{Clutch.Size.Estimated} where \code{1} denotes the clutch size was
 estimated by the function and \code{0} denotes the clutch size was provided by the participant.
 }
 \description{

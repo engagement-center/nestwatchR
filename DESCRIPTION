@@ -27,18 +27,20 @@ Imports:
     auk,
     dplyr,
     magrittr,
-    reticulate,
     sf,
     stringr,
-    lubridate
+    lubridate,
+    httr,
+    jsonlite,
+    readr
 URL: https://engagement-center.github.io/nestwatchR
 BugReports: https://github.com/engagement-center/nestwatchR/issues
 Suggests: 
     DT,
-    knitr,
     rmarkdown,
     testthat (>= 3.0.0),
-    tmap
+    tmap,
+    knitr
 VignetteBuilder: knitr
 Depends: 
     R (>= 2.10)

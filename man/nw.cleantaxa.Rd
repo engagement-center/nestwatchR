@@ -41,7 +41,7 @@ nw.cleantaxa(
 Uses the current eBird taxonomy as in \code{\link[auk:ebird_taxonomy]{auk::ebird_taxonomy}}.
  \itemize{
   \item if \code{NULL}, the default, retains original Species.Names and Species.Codes.
-  \item if \code{TRUE}, preforms taxonomic roll up for all attempts with subspecies/form designation and updates Species.Code.
+  \item if \code{TRUE}, performs taxonomic roll up for all attempts with subspecies/form designation and updates Species.Code.
   \item if \code{FALSE}, retains original Species.Names and Species.Codes.
 }}
 
@@ -51,7 +51,7 @@ Uses the current eBird taxonomy as in \code{\link[auk:ebird_taxonomy]{auk::ebird
 a dataframe
 }
 \description{
-This function can optionally remove attempts for species identified as hybrids, "spuhs", or "slashes" and  preform
+This function can optionally remove attempts for species identified as hybrids, "spuhs", or "slashes" and  perform
 a "taxonomic roll up" of subspecies to the species level.
 }
 \details{

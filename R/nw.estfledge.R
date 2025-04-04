@@ -29,7 +29,7 @@
 #' @examples
 #' # Simplified NestWatch data with missing data
 #' # All fledge dates if nest fledged (Outcome = s1) should be 2024-06-03
-#' # Notem Attemp.ID "4" failed to fledged (outcome = "f"), so a fledge date is not estimated
+#' # Note Attemp.ID "4" failed to fledged (outcome = "f"), so a fledge date is not estimated
 #' data <- data.frame(Attempt.ID = c("1", "2", "3", "4"),
 #'                    Species.Code = rep("carwre", 4),
 #'                    First.Lay.Date = as.Date(c("2024-05-01", "2024-05-02",
@@ -58,18 +58,18 @@ nw.estfledge <- function(data, phenology, output = NULL) {
 
   # Check the dataframe is merged NW data
   if (missing(data)){
-    stop("Augument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
+    stop("Argument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
   }
   if (all(!(c("Species.Code", "Visit.ID") %in% names(data)))){
-    stop("Augument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
+    stop("Argument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
   }
   # Check phenology is a dataframe, has correct column names
   if(!is.data.frame(phenology)){
-    stop("Augument 'phenology' must be a dataframe, see ?nw.estfirstlay() for details.")
+    stop("Argument 'phenology' must be a dataframe, see ?nw.estfirstlay() for details.")
   }
   needed_columns <- c("Species", "Clutch.Size", "Eggs.per.Day", "Incubation", "Nestling")
   if (!all(tolower(needed_columns) %in% tolower(colnames(phenology)))) {
-    stop("Augument 'phenology' must be a dataframe, see ?nw.estfirstlay() for details.")
+    stop("Argument 'phenology' must be a dataframe, see ?nw.estfirstlay() for details.")
   }
 
 
@@ -80,7 +80,7 @@ nw.estfledge <- function(data, phenology, output = NULL) {
   ###########################
 
   # Initiate column names
-  Species <- species <- Species.Code <- Attempt.ID <- Eggs.per.Day <- Incubation <- Netsling <- Clutch.Size <- NULL
+  Species <- species <- Species.Code <- Attempt.ID <- Eggs.per.Day <- Incubation <- Nestling <- Clutch.Size <- NULL
   Fledge.Date <- First.Lay.Date <- Hatch.Date <- Outcome <- Fledge <- First.Lay <- NULL
 
 
