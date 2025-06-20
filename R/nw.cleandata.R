@@ -9,9 +9,10 @@
 #' \cr
 #'     \strong{Cleaning Procedure Details}:
 #'       \itemize{
-#'        \item \code{a}: Flag/remove attempts with \code{Species.Name} is "Brown-headed Cowbird" as they are nest parasites and
-#'        do not create their own nests. This is not the correct interpretation of the nest species. Users may choose to look at these data more
-#'        closely if investigating brood parasitism.
+#'        \item \code{a}: Flag/remove attempts with attempts with `Species.Name` entered as a species known to be an obligate brood parasite. These
+#'        species do not create their own nests, so this is not the correct interpretation of the nest species. Users may choose to look at these data more
+#'        closely if investigating brood parasitism. See the full list or obligate brood parasite species
+#'        \href{https://https://engagement-center.github.io/nestwatchR/articles/b_Data-Cleaning.html#parasite-table}{click here}.
 #'        \item \code{b}: Flag/remove attempts with  of "no breeding behavior observed" (\code{u3}), "inactive" (\code{i}), and
 #'        "not monitored" (\code{n}). These data likely represent nests or nest boxes which never received eggs or were unmonitored. Users may choose
 #'        to include these data if looking at habitat or location data without measures of phenology or success.
@@ -134,8 +135,28 @@ nw.cleandata  <- function(data, mode, methods, output = NULL) {
     for (m in methods) {
       if (m == "a") {
         # Code block for method "a"
-        # A. Flag BHCO "nests"
-        toflag <- data %>% filter(Species.Code == 'bnhcow') %>% pull(Attempt.ID) %>% unique()
+        # A. Flag brood parasite "nests"
+
+        # Get list of obligate brood parasite species codes
+        # Define genera/families
+        parasite_genera <- c("Molothrus", "Pachycoccyx", "Microdynamis", "Eudynamys",
+                             "Scythrops", "Urodynamis", "Chrysococcyx", "Cacomantis",
+                             "Surniculus", "Cercococcyx", "Hierococcyx", "Cuculus",
+                             "Clamator", "Vidua", "Anomalospiza")
+        parasite_family <- c("Indicatoridae")
+
+        # Regex patterns
+        genera_pattern <- paste(parasite_genera, collapse = "|")
+        family_pattern <- paste(parasite_family, collapse = "|")
+
+        # Prepare data
+        parasites <- auk::get_ebird_taxonomy() %>%
+          mutate(parasite = ifelse(grepl(genera_pattern, scientific_name), TRUE, NA)) %>%
+          mutate(parasite = ifelse(grepl(family_pattern, family), TRUE, parasite)) %>%
+          filter(parasite == TRUE) %>% pull(species_code)
+
+        # Flag
+        toflag <- data %>% filter(Species.Code %in% parasites) %>% pull(Attempt.ID) %>% unique()
         rows <- which(data$Attempt.ID %in% toflag)
         data$Flagged.Attempt[rows] <- "FLAGGED"
 
