@@ -93,14 +93,7 @@ blank. This function will download, unzip, and import two dataframes to
 the global environment. Depending on your connection speed, this may
 take a few minutes.
 
-> ⚠️ This function depends on the library
-> [`reticulate`](https://rstudio.github.io/reticulate/) which requires
-> `Python` to be installed on your machine. See the [installation
-> instructions](https://engagement-center.github.io/nestwatchR/index.html#installation-computer)
-> for more information.
-
 ```{r access, eval = F}
-library(reticulate)
 
 # Download the most current version of the NestWatch dataset 
 nw.getdata()
@@ -110,8 +103,7 @@ nw.getdata(version = 1)
 
 ```
 
-This function uses Python within R to access the Mendeley data archive
-and download the Nest Watch datasets. Once run, two dataframes will be
+Once run, two dataframes will be
 available in the global environment: `NW.attempts` and `NW.checks`.
 These dataframes are not yet saved to your machine--you may wish to use
 [`write.csv()`](https://www.rdocumentation.org/packages/AlphaPart/versions/0.9.8/topics/write.csv)
