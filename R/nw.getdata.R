@@ -82,6 +82,12 @@ nw.getdata <- function(version = NULL) {
   files <- list.files("temp-dir", pattern = "\\.csv$", full.names = TRUE)    # get list of .csv files
   NW.attempts <- suppressMessages(readr::read_csv(grep("attempt", files, value = TRUE)))     # filter to get Attempt/Location dataset and move to Global Environment
   NW.checks   <- suppressMessages(readr::read_csv(grep("check",   files, value = TRUE)))    # filter to get Nest Visits dataset and move to Global Environment
+
+  # Replace spaces in column names with "."
+  names(NW.attempts) <- gsub(" ", ".", names(NW.attempts))
+  names(NW.checks) <- gsub(" ", ".", names(NW.checks))
+
+  # Assign
   assign("NW.attempts", NW.attempts, envir = envir)
   assign("NW.checks", NW.checks, envir = envir)
 
