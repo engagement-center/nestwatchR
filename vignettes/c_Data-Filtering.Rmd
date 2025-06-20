@@ -29,6 +29,8 @@ Before analysis, researchers should consider conducting finer-scale filtering in
 
 Limiting the dataset to just a few species can easily be done using the pipe (`%>%`). If you are unfamiliar with "piping", see the [`migritrr`](https://magrittr.tidyverse.org/) package. Below we will subset the version 2 of the NestWatch dataset to include only attempts for Bewick's Wren ("bewwre") and Carolina Wren ("carwre"). The code below walks through download, merging, and filtering to species from scratch.
 
+Note that subspecies and identifiable forms of species have different species codes than the main species. For example, Carolina Wren's species code is "carwre" but Carolina Wren (Northern) has the code "carwre1". If you wish to include all subspecies/forms, make sure to run `nw.cleantaxa(data = data, rollsubspecies = T)` or lookup the species codes you would like to include by referencing the eBird taxonomy table using auk::ebird_taxonomy.
+
 ```{r filter to spp, eval = F}
 library(nestwatchR)
 library(dplyr)

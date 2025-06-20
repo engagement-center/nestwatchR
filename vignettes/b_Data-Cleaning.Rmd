@@ -90,7 +90,7 @@ sp."), slashes (i.e., "Tree/Violet-green Swallow"), hybrids (i.e.,
 helps filter out and/or "roll up" these taxonomic units. This function
 uses a NestWatch dataframe as `data =` and has logical arguments
 `spuh =`, `slash =`, `hybrid =`, and `rollsubspecies =` where `T`
-removes attempts with those designations and subspecies/forms are
+removes attempts with those spuh, slash, or hybrid designations and subspecies/forms are
 "rolled up" to the species level (i.e., "Downy Woodpecker (eastern)" →
 "Downy Woodpecker"). If arguments are set to `F` or `NULL` the filtering
 and/or roll up are not performed. The resulting dataframe may be
