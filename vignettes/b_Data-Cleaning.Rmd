@@ -341,7 +341,7 @@ length(unique(no_longnests$Attempt.ID))
 **Obligate Brood Parasite List**
 ```{r parasite-table, echo=FALSE, eval = T}
 # Define genera/families
-parasite_genera <- c("Molothrus", "Pachycoccyx", "Microdynamis", "Eudynamys",
+parasite_genera <- c("Heteronetta", "Molothrus", "Pachycoccyx", "Microdynamis", "Eudynamys",
                      "Scythrops", "Urodynamis", "Chrysococcyx", "Cacomantis",
                      "Surniculus", "Cercococcyx", "Hierococcyx", "Cuculus",
                      "Clamator", "Vidua", "Anomalospiza")

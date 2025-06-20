@@ -139,7 +139,7 @@ nw.cleandata  <- function(data, mode, methods, output = NULL) {
 
         # Get list of obligate brood parasite species codes
         # Define genera/families
-        parasite_genera <- c("Molothrus", "Pachycoccyx", "Microdynamis", "Eudynamys",
+        parasite_genera <- c("Heteronetta", "Molothrus", "Pachycoccyx", "Microdynamis", "Eudynamys",
                              "Scythrops", "Urodynamis", "Chrysococcyx", "Cacomantis",
                              "Surniculus", "Cercococcyx", "Hierococcyx", "Cuculus",
                              "Clamator", "Vidua", "Anomalospiza")
