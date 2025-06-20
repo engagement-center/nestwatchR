@@ -245,7 +245,7 @@ You may also choose to refine the coarse phenologic filtering done in the cleani
 
 Phenologic filtering allows the user to define the allowed maximum number of days for each different period in the nesting cycle, or for the whole nesting cycle. The function [`nw.filterphenology()`](https://engagement-center.github.io/nestwatchR/reference/nw.filterphenology.html) uses both the data in the attempt summary info (data originating from the "Attempts" dataset) and the individual visits data (originating from the "Checks" dataset). Note that NestWatch participants do not always provide the summary info, but the key dates may be inferred from the series of nest check data. Because the function uses both summary and checks data, we highly recommend running the series of estimation functions provided in the package to estimate summary dates where they were not specifically provided by the participant (see: [`nw.estclutchsize()`](https://engagement-center.github.io/nestwatchR/reference/nw.estclutchsize.html), [`nw.estfirstlay()`](https://engagement-center.github.io/nestwatchR/reference/nw.estfirstlay.html), [`nw.esthatch()`](https://engagement-center.github.io/nestwatchR/reference/nw.esthatch.html), and [`nw.estfledge()`](https://engagement-center.github.io/nestwatchR/reference/nw.estfledge.html)). Running theses estimations can increase the amount of information available for phenologic filtering.
 
-For this function, a small user-created dataframe in the following format is needed. These values represent the *maximum* allowable number of days a nest of a particular species can be in each nesting stage. "Total" refers to the maximum number of days from the initiation of nest building though fledging. In this example we will continue using use NestWatch data for Bewick's Wren and Carolina Wren:
+For this function, a small user-created dataframe in the following format is needed. These values represent the *maximum* allowable number of days a nest of a particular species can be in each nesting stage. "Total" refers to the maximum number of days from the initiation of nest building though fledging. In this example we will continue using NestWatch data for Bewick's Wren and Carolina Wren:
 
 ```{r filter phen, eval = T}
 ## 1. Load, Clean, & Estimate Data 
@@ -261,8 +261,8 @@ nw.cleandata(data = data,
              methods = c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"),
              output = "data")
 
-# Run summary date estimation functions
-# Missing summary data will be populated, when possible, by using AVERAGE values for the focal species.  Update the values below with the average clutch size, number of eggs laid per day, incubation period (in days), and nestling period (in days).
+# Run summary date estimation functions:
+# Missing summary data will be estimated, when possible, by using AVERAGE values for the focal species. The dataframe below contains values of the average clutch size, number of eggs laid per day, incubation period (in days), and nestling period (in days) which the estimation functions will use to estaimte any missing values.
 avg_phen <- data.frame(Species = c("bewwre", "carwre"),
                        Clutch.Size  = c(5, 4),
                        Eggs.per.Day = c(1, 1),
@@ -331,9 +331,8 @@ filtered <- flagged_phenology %>% group_by(Attempt.ID) %>% arrange(Visit.Datetim
 
 # Visualize filtered vs unfiltered date spans
 library(ggplot2)
-ggplot() +
+p1 <- ggplot() +
   geom_histogram(data = unfiltered, aes(x = nesting_period, fill = "Unfiltered"), color = "#69A0C2") +
-  geom_histogram(data = filtered, aes(x = nesting_period, fill = "Filtered"), color = "grey90", alpha = 0.5) +
   scale_fill_manual(values = c("Unfiltered" = "#457999", "Filtered" = "#8DCA8B"), name = "Dataset") +
   xlim(0, 250) + 
   xlab("Carolina Wren Nesting Periods") +
@@ -341,6 +340,20 @@ ggplot() +
   geom_vline(xintercept = 55, linetype = "dashed", linewidth = 2, color = "black") +
   annotate("text", x = 85, y = 4500, label = "55 day limit", color = "black", vjust = -0.5) +
   theme_minimal()
+
+p2 <- ggplot() +
+  geom_histogram(data = filtered, aes(x = nesting_period, fill = "Filtered"), color = "grey90") +
+  scale_fill_manual(values = c("Unfiltered" = "#457999", "Filtered" = "#8DCA8B"), name = "Dataset") +
+  xlim(0, 250) + 
+  xlab("Carolina Wren Nesting Periods") +
+  ylab("Count") +
+  geom_vline(xintercept = 55, linetype = "dashed", linewidth = 2, color = "black") +
+  annotate("text", x = 85, y = 4500, label = "55 day limit", color = "black", vjust = -0.5) +
+  theme_minimal()
+
+p1
+p2
+
 ```
 
-We can see that there were more than a few nests with long nesting periods before filtering. After filtering out 448 attempts deemed "too long", we are left with 2,539 attempts to continue an analysis with.
+We can see in the unfiltered plot that there were more than a few nests with long nesting periods before filtering. After filtering out 448 attempts deemed "too long", we are left with 2,539 attempts to continue an analysis with. Note that this function does not just trim the attempts by length. If you look closely you will see the distribution of nesting periods left of the cutoff has changed slightly (see the bar directly left of the dashed line has been reduced by several hundred attempts, and th other bars have increased slightly). This is due to removing days of nest checks post-fledging from the total nesting period. 
