@@ -22,6 +22,8 @@ knitr::opts_chunk$set(warning = FALSE,
 # only build vignettes locally and not for R CMD check
 knitr::opts_chunk$set(eval = nzchar(Sys.getenv("BUILD_VIGNETTES")))
 library(nestwatchR)
+library(DT)
+library(dplyr)
 ```
 
 This data cleaning vignette will cover several different methods for
@@ -226,11 +228,12 @@ optionally rename the resulting dataframe as well.
 
 ## Cleaning Procedure Definitions
 
-a.  **Brown-headed Cowbirds:** Flag/remove attempts with `Species.Name`
-    as "Brown-headed Cowbird" as they are nest parasites and do not
-    create their own nests. This is not the correct interpretation of
-    the nest species. Users may choose to look at these data more
-    closely if investigating brood parasitism. <br> <br>
+a.  **Obligate Brood Parasites:** Flag/remove attempts with `Species.Name`
+    entered as species know to be obligate brood parasites. Species like Brown-headed Cowbirds
+    are obligate brood parasites and do not create their own nests. This is not the 
+    correct interpretation of the nest species. Users may choose to look 
+    at these data more closely if investigating brood parasitism. To view a list of identified 
+    obligate brood parasites, [click here](#parasite-table).<br> <br>
 b.  **No Nesting Activity:** Flag/remove attempts with Outcome of "no
     breeding behavior observed" (u3), "inactive" (i), and "not
     monitored" (n). These data likely represent nests or nest boxes
@@ -316,13 +319,50 @@ length(unique(merged.data$Attempt.ID))
 # > 648569    # Attempts in raw dataset
 
 
-# Remove attempts with 'Brown-headed Cowbird' as the species
-nw.cleandata(data = merged.data, mode = "remove", methods = "a", output = "no_bnhcow")
-length(unique(no_bnhcow$Attempt.ID))
+# Remove attempts with known brood parasites (like Brown-headed Cowbird) as the nest species
+nw.cleandata(data = merged.data, mode = "remove", methods = "a", output = "no_parasite_spp")
+length(unique(no_parasite_spp$Attempt.ID))
 # > 648540    # Attempts after cleaning
 
 # Remove attempts using "j" and "k"
 nw.cleandata(data = merged.data, mode = "remove", methods = c("j", "k"), output = "no_longnests")
 length(unique(no_longnests$Attempt.ID))
 # > 646753    # Attempts after cleaning
+```
+
+<br>
+<br>
+<br>
+<br>
+
+## Reference Table
+
+<a name="parasite-table"></a>
+**Obligate Brood Parasite List**
+```{r parasite-table, echo=FALSE, eval = T}
+# Define genera/families
+parasite_genera <- c("Molothrus", "Pachycoccyx", "Microdynamis", "Eudynamys",
+                     "Scythrops", "Urodynamis", "Chrysococcyx", "Cacomantis",
+                     "Surniculus", "Cercococcyx", "Hierococcyx", "Cuculus",
+                     "Clamator", "Vidua", "Anomalospiza")
+parasite_family <- c("Indicatoridae")
+
+# Regex patterns
+genera_pattern <- paste(parasite_genera, collapse = "|")
+family_pattern <- paste(parasite_family, collapse = "|")
+
+# Prepare data
+parasites <- auk::get_ebird_taxonomy() %>%
+  mutate(parasite = ifelse(grepl(genera_pattern, scientific_name), TRUE, NA)) %>%
+  mutate(parasite = ifelse(grepl(family_pattern, family), TRUE, parasite)) %>%
+  filter(parasite == TRUE) %>%
+  select(-taxon_order, -parasite, -report_as, -category)
+
+# Render table as HTML for inline display inside <details>
+DT::datatable(parasites, options = list(paging = FALSE,           # No pagination
+                                        scrollY = "300px",        # Set vertical scroll height
+                                        scrollX = TRUE,           # Enable horizontal scrolling
+                                        searching = TRUE,
+                                        dom = 't'))               # Show only the table (remove extra UI like page length selector)
+
 ```
