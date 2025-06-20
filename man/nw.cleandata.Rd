@@ -29,9 +29,10 @@ deciding what cleaning procedures to conduct. This function contains 11 cleaning
 \cr
     \strong{Cleaning Procedure Details}:
       \itemize{
-       \item \code{a}: Flag/remove attempts with \code{Species.Name} is "Brown-headed Cowbird" as they are nest parasites and
-       do not create their own nests. This is not the correct interpretation of the nest species. Users may choose to look at these data more
-       closely if investigating brood parasitism.
+       \item \code{a}: Flag/remove attempts with attempts with `Species.Name` entered as a species known to be an obligate brood parasite. These
+       species do not create their own nests, so this is not the correct interpretation of the nest species. Users may choose to look at these data more
+       closely if investigating brood parasitism. See the full list or obligate brood parasite species
+       \href{https://https://engagement-center.github.io/nestwatchR/articles/b_Data-Cleaning.html#parasite-table}{click here}.
        \item \code{b}: Flag/remove attempts with  of "no breeding behavior observed" (\code{u3}), "inactive" (\code{i}), and
        "not monitored" (\code{n}). These data likely represent nests or nest boxes which never received eggs or were unmonitored. Users may choose
        to include these data if looking at habitat or location data without measures of phenology or success.

@@ -127,25 +127,16 @@ version of the dataset to be downloaded and defaults to the latest
 version if left blank. This function will download, unzip, and import
 two dataframes to the global environment. Depending on your connection
 speed, this may take a few minutes.</p>
-<blockquote>
-<p>⚠️ This function depends on the library <a href="https://rstudio.github.io/reticulate/" class="external-link"><code>reticulate</code></a>
-which requires <code>Python</code> to be installed on your machine. See
-the <a href="https://engagement-center.github.io/nestwatchR/index.html#installation-computer">installation
-instructions</a> for more information.</p>
-</blockquote>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/reticulate/" class="external-link">reticulate</a></span><span class="op">)</span></span>
-<span></span>
+<code class="sourceCode R"><span></span>
 <span><span class="co"># Download the most current version of the NestWatch dataset </span></span>
 <span><span class="fu"><a href="../reference/nw.getdata.html">nw.getdata</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Download the first version</span></span>
 <span><span class="fu"><a href="../reference/nw.getdata.html">nw.getdata</a></span><span class="op">(</span>version <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<p>This function uses Python within R to access the Mendeley data
-archive and download the Nest Watch datasets. Once run, two dataframes
-will be available in the global environment: <code>NW.attempts</code>
-and <code>NW.checks</code>. These dataframes are not yet saved to your
-machine–you may wish to use <a href="https://www.rdocumentation.org/packages/AlphaPart/versions/0.9.8/topics/write.csv" class="external-link"><code>write.csv()</code></a>
+<p>Once run, two dataframes will be available in the global environment:
+<code>NW.attempts</code> and <code>NW.checks</code>. These dataframes
+are not yet saved to your machine–you may wish to use <a href="https://www.rdocumentation.org/packages/AlphaPart/versions/0.9.8/topics/write.csv" class="external-link"><code>write.csv()</code></a>
 or <a href="https://rdrr.io/r/base/readRDS.html" class="external-link"><code>saveRDS()</code></a> to
 access these data again without the need to re-download the
 datasets.</p>
