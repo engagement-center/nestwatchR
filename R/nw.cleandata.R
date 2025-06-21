@@ -45,8 +45,7 @@
 #'         - Hatch Date > 300 days. These dates represent the maximum nest phenological period for any bird species and are not realistic for the
 #'        majority of the NestWatch dataset. We encourage users to determine reasonable phenologies for their species of interest and use
 #'        \code{\link[nestwatchR:nw.filterphenology]{nw.filterphenology}} to run a finer filter on nest phenology dates by species.
-#'        \item \code{k}: Flag/remove attempts where the # days between the first and the last visit are > 365 days or where the year of a summary
-#'        dates (Lay, Hatch, Fledge) does not overlap the year in the nest checks data. Additional check to identify nest attempts where year portion
+#'        \item \code{k}: Flag/remove attempts where the # days between the first and the last visit are > 365 days. Additional check to identify nest attempts where year portion
 #'        of dates between nest visits were likely incorrectly entered. An analyst may choose to review these attempts individually to verify if a typo occurred.
 #' }
 #'
@@ -308,21 +307,12 @@ nw.cleandata  <- function(data, mode, methods, output = NULL) {
                          filter(date_span >= 365) %>%                                                     # filter to long attempts
                          pull(Attempt.ID) %>% unique()                                                    # get unique attempt.ids to flag
 
-        temp_1 <- data %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime) %>%                           # T/F all years are good, flag F
-          filter(!(all(is.na(First.Lay.Date)) & all(is.na(Hatch.Date)) & all(is.na(Fledge.Date)))) %>%    # ingnore attempts with no summary info
-          summarize(all_dates_match_year = all(
-                              na.omit(lubridate::year(First.Lay.Date) %in% lubridate::year(Visit.Datetime)) &
-                              na.omit(lubridate::year(Hatch.Date) %in% lubridate::year(Visit.Datetime)) &
-                              na.omit(lubridate::year(Fledge.Date) %in% lubridate::year(Visit.Datetime))), .groups = "drop") %>%
-          filter(all_dates_match_year == "FALSE") %>%
-          pull(Attempt.ID) %>% unique()
-
         # Flag attempts
-        toflag <- c(temp, temp_1)
+        toflag <- c(temp)
         toflag <- unique(toflag)
         rows <- which(data$Attempt.ID %in% toflag)
         data$Flagged.Attempt[rows] <- "FLAGGED"
-        rm(temp, temp_1)
+        rm(temp)
 
       # Unused, included better in nw.filterphenology()
       # } else if (m == "l") {
