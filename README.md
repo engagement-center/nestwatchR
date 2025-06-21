@@ -104,8 +104,9 @@ If you use the NestWatch Open Dataset or this R package, please cite:
 <blockquote>
 
 **Dataset (replace with appropriate version \# and year):**</br> Bailey,
-R., L. Larson, D. Bonter. 2025. “NestWatch Open Dataset.” Mendeley Data,
-V4. DOI: [10.17632/wjf794z7gc](https://doi.org/10.17632/wjf794z7gc)</a>
+R. L., L. Larson, D. Bonter. 2025. “NestWatch Open Dataset.” Mendeley
+Data, V5. DOI:
+[10.17632/wjf794z7gc](https://doi.org/10.17632/wjf794z7gc)</a>
 
 **Data Paper:**</br> Bailey, R. L., L. Larson, and D. N. Bonter. 2024.
 “NestWatch: An Open-Access, Long-Term Data Set on Avian Reproductive
@@ -113,7 +114,7 @@ Success.” Ecology 105(2): e4230. DOI:
 [10.1002/ecy.4230](https://doi.org/10.1002/ecy.4230)</a>
 
 **NestWatch R Package (replace appropriate version \# and year):**<br>
-Savides, K., R. Bailey, & D. Bonter. 2025. NestWatch Data Products
+Savides, K., R. L. Bailey, & D. Bonter. 2025. NestWatch Data Products
 (Version 0.00.00) \[Computer software\].
 <https://github.com/engagement-center/2024-NestWatch-Package-Internal>
 
