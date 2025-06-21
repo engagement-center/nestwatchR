@@ -14,10 +14,11 @@ navbar:
         href: articles/a_Intro-and-Data-Access.html
       - text: Conduct Common NestWatch Data Cleaning Procedures
         href: articles/b_Data-Cleaning.html
-      - text: Filter NestWatch Data on Finer Scales
-        href: articles/c_Data-Filtering.html
       - text: Estimate NestWatch Summary Dates
         href: articles/d_Data-Estimation.html
+      - text: Filter NestWatch Data on Finer Scales
+        href: articles/c_Data-Filtering.html
+
     reference:
       text: Function Reference
       href: reference/index.html
