@@ -37,7 +37,7 @@
 #' nw.estclutchsize(data = data, output = "out")
 #'
 #' out$Clutch.Size   # clutch size values
-#' out$Clutch.Size.Estimated   # binary indicator if clutch size value is estimated or not
+#' out$Clutch.Size.Estimated   # binary indicator if clutch size is estimated (1) or not (0)
 nw.estclutchsize <- function(data, output = NULL){
 
   ###########################
