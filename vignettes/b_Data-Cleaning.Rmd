@@ -322,12 +322,12 @@ length(unique(merged.data$Attempt.ID))
 # Remove attempts with known brood parasites (like Brown-headed Cowbird) as the nest species
 nw.cleandata(data = merged.data, mode = "remove", methods = "a", output = "no_parasite_spp")
 length(unique(no_parasite_spp$Attempt.ID))
-# > 648540    # Attempts after cleaning
+# > 648537    # Attempts after cleaning
 
 # Remove attempts using "j" and "k"
 nw.cleandata(data = merged.data, mode = "remove", methods = c("j", "k"), output = "no_longnests")
 length(unique(no_longnests$Attempt.ID))
-# > 646753    # Attempts after cleaning
+# > 646743    # Attempts after cleaning
 ```
 
 <br>
