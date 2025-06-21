@@ -19,7 +19,7 @@ flagged with "FLAGGED" in a new column, or removed from the dataset.}
  \item \strong{Lay}: The number of days representing the maximum expected laying period for each species.
  \item \strong{Incubation}: The number of days representing the maximum expected incubation period (between clutch complete and hatch) for each species.
  \item \strong{Nestling}: The number of days representing the maximum expected nesting period (hatch and last fledge) for each species.
- \item \strong{Total Nesting Period}: The number of days representing the maximum expected nesting period (spanning first initial nest building to last fledge) for each species.
+ \item \strong{Total}: The number of days representing the maximum expected total nesting period (spanning first initial nest building to last fledge) for each species.
  }}
 
 \item{trim_to_active}{logical; TRUE or FALSE indicating if nest check data should be trimmed to include only those rows where the nest was active
