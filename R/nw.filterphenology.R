@@ -16,7 +16,7 @@
 #'   \item \strong{Lay}: The number of days representing the maximum expected laying period for each species.
 #'   \item \strong{Incubation}: The number of days representing the maximum expected incubation period (between clutch complete and hatch) for each species.
 #'   \item \strong{Nestling}: The number of days representing the maximum expected nesting period (hatch and last fledge) for each species.
-#'   \item \strong{Total Nesting Period}: The number of days representing the maximum expected nesting period (spanning first initial nest building to last fledge) for each species.
+#'   \item \strong{Total}: The number of days representing the maximum expected total nesting period (spanning first initial nest building to last fledge) for each species.
 #'   }
 #' @param trim_to_active logical; TRUE or FALSE indicating if nest check data should be trimmed to include only those rows where the nest was active
 #' (in build, lay, incubation, presence of life young). The first check observing a fledge or fail event is retained, but subsequent checks would be
@@ -162,7 +162,7 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active, output
     ###        Flag Long Attempts based on whole period          ###
     ################################################################
 
-    # Temp trim proceeding empty nest checks from each attempt
+    # Temp trim preceding empty nest checks from each attempt
     temp <- spp_data %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime) %>%      # group checks by attempt and arrange by date
       mutate(CumulativeMax = cummax(Host.Eggs.Count)) %>%       # make column for cumulative eggs
       filter(!(Host.Eggs.Count == 0 & CumulativeMax == 0)) %>%  # remove checks up until egg count != 0
