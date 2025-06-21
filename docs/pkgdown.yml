@@ -4,9 +4,9 @@ pkgdown_sha: ~
 articles:
   a_Intro-and-Data-Access: a_Intro-and-Data-Access.html
   b_Data-Cleaning: b_Data-Cleaning.html
-  d_Data-Estimation: d_Data-Estimation.html
-  c_Data-Filtering: c_Data-Filtering.html
-last_built: 2025-06-20T18:09Z
+  c_Data-Estimation: c_Data-Estimation.html
+  d_Data-Filtering: d_Data-Filtering.html
+last_built: 2025-06-21T17:41Z
 urls:
   reference: https://engagement-center.github.io/nestwatchR/reference
   article: https://engagement-center.github.io/nestwatchR/articles
