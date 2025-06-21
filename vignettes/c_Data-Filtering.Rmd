@@ -27,7 +27,7 @@ Before analysis, researchers should consider conducting finer-scale filtering in
 
 ## Filtering Species
 
-Limiting the dataset to just a few species can easily be done using the pipe (`%>%`). If you are unfamiliar with "piping", see the [`migritrr`](https://magrittr.tidyverse.org/) package. Below we will subset the version 2 of the NestWatch dataset to include only attempts for Bewick's Wren ("bewwre") and Carolina Wren ("carwre"). The code below walks through download, merging, and filtering to species from scratch.
+Limiting the dataset to just a few species can easily be done using the pipe (`%>%`). If you are unfamiliar with "piping", see the [`migritrr`](https://magrittr.tidyverse.org/) package. Below we will subset the version 1 of the NestWatch dataset to include only attempts for Bewick's Wren ("bewwre") and Carolina Wren ("carwre"). The code below walks through download, merging, and filtering to species from scratch.
 
 Note that subspecies and identifiable forms of species have different species codes than the main species. For example, Carolina Wren's species code is "carwre" but Carolina Wren (Northern) has the code "carwre1". If you wish to include all subspecies/forms, make sure to run `nw.cleantaxa(data = data, rollsubspecies = T)` or lookup the species codes you would like to include by referencing the eBird taxonomy table using auk::ebird_taxonomy.
 
@@ -48,7 +48,7 @@ unique(wrens$Species.Name)
 
 ```
 
-<br> This "wrens" data subset is also included within the package for quick access using `wrens <- nestwatchR::wren_quickstart`:
+<br> This "wrens" data subset from dataset Version 1 is also included within the package for quick access using `wrens <- nestwatchR::wren_quickstart`:
 
 ```{r load the data, eval = T, echo = F, message=FALSE, }
 library(dplyr)
@@ -243,10 +243,11 @@ nests_cleanlocs <- flagged_nests %>% filter(Flagged.Location == "In-Range")
 
 You may also choose to refine the coarse phenologic filtering done in the cleaning process of [`nw.cleandata()`](https://engagement-center.github.io/nestwatchR/reference/nw.cleandata.html). NestWatch data are known to have some errors where participants either enter dates incorrectly (i.e., enter the year portion of a date as 2021 in one field and 2020 in the next) or incorrectly continue a nest attempt when it should be considered a new nest (i.e. nest usurpation or failure-and-rebuild). As an example of the latter, if a bluebird nest fails due to predation and the pair renests in the same box, this should be entered as two different attempts at the same location. But records of these "run-on nests" where the first attempt was not ended do exist in the dataset. One way a user might choose to identify or remove such nesting attempts, or ones which are outside of the expected nesting timeline for a given species, is to use phenologic filtering.
 
-Phenologic filtering allows the user to define the allowed maximum number of days for each different period in the nesting cycle, or for the whole nesting cycle. The function [`nw.filterphenology()`](https://engagement-center.github.io/nestwatchR/reference/nw.filterphenology.html) uses both the data in the attempt summary info (data originating from the "Attempts" dataset) and the individual visits data (originating from the "Checks" dataset). Note that NestWatch participants do not always provide the summary info, but the key dates may be inferred from the series of nest check data. Because the function uses both summary and checks data, we highly recommend running the series of estimation functions provided in the package to estimate summary dates where they were not specifically provided by the participant (see: [`nw.estclutchsize()`](https://engagement-center.github.io/nestwatchR/reference/nw.estclutchsize.html), [`nw.estfirstlay()`](https://engagement-center.github.io/nestwatchR/reference/nw.estfirstlay.html), [`nw.esthatch()`](https://engagement-center.github.io/nestwatchR/reference/nw.esthatch.html), and [`nw.estfledge()`](https://engagement-center.github.io/nestwatchR/reference/nw.estfledge.html)). Running theses estimations can increase the amount of information available for phenologic filtering.
+Phenologic filtering allows the user to define the allowed maximum number of days for each different period in the nesting cycle, or for the whole nesting cycle. The function [`nw.filterphenology()`](https://engagement-center.github.io/nestwatchR/reference/nw.filterphenology.html) uses both the data in the attempt summary info (data originating from the "Attempts" dataset) and the individual visits data (originating from the "Checks" dataset). Note that NestWatch participants do not always provide the summary info, but the key dates may be inferred from the series of nest check data. Because the function uses both summary and checks data, we highly recommend running the series of estimation functions provided in the package to estimate summary dates where they were not specifically provided by the participant (see: [`nw.estclutchsize()`](https://engagement-center.github.io/nestwatchR/reference/nw.estclutchsize.html), [`nw.estfirstlay()`](https://engagement-center.github.io/nestwatchR/reference/nw.estfirstlay.html), [`nw.esthatch()`](https://engagement-center.github.io/nestwatchR/reference/nw.esthatch.html), and [`nw.estfledge()`](https://engagement-center.github.io/nestwatchR/reference/nw.estfledge.html)). Running these estimations can increase the amount of information available for phenologic filtering.
 
 For this function, a small user-created dataframe in the following format is needed. These values represent the *maximum* allowable number of days a nest of a particular species can be in each nesting stage. "Total" refers to the maximum number of days from the initiation of nest building though fledging. In this example we will continue using NestWatch data for Bewick's Wren and Carolina Wren:
 
+First, we will load, clean, and estimate missing values: 
 ```{r filter phen, eval = T}
 ## 1. Load, Clean, & Estimate Data 
 
@@ -261,8 +262,11 @@ nw.cleandata(data = data,
              methods = c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"),
              output = "data")
 
-# Run summary date estimation functions:
-# Missing summary data will be estimated, when possible, by using AVERAGE values for the focal species. The dataframe below contains values of the average clutch size, number of eggs laid per day, incubation period (in days), and nestling period (in days) which the estimation functions will use to estaimte any missing values.
+# First, run summary date estimation functions:
+# Missing summary data will be estimated, when possible, by using AVERAGE values 
+# for the focal species. The dataframe below contains values of the average clutch
+# size, number of eggs laid per day, incubation period (in days), and nestling 
+# period (in days) which the estimation functions will use to estimate any missing values.
 avg_phen <- data.frame(Species = c("bewwre", "carwre"),
                        Clutch.Size  = c(5, 4),
                        Eggs.per.Day = c(1, 1),
@@ -276,19 +280,20 @@ nw.estfledge(data = data, phenology = avg_phen, output = "data")
 ```
 
 <br>
-
+Now we can create the maximum allowable periods dataframe and run phenological filtering. Here we choose the maximum values for incubation, nestling, and total to be the mean value plus several days to account for allowable variation in length. Again, `total = ` represents the maximum nesting period, spanning between first build and fledge. For example here, Bewick's Wren typically build nests within 8 days. So we might say max build time is 10 days, and lay + incubation + nestling + build = 60 days:
 ```{r phen filtering, eval = T}
 ## 2. Phenologically filter data by limiting dataset to nests with dates within the maximum possible range.
 
 # Create simple df with maximum allowable # days in each nest phase for Bewick's and Carolina Wrens.
 # You can provide data for a single species or multiple species to be run at the same time.
-# We suggest adding a few days of buffer to the average incubation, nesting, and total nesting period lengths. This is your judgement call based on the biology of the focal species.
+# We suggest adding a few days of buffer to average incubation, nesting, and total 
+# nesting period lengths. This is your judgement call based on the biology of the focal species.
 max_days <- 
   data.frame(species =  c("bewwre", "carwre"),
              lay = c(8, 6),           # max recorded clutch size for focal species
              incubation = c(20, 20),  # means plus a bit of buffer
              nestling = c(20, 20),    # means plus a bit of buffer
-             total = c(60, 55))       # means (build-to-fledge) plus a bit of buffer
+             total = c(60, 55))       # mean days build to fledge, plus a bit of buffer
 
 # Filter attempts based on nesting phenology
 nw.filterphenology(data = data,
