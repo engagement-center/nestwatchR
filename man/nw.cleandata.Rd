@@ -65,8 +65,7 @@ deciding what cleaning procedures to conduct. This function contains 11 cleaning
         - Hatch Date > 300 days. These dates represent the maximum nest phenological period for any bird species and are not realistic for the
        majority of the NestWatch dataset. We encourage users to determine reasonable phenologies for their species of interest and use
        \code{\link[nestwatchR:nw.filterphenology]{nw.filterphenology}} to run a finer filter on nest phenology dates by species.
-       \item \code{k}: Flag/remove attempts where the # days between the first and the last visit are > 365 days or where the year of a summary
-       dates (Lay, Hatch, Fledge) does not overlap the year in the nest checks data. Additional check to identify nest attempts where year portion
+       \item \code{k}: Flag/remove attempts where the # days between the first and the last visit are > 365 days. Additional check to identify nest attempts where year portion
        of dates between nest visits were likely incorrectly entered. An analyst may choose to review these attempts individually to verify if a typo occurred.
 }
 }
