@@ -37,7 +37,7 @@ library(dplyr)
 
 # Download and merge datasets
 nw.getdata(version = 1)
-nw.mergedata(attempts = NW.attemps, checks = NW.checks, output = "merged.data")
+nw.mergedata(attempts = NW.attempts, checks = NW.checks, output = "merged.data")
 
 # Filter data to include only carwre and bewwre
 wrens <- merged.data %>% filter(Species.Code %in% c("carwre", "bewwre"))
@@ -61,18 +61,18 @@ wrens <- nestwatchR::wren_quickstart
 
 Spatial filters are a flexible way to limit data to a predefined geographic area. You may choose to limit an analysis to nesting attempts within a certain area, like a single [Bird Conservation Region](https://nabci-us.org/resources/bird-conservation-regions-map/) or a select political jurisdiction. Or you may choose to remove potentially misidentified species by using a range map to filter out nesting attempts. If those filtering criteria are easily subset from the dataset, like states/provinces and countries (via `Subnational.Code`), you can quickly use subsetting rules to filter the data for analysis. But, if those criteria are not already easily subset-able, a spatial filter can be a good option.
 
-As an example, we can first view a plot of where the nests in `wrens` are located by species. Here we will use the package [`tmap`](https://cran.r-project.org/web/packages/tmap/vignettes/tmap-getstarted.html) to produce an interactive map. We will also be utilizing the [`sf`](https://r-spatial.github.io/sf/) package to help create and transform our tabular data into spatial data. We will then project the wrens data into the Lambert Conformal Conic Projection, which is well suited for mapping areas in the United States (but you can change the object `prj` to any appropriate PROJ.4 string for the area you are mapping).
+As an example, we can first view a plot of where the nests in `wrens` are located by species. Here we will use the package [`tmap`](https://cran.r-project.org/web/packages/tmap/vignettes/tmap-getstarted.html) to produce an interactive map. We will also be utilizing the [`sf`](https://r-spatial.github.io/sf/) package to help create and transform our tabular data into spatial data. We will then project the wrens data into the Lambert Conformal Conic Projection, which is well suited for mapping areas in the United States (but you can change the object `proj` to any appropriate PROJ.4 string for the area you are mapping).
 
 [!Note] If you are unfamiliar with working with spatial data, [this is a good resource](https://bookdown.org/mcwimberly/gdswr-book/coordinate-reference-systems.html) on coordinate reference systems and projections within R.
 
 ```{r wren nests, eval = F, echo = T}
 # Create a spatial object from nest data
+library(sf)
 nest_points <- sf::st_as_sf(wrens, coords = c("Longitude", "Latitude"), crs = 4326)  # data are in WGS 84 (crs = 4326)
 
 # Define desired CRS for data projection
 proj <- "+proj=lcc +lon_0=-90 +lat_1=33 +lat_2=45"  # PROJ.4 string defining the projection
   
-
 # Project the nest points into LCC projection  
 nest_points <- sf::st_transform(nest_points, crs = proj)   # apply projection
 
@@ -102,6 +102,7 @@ We can use our unique access key to download the range map of Bewick's Wren and 
 
 ```{r not run download range, eval = F, echo = T}
 # Obtain and set an ebird access key
+library(ebirdst)
 set_ebirdst_access_key("pasteyourkeyhere")      # you only need to do this once, R will remember it
 
 # Define what species you want to download by their 6-letter code
@@ -139,11 +140,11 @@ for (i in object_names) {
     data <- get(i, envir = .GlobalEnv)
     if (any(data$season %in% "breeding")) {
       data <- data %>% filter(season == "breeding")
-      data <- data %>% st_transform(nest_points, crs = prj)
+      data <- data %>% st_transform(nest_points, crs = proj)
       assign(paste0(i), data, envir = .GlobalEnv)
     } else {
       data <- data %>% filter(season == "resident")
-      data <- data %>% st_transform(nest_points, crs = prj)
+      data <- data %>% st_transform(nest_points, crs = proj)
       assign(paste0(i), data, envir = .GlobalEnv)}
     rm(data)
   }
