@@ -191,7 +191,7 @@ We can now see that there are more than a few nests outside of the typical Bewic
 
 If we zoom in to central Colorado, we can see there are a few Bewick's Wren nests just outside the range border.
 
-![A zoomed in map if Colorado showing two nest locations not too far outside of the typical range of the Bewick's Wren.](colorado-zoom.png)
+![A zoomed in map of Colorado showing two nest locations not too far outside of the typical range of the Bewick's Wren.](colorado-zoom.png)
 
 We might choose to keep nests like these in our analysis, because they could be correctly identified and just a bit outside the typical range. Let's define a buffer zone to keep such nests but exclude those well outside the expected range:
 
@@ -226,7 +226,7 @@ map
 
 ```
 
-![Map of the United States overlayed with Bewick's Wren typical range with an added 50km buffer zone with and points representing the reported locations of Bewick's Wren nests. Nests outside the buffer are red while those inside are blue.](plot-buffered.png)
+![Map of the United States overlaid with the Bewick’s Wren typical breeding range polygon, plus an added 50km buffer zone (lighter blue). Points represent the reported locations of Bewick’s Wren nests, with those outside the buffer being red while those inside are blue.](plot-buffered.png)
 
 <br>
 

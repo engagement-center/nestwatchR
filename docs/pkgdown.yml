@@ -1,12 +1,12 @@
 pandoc: '3.4'
-pkgdown: 2.1.1
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   a_Intro-and-Data-Access: a_Intro-and-Data-Access.html
   b_Data-Cleaning: b_Data-Cleaning.html
   c_Data-Estimation: c_Data-Estimation.html
   d_Data-Filtering: d_Data-Filtering.html
-last_built: 2025-06-21T18:21Z
+last_built: 2025-08-27T16:41Z
 urls:
   reference: https://engagement-center.github.io/nestwatchR/reference
   article: https://engagement-center.github.io/nestwatchR/articles
