@@ -8,6 +8,8 @@
 #' @export
 #'
 #' @import dplyr
+#' @importFrom lubridate parse_date_time
+#'
 #' @examples
 #'
 #' # Load example NestWatch data
@@ -51,7 +53,7 @@ nw.mergedata <- function(attempts, checks, output = NULL) {
   data$First.Lay.Date <- as.Date(data$First.Lay.Date)
   data$Fledge.Date <- as.Date(data$Fledge.Date)
   data$Hatch.Date <- as.Date(data$Hatch.Date)
-  data$Visit.Datetime <- as.POSIXct(data$Visit.Datetime, format="%Y-%m-%d %H:%M:%S")
+  data$Visit.Datetime <- parse_date_time(data$Visit.Datetime, orders = c("Y-m-d H:M:S", "Y-m-d")) # datetime handling fix
 
   # Prep for and output
   pos <- 1

@@ -58,6 +58,7 @@
 #' @importFrom stats complete.cases
 #' @importFrom stats na.omit
 #' @importFrom lubridate year
+#' @importFrom lubridate parse_date_time
 #' @return a dataframe
 #' @export
 #'
@@ -72,7 +73,7 @@
 #' # Remove data not meeting procedures j or k.
 #' nw.cleandata(data = wrens, mode = "remove",
 #'              methods = c("j", "k"))
-nw.cleandata  <- function(data, mode, methods, output = NULL) {
+nw.cleandata <- function(data, mode, methods, output = NULL) {
 
   #####################################                                         # Stops the function if the provided arguments are not correctly provided
   ###   Function Parameters Check   ###
@@ -115,7 +116,8 @@ nw.cleandata  <- function(data, mode, methods, output = NULL) {
   data$First.Lay.Date <- as.Date(data$First.Lay.Date)                           # Make all date-times proper formats
   data$Fledge.Date    <- as.Date(data$Fledge.Date)
   data$Hatch.Date     <- as.Date(data$Hatch.Date)
-  data$Visit.Datetime <- as.POSIXct(data$Visit.Datetime, format = "%Y-%m-%d %H:%M:%S", tz = "")
+  #data$Visit.Datetime <- as.POSIXct(data$Visit.Datetime, format = "%Y-%m-%d %H:%M:%S", tz = "")
+  data$Visit.Datetime <- lubridate::parse_date_time(data$Visit.Datetime, orders = c("Y-m-d H:M:S", "Y-m-d")) # testing fix
 
   # Force methods to be lowercase
   methods <- tolower(methods)
