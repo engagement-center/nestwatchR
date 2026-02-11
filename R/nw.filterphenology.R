@@ -86,7 +86,7 @@
 #'                    Live.Host.Young.Count = c("0", "4", "0", "4"),
 #'                    Nest.Status = rep(NA, 4))
 #' nw.filterphenology(data = data, max_phenology = phenology, trim_to_active = F, mode = "flag")
-nw.filterphenology <- function(data, mode, max_phenology, trim_to_active, output = NULL){
+nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = F, output = NULL){
 
   #####################################
   ###   Function Parameters Check   ###
