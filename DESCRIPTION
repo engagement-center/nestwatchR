@@ -18,7 +18,7 @@ Authors@R:
              comment = c(ORCID = "0000-0003-1768-1941")),
       person("Cornell Lab of Ornithology", role = "cph"))
 Maintainer: Kim Savides <kim.savides@cornell.edu>
-Description: This package was build to improve accessability for downloading, cleaning, and filtering data from the NestWatch database of bird nesting records. Functions in this package are designed to assist users in conducting common cleaning procedures to the raw data contained in the database.
+Description: Provides tools for downloading, cleaning, and filtering data from the NestWatch database of bird nesting records. Functions assist users with common data-cleaning procedures for raw NestWatch data.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -40,8 +40,6 @@ Suggests:
     rmarkdown,
     testthat (>= 3.0.0),
     tmap,
-    knitr
-VignetteBuilder: knitr
 Depends: 
     R (>= 2.10)
 Config/testthat/edition: 3

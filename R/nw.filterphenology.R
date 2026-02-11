@@ -57,14 +57,15 @@
 #'                    Hatch.Date = as.Date(c("2024-05-20", "2024-05-21", "2024-06-10", "2024-05-21")),
 #'                    Fledge.Date = as.Date(c("2024-06-05", NA, "2024-06-25", "2024-06-30")),
 #'                    Outcome = c("s1", "f", "s1", "s1"),
-#'                    Visit.Datetime = c(as.POSIXct(rep(NA, 4))),     # sim of single visit of data for each
+#'                    # simulate data for a single visit of each attempt
+#'                    Visit.Datetime = c(as.POSIXct(rep(NA, 4))),
 #'                    Visit.ID = c("S100", "S200", "S300", "S400"),
 #'                    Host.Eggs.Count = c("4", "4", "4", "4"),
 #'                    Host.Eggs.Present.Uncounted = rep(NA, 4),
 #'                    Live.Host.Young.Present.Uncounted = rep(NA, 4),
 #'                    Live.Host.Young.Count = c("4", "4", "4", "4"),
 #'                    Nest.Status = rep(NA, 4))
-#' nw.filterphenology(data = data, max_phenology = phenology, trim_to_active = F, mode = "flag")
+#' nw.filterphenology(data = data, max_phenology = phenology, mode = "flag")
 #'
 #'
 #' # Simplified NestWatch dataset without nest summary dates
@@ -85,7 +86,7 @@
 #'                    Live.Host.Young.Present.Uncounted = rep(NA, 4),
 #'                    Live.Host.Young.Count = c("0", "4", "0", "4"),
 #'                    Nest.Status = rep(NA, 4))
-#' nw.filterphenology(data = data, max_phenology = phenology, trim_to_active = F, mode = "flag")
+#' nw.filterphenology(data = data, max_phenology = phenology, mode = "flag")
 nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = F, output = NULL){
 
   #####################################
