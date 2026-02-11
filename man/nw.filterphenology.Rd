@@ -4,7 +4,13 @@
 \alias{nw.filterphenology}
 \title{Filter Nesting Attempts Based on Expected Nest Phenological Periods}
 \usage{
-nw.filterphenology(data, mode, max_phenology, trim_to_active, output = NULL)
+nw.filterphenology(
+  data,
+  mode,
+  max_phenology,
+  trim_to_active = F,
+  output = NULL
+)
 }
 \arguments{
 \item{data}{dataframe; A dataframe of merged NestWatch attempt and visits data. Date columns must have class \code{Date}
@@ -63,24 +69,34 @@ data <- data.frame(Attempt.ID = c("1", "2", "3", "4"),
                                               "2024-05-01", "2024-05-01")),
                    Hatch.Date = as.Date(c("2024-05-20", "2024-05-21", "2024-06-10", "2024-05-21")),
                    Fledge.Date = as.Date(c("2024-06-05", NA, "2024-06-25", "2024-06-30")),
-                   Visit.Datetime = c(rep(NA, 4)),
                    Outcome = c("s1", "f", "s1", "s1"),
+                   Visit.Datetime = c(as.POSIXct(rep(NA, 4))),     # sim of single visit of data for each
+                   Visit.ID = c("S100", "S200", "S300", "S400"),
+                   Host.Eggs.Count = c("4", "4", "4", "4"),
+                   Host.Eggs.Present.Uncounted = rep(NA, 4),
+                   Live.Host.Young.Present.Uncounted = rep(NA, 4),
+                   Live.Host.Young.Count = c("4", "4", "4", "4"),
                    Nest.Status = rep(NA, 4))
-nw.filterphenology(data = data, max_phenology = phenology, mode = "flag")
+nw.filterphenology(data = data, max_phenology = phenology, trim_to_active = F, mode = "flag")
 
 
 # Simplified NestWatch dataset without nest summary dates
-# (will look at total nest attempt duration from visit dates)
+# (will look at total attempt duration from visit dates)
 # Attempt "2" should be flagged as being too long.
 data <- data.frame(Attempt.ID = c("1", "1", "2", "2"),
                    Species.Code = rep("carwre", 4),
                    First.Lay.Date = as.Date(rep(NA, 4)),
                    Hatch.Date = as.Date(rep(NA, 4)),
                    Fledge.Date = as.Date(rep(NA, 4)),
-                   Visit.Datetime =
-                   as.POSIXct(c("2024-05-01", "2024-06-15",
-                                "2024-05-01", "2024-07-30")),
                    Outcome = c("s1", "s1", "s1", "s1"),
+                   Visit.ID = c("S100", "S101", "S200", "S201"),
+                   Visit.Datetime =
+                     as.POSIXct(c("2024-05-01", "2024-06-15",
+                                  "2024-05-01", "2024-07-30")),
+                   Host.Eggs.Count = c("4", "0", "4", "0"),
+                   Host.Eggs.Present.Uncounted = rep(NA, 4),
+                   Live.Host.Young.Present.Uncounted = rep(NA, 4),
+                   Live.Host.Young.Count = c("0", "4", "0", "4"),
                    Nest.Status = rep(NA, 4))
-nw.filterphenology(data = data, max_phenology = phenology, mode = "flag")
+nw.filterphenology(data = data, max_phenology = phenology, trim_to_active = F, mode = "flag")
 }

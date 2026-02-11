@@ -58,7 +58,7 @@
 #'
 #' # Remove "/" and hybrid attempts, roll up subspecies to species
 #' nw.cleantaxa(df, rm_slash = TRUE, rm_hybrid = TRUE, roll_subspecies = TRUE)
-new_fun <- function(data, rm_spuh = FALSE, rm_slash = FALSE, rm_hybrid = FALSE, roll_subspecies = FALSE, output = NULL){
+nw.cleantaxa <- function(data, rm_spuh = FALSE, rm_slash = FALSE, rm_hybrid = FALSE, roll_subspecies = FALSE, output = NULL){
   # Get eBird taxonomy, bind in category and report as
   taxa <- auk::ebird_taxonomy
   data <- data %>% left_join(taxa %>% select(species_code, category, report_as), by = c("Species.Code" = "species_code"))
