@@ -65,6 +65,19 @@ As an example, we can first view a plot of where the nests in `wrens` are locate
 
 [!Note] If you are unfamiliar with working with spatial data, [this is a good resource](https://bookdown.org/mcwimberly/gdswr-book/coordinate-reference-systems.html) on coordinate reference systems and projections within R.
 
+
+First, to limit stress on our plotting instrument, we will limit the dataset to include only one line of data for each nest. If you would like certain variables of the nest, like clutch size, fledge/fail date, or substrate, to be visible when you click on individual points, but sure to select those columns here. In this example, we will select clutch size and outcome.
+
+```{r limit dataset, eval = T, echo = T}
+# Select a few columns that your are interest in plotting
+wrens <- wrens %>% select(Attempt.ID, Latitude, Longitude, Species.Name, 
+                          Species.Code, Clutch.Size, Outcome) %>%    # select columns
+                   distinct()                                        # get one row for each nest
+
+```
+
+Now that we have a single line of data for each nest, we can plot our points. Do note that depending on your sample size, your map may take a while to plot. If you think this might be happening, try plotting just a subset of the points at a time or switching the tmap mode to "plot" (see tmap documentation for more details).
+
 ```{r wren nests, eval = F, echo = T}
 # Create a spatial object from nest data
 library(sf)
@@ -78,13 +91,14 @@ nest_points <- sf::st_transform(nest_points, crs = proj)   # apply projection
 
 # Map nest locations
 library(tmap)
-tmap_mode("view")                                             # starts interactive plot
-map <- tm_basemap("Esri.WorldGrayCanvas") +                   # define basemap
-       tm_shape(nest_points) +                                # add nest point data
-          tm_dots(col = "Species.Name",                       # color nests by species
-                  palette = c("#457999", "#8DCA8B"),
-                  border.col = "white")
-
+tmap_mode("view")                                       # starts interactive plot
+map <- tm_basemap("Esri.WorldGrayCanvas") +             # define basemap
+  tm_shape(nest_points) +                               # add nest point data
+  tm_symbols(shape = 21,                                # defines shape as cicle w/ border
+             fill = "Species.Name",                     # define what colors map to
+             fill.scale =                               # colors
+                tm_scale_categorical(values = c("#457999", "#8DCA8B")), 
+             size = 0.5)   
 # View the map
 map                                                           
 
@@ -123,7 +137,7 @@ for (i in spp) {
 # Read in the range files
 for (i in spp) {
   # Generate the path to the .gpkg files
-  file_path <- paste0(spatialdata_path, "/2022/", i, "/ranges/", i, "_range_smooth_27km_2022.gpkg")
+  file_path <- paste0(spatialdata_path, "/2023/", i, "/ranges/", i, "_range_smooth_27km_2023.gpkg")
   # Read in the .gpkg file
   range_data <- st_read(file_path)
   # Generate the name for the object
@@ -169,14 +183,16 @@ bewwre_range <- sf::st_read(path)
 bewwre <- nest_points %>% filter(Species.Code == "bewwre")
 
 # Map the nests onto the range polygon
-tmap_mode("view")                                           # starts interactive plot
-map <- tm_basemap("Esri.WorldGrayCanvas") +                 # define basemap
-  tm_shape(shp = bewwre_range, name = "Bewick's Wren") +    # add range polygon, 
-    tm_polygons(alpha = 0.5, 
-                col = "#B4CFE1", border.col = NULL) +       # define polygon color      
-  tm_shape(bewwre) +                                        # add nest points
-    tm_dots(col = "Species.Name", 
-            border.col = "grey90", palette = c("#457999"))  # define nest point color
+tmap_mode("view")                                     # starts interactive plot
+map <- tm_basemap("Esri.WorldGrayCanvas") +           # define basemap
+  tm_shape(bewwre_range, name = "Bewick's Wren") +    # add range polygon
+    tm_polygons(fill_alpha = 0.5,                     # polygon transparency
+                fill = "#B4CFE1",                     # polygon fill color
+                col = NULL) +                         # polygon border color      
+  tm_shape(bewwre) +                                  # add nest points
+  tm_dots(fill = "Species.Name",                      # define how to color points
+          fill.scale =                                # define point fill
+            tm_scale_categorical(values = c("#457999")))  
 map
 
 ```
@@ -215,14 +231,14 @@ flagged_nests$Flagged.Location[is.na(flagged_nests$Flagged.Location)] <- "In-Ran
 
 map <- tm_basemap("Esri.WorldGrayCanvas") +                 # define basemap
   tm_shape(shp = polygon_buffered, name = "50km Buffer") +  # add buffered polygon, define color
-    tm_polygons(alpha = 0.5, col = "#CEE6F3", border.col = NULL) +                         
+  tm_polygons(fill_alpha = 0.5, fill = "#CEE6F3", col = NULL) +                         
   tm_shape(shp = bewwre_range, name = "Bewick's Wren Range") +  # add range polygon, define color
-    tm_polygons(alpha = 0.5, col = "#B4CFE1", border.col = NULL) +                         
+  tm_polygons(fill_alpha = 0.5, fill = "#B4CFE1", col = NULL) +                         
   tm_shape(flagged_nests) +                                 # add nest points, color by "Flagged.Attempt"
-    tm_dots(col = "Flagged.Location", 
-            palette = c("#B31B1B", "#457999"),
-            border.col = "white")    
+  tm_dots(col = "Flagged.Location", 
+          palette = c("#B31B1B", "#457999"))    
 map
+
 
 ```
 
