@@ -13,26 +13,26 @@
 #' @seealso \code{\link[auk:ebird_taxonomy]{auk::ebird_taxonomy}}
 #'
 #' @param data dataframe; A dataframe containing NestWatch data.
-#' @param spuh logical; Should attempt with "sp." be removed?
+#' @param rm_spuh logical; Should attempt with "sp." be removed?
 #'  \itemize{
 #'   \item if \code{NULL}, the default, retains identified rows in the output dataframe.
 #'   \item if \code{TRUE}, removes identified rows from the output dataframe.
 #'   \item if \code{FALSE}, retains identified rows in the output dataframe.
 #' }
 #'
-#' @param slash logical; Should attempt with "/" be removed?
+#' @param rm_slash logical; Should attempt with "/" be removed?
 #'  \itemize{
 #'   \item if \code{NULL}, the default, retains identified rows in the output dataframe.
 #'   \item if \code{TRUE}, removes identified rows from the output dataframe.
 #'   \item if \code{FALSE}, retains identified rows in the output dataframe.
 #' }
-#' @param hybrid logical; Should attempt with "(hybrid)" be removed?
+#' @param rm_hybrid logical; Should attempt with "(hybrid)" be removed?
 #'  \itemize{
 #'   \item if \code{NULL}, the default, retains identified rows in the output dataframe.
 #'   \item if \code{TRUE}, removes identified rows from the output dataframe.
 #'   \item if \code{FALSE}, retains identified rows in the output dataframe.
 #' }
-#' @param rollsubspecies logical; Should attempt with Species.Name of the form "species (subspecies/form) be rolled up to the species level?
+#' @param roll_subspecies logical; Should attempt with Species.Name of the form "species (subspecies/form) be rolled up to the species level?
 #' Uses the current eBird taxonomy as in \code{\link[auk:ebird_taxonomy]{auk::ebird_taxonomy}}.
 #'  \itemize{
 #'   \item if \code{NULL}, the default, retains original Species.Names and Species.Codes.
@@ -54,48 +54,43 @@
 #'                 Species.Code = c("houwre1", "houwre1", "chicka1", "y00701", "x00004"))
 #'
 #' # Remove just ".sp" attempts
-#' nw.cleantaxa(df, spuh = TRUE)
+#' nw.cleantaxa(df, rm_spuh = TRUE)
 #'
 #' # Remove "/" and hybrid attempts, roll up subspecies to species
-#' nw.cleantaxa(df, slash = TRUE, hybrid = TRUE, rollsubspecies = TRUE)
-nw.cleantaxa <- function(data, spuh = FALSE, slash = FALSE, hybrid = FALSE, rollsubspecies = FALSE, output = NULL){
+#' nw.cleantaxa(df, rm_slash = TRUE, rm_hybrid = TRUE, roll_subspecies = TRUE)
+new_fun <- function(data, rm_spuh = FALSE, rm_slash = FALSE, rm_hybrid = FALSE, roll_subspecies = FALSE, output = NULL){
+  # Get eBird taxonomy, bind in category and report as
+  taxa <- auk::ebird_taxonomy
+  data <- data %>% left_join(taxa %>% select(species_code, category, report_as), by = c("Species.Code" = "species_code"))
+
+
 
   # Remove "spuhs" from the data
-  if(isTRUE(spuh)){
-    data <- data[!grepl("sp.", data$Species.Name), ]
+  if(isTRUE(rm_spuh)){
+    data <- data %>% filter(category != "spuh")
   }
   # Remove "/" species
-  if(isTRUE(slash)){
-    data <- data[!grepl("/", data$Species.Name), ]
+  if(isTRUE(rm_slash)){
+    data <- data %>% filter(category != "slash")
   }
-  # Remove hybrids
-  if(isTRUE(hybrid)){
-    data <- data[!grepl("\\bhybrid\\b", data$Species.Name), ]
+  # Remove hybrids/intergrades
+  if(isTRUE(rm_hybrid)){
+    data <- data %>% filter(category != "hybrid") %>% filter(category != "intergrade")
   }
 
 
   # Roll subspecies "species (subspecies)" to full species
-  # Ignore hybrids
-  if(isTRUE(rollsubspecies)){
-    # Get eBird taxonomy from auk, rename columns
-    taxa <- auk::ebird_taxonomy
-    names(taxa)[names(taxa) == "common_name"] <- "Species.Name"
-    names(taxa)[names(taxa) == "species_code"] <- "Species.Code"
+  if(isTRUE(roll_subspecies)){
+    # Change spp codes
+    data <- data %>% mutate(Species.Code = if_else(is.na(report_as), Species.Code, report_as))
+    # Change common name
+    data <- data %>% left_join(taxa %>% select(species_code, common_name), by = c("Species.Code" = "species_code"))
+    data <- data %>% mutate(Species.Name = common_name)
+    data <- data %>% select(-common_name) # remove common name column
+  }
 
-    # Get row numbers of subsps
-    rows <- grep("^(?!.*hybrid).*\\(", data$Species.Name, perl = TRUE)
-    # Strip subsp info if not hybrid
-    data$Species.Name <- ifelse(grepl("\\bhybrid\\b", data$Species.Name),
-                                data$Species.Name,
-                                sub(" \\(.*", "", data$Species.Name))
-    # Temp df to store codes and join on common name
-    new_codes <- data[rows, c("Attempt.ID", "Species.Name", "Species.Code")]
-    new_codes <- left_join(new_codes, taxa[, c("Species.Code", "Species.Name")],     # get df of old/new codes for rows
-                           by = "Species.Name", relationship = "many-to-one")
-    # Update data with corrected sp codes
-    data[rows, "Species.Code"] <- new_codes$Species.Code.y
-    }
-
+  # Remove bound in columns
+  data <- data %>% select(-category, -report_as)
 
   # Prep for and Export resulting dataframe
   pos <- 1
