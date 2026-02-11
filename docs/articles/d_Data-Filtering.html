@@ -130,7 +130,23 @@ the area you are mapping).</p>
 <p>[!Note] If you are unfamiliar with working with spatial data, <a href="https://bookdown.org/mcwimberly/gdswr-book/coordinate-reference-systems.html" class="external-link">this
 is a good resource</a> on coordinate reference systems and projections
 within R.</p>
+<p>First, to limit stress on our plotting instrument, we will limit the
+dataset to include only one line of data for each nest. If you would
+like certain variables of the nest, like clutch size, fledge/fail date,
+or substrate, to be visible when you click on individual points, but
+sure to select those columns here. In this example, we will select
+clutch size and outcome.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Select a few columns that your are interest in plotting</span></span>
+<span><span class="va">wrens</span> <span class="op">&lt;-</span> <span class="va">wrens</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Attempt.ID</span>, <span class="va">Latitude</span>, <span class="va">Longitude</span>, <span class="va">Species.Name</span>, </span>
+<span>                          <span class="va">Species.Code</span>, <span class="va">Clutch.Size</span>, <span class="va">Outcome</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>    <span class="co"># select columns</span></span>
+<span>                   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="op">)</span>                                        <span class="co"># get one row for each nest</span></span></code></pre></div>
+<p>Now that we have a single line of data for each nest, we can plot our
+points. Do note that depending on your sample size, your map may take a
+while to plot. If you think this might be happening, try plotting just a
+subset of the points at a time or switching the tmap mode to “plot” (see
+tmap documentation for more details).</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create a spatial object from nest data</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
 <span><span class="va">nest_points</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">wrens</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Longitude"</span>, <span class="st">"Latitude"</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span>  <span class="co"># data are in WGS 84 (crs = 4326)</span></span>
@@ -143,13 +159,14 @@ within R.</p>
 <span></span>
 <span><span class="co"># Map nest locations</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-tmap/tmap" class="external-link">tmap</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tmap_mode.html" class="external-link">tmap_mode</a></span><span class="op">(</span><span class="st">"view"</span><span class="op">)</span>                                             <span class="co"># starts interactive plot</span></span>
-<span><span class="va">map</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_basemap.html" class="external-link">tm_basemap</a></span><span class="op">(</span><span class="st">"Esri.WorldGrayCanvas"</span><span class="op">)</span> <span class="op">+</span>                   <span class="co"># define basemap</span></span>
-<span>       <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html" class="external-link">tm_shape</a></span><span class="op">(</span><span class="va">nest_points</span><span class="op">)</span> <span class="op">+</span>                                <span class="co"># add nest point data</span></span>
-<span>          <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html" class="external-link">tm_dots</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"Species.Name"</span>,                       <span class="co"># color nests by species</span></span>
-<span>                  palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#457999"</span>, <span class="st">"#8DCA8B"</span><span class="op">)</span>,</span>
-<span>                  border.col <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span></span>
-<span></span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tmap_mode.html" class="external-link">tmap_mode</a></span><span class="op">(</span><span class="st">"view"</span><span class="op">)</span>                                       <span class="co"># starts interactive plot</span></span>
+<span><span class="va">map</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_basemap.html" class="external-link">tm_basemap</a></span><span class="op">(</span><span class="st">"Esri.WorldGrayCanvas"</span><span class="op">)</span> <span class="op">+</span>             <span class="co"># define basemap</span></span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html" class="external-link">tm_shape</a></span><span class="op">(</span><span class="va">nest_points</span><span class="op">)</span> <span class="op">+</span>                               <span class="co"># add nest point data</span></span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html" class="external-link">tm_symbols</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="fl">21</span>,                                <span class="co"># defines shape as circle w/ border</span></span>
+<span>             fill <span class="op">=</span> <span class="st">"Species.Name"</span>,                     <span class="co"># define what colors map to</span></span>
+<span>             fill.scale <span class="op">=</span>                               <span class="co"># colors</span></span>
+<span>                <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_categorical.html" class="external-link">tm_scale_categorical</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#457999"</span>, <span class="st">"#8DCA8B"</span><span class="op">)</span><span class="op">)</span>, </span>
+<span>             size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>   </span>
 <span><span class="co"># View the map</span></span>
 <span><span class="va">map</span>                                                           </span></code></pre></div>
 <div class="float">
@@ -188,7 +205,7 @@ store it for you!) and you only need to download the range maps once
 when the data already exists at the <code>spatialdata_path</code>
 location). You may also need to modify the year in the code below
 depending on what Status &amp; Trends data product is available.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Obtain and set an ebird access key</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ebird.github.io/ebirdst/" class="external-link">ebirdst</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ebird.github.io/ebirdst/reference/set_ebirdst_access_key.html" class="external-link">set_ebirdst_access_key</a></span><span class="op">(</span><span class="st">"pasteyourkeyhere"</span><span class="op">)</span>      <span class="co"># you only need to do this once, R will remember it</span></span>
@@ -211,7 +228,7 @@ depending on what Status &amp; Trends data product is available.</p>
 <span><span class="co"># Read in the range files</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="va">spp</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="co"># Generate the path to the .gpkg files</span></span>
-<span>  <span class="va">file_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">spatialdata_path</span>, <span class="st">"/2022/"</span>, <span class="va">i</span>, <span class="st">"/ranges/"</span>, <span class="va">i</span>, <span class="st">"_range_smooth_27km_2022.gpkg"</span><span class="op">)</span></span>
+<span>  <span class="va">file_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">spatialdata_path</span>, <span class="st">"/2023/"</span>, <span class="va">i</span>, <span class="st">"/ranges/"</span>, <span class="va">i</span>, <span class="st">"_range_smooth_27km_2023.gpkg"</span><span class="op">)</span></span>
 <span>  <span class="co"># Read in the .gpkg file</span></span>
 <span>  <span class="va">range_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="va">file_path</span><span class="op">)</span></span>
 <span>  <span class="co"># Generate the name for the object</span></span>
@@ -243,19 +260,21 @@ depending on what Status &amp; Trends data product is available.</p>
 <p><br> Now that we have range polygons for Bewick’s Wrens and Carolina
 Wrens, we can add them to our map and investigate our nest locations a
 bit closer. Let’s plot just the Bewick’s Wren data.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Subset nest locations to Bewick's Wrens</span></span>
 <span><span class="va">bewwre</span> <span class="op">&lt;-</span> <span class="va">nest_points</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Species.Code</span> <span class="op">==</span> <span class="st">"bewwre"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Map the nests onto the range polygon</span></span>
-<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tmap_mode.html" class="external-link">tmap_mode</a></span><span class="op">(</span><span class="st">"view"</span><span class="op">)</span>                                           <span class="co"># starts interactive plot</span></span>
-<span><span class="va">map</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_basemap.html" class="external-link">tm_basemap</a></span><span class="op">(</span><span class="st">"Esri.WorldGrayCanvas"</span><span class="op">)</span> <span class="op">+</span>                 <span class="co"># define basemap</span></span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html" class="external-link">tm_shape</a></span><span class="op">(</span>shp <span class="op">=</span> <span class="va">bewwre_range</span>, name <span class="op">=</span> <span class="st">"Bewick's Wren"</span><span class="op">)</span> <span class="op">+</span>    <span class="co"># add range polygon, </span></span>
-<span>    <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html" class="external-link">tm_polygons</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.5</span>, </span>
-<span>                col <span class="op">=</span> <span class="st">"#B4CFE1"</span>, border.col <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span>       <span class="co"># define polygon color      </span></span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html" class="external-link">tm_shape</a></span><span class="op">(</span><span class="va">bewwre</span><span class="op">)</span> <span class="op">+</span>                                        <span class="co"># add nest points</span></span>
-<span>    <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html" class="external-link">tm_dots</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"Species.Name"</span>, </span>
-<span>            border.col <span class="op">=</span> <span class="st">"grey90"</span>, palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#457999"</span><span class="op">)</span><span class="op">)</span>  <span class="co"># define nest point color</span></span>
+<span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tmap_mode.html" class="external-link">tmap_mode</a></span><span class="op">(</span><span class="st">"view"</span><span class="op">)</span>                                     <span class="co"># starts interactive plot</span></span>
+<span><span class="va">map</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_basemap.html" class="external-link">tm_basemap</a></span><span class="op">(</span><span class="st">"Esri.WorldGrayCanvas"</span><span class="op">)</span> <span class="op">+</span>           <span class="co"># define basemap</span></span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html" class="external-link">tm_shape</a></span><span class="op">(</span><span class="va">bewwre_range</span>, name <span class="op">=</span> <span class="st">"Bewick's Wren"</span><span class="op">)</span> <span class="op">+</span>    <span class="co"># add range polygon</span></span>
+<span>    <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html" class="external-link">tm_polygons</a></span><span class="op">(</span>fill_alpha <span class="op">=</span> <span class="fl">0.5</span>,                     <span class="co"># polygon transparency</span></span>
+<span>                fill <span class="op">=</span> <span class="st">"#B4CFE1"</span>,                     <span class="co"># polygon fill color</span></span>
+<span>                col <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span>                         <span class="co"># polygon border color      </span></span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html" class="external-link">tm_shape</a></span><span class="op">(</span><span class="va">bewwre</span><span class="op">)</span> <span class="op">+</span>                                  <span class="co"># add nest points</span></span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html" class="external-link">tm_dots</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Species.Name"</span>,                      <span class="co"># define how to color points</span></span>
+<span>          fill.scale <span class="op">=</span>                                <span class="co"># define point fill</span></span>
+<span>            <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_categorical.html" class="external-link">tm_scale_categorical</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#457999"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>  </span>
 <span><span class="va">map</span></span></code></pre></div>
 <div class="float">
 <img src="plot-bewwre-data.png" alt="Map of the United States overlayed with a range polygon and points representing the locations of Bewick’s Wren nests. Most nests are within the range polygon, but a few are located outside."><div class="figcaption">Map of the United States overlayed with a range
@@ -301,7 +320,7 @@ Wren.</div>
 they could be correctly identified and just a bit outside the typical
 range. Let’s define a buffer zone to keep such nests but exclude those
 well outside the expected range:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/nw.filterspatial.html">nw.filterspatial</a></span><span class="op">(</span>points <span class="op">=</span> <span class="va">bewwre</span>,                    <span class="co"># Bewick's Wren nest points </span></span>
 <span>                 polygon <span class="op">=</span> <span class="va">bewwre_range</span>,             <span class="co"># Bewick's Wren range shapefile</span></span>
 <span>                 mode <span class="op">=</span> <span class="st">"flag"</span>,                      <span class="co"># flag points outside </span></span>
@@ -312,19 +331,18 @@ well outside the expected range:</p>
 <span>                 output <span class="op">=</span> <span class="st">"flagged_nests"</span><span class="op">)</span>           <span class="co"># define the output name</span></span></code></pre></div>
 <p><br> We can plot the results to see which points were flagged for
 review (and would be removed if mode was set to “remove”):</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Relabel nests within range for nice map symbology</span></span>
 <span><span class="va">flagged_nests</span><span class="op">$</span><span class="va">Flagged.Location</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">flagged_nests</span><span class="op">$</span><span class="va">Flagged.Location</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"In-Range"</span></span>
 <span></span>
 <span><span class="va">map</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_basemap.html" class="external-link">tm_basemap</a></span><span class="op">(</span><span class="st">"Esri.WorldGrayCanvas"</span><span class="op">)</span> <span class="op">+</span>                 <span class="co"># define basemap</span></span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html" class="external-link">tm_shape</a></span><span class="op">(</span>shp <span class="op">=</span> <span class="va">polygon_buffered</span>, name <span class="op">=</span> <span class="st">"50km Buffer"</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># add buffered polygon, define color</span></span>
-<span>    <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html" class="external-link">tm_polygons</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.5</span>, col <span class="op">=</span> <span class="st">"#CEE6F3"</span>, border.col <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span>                         </span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html" class="external-link">tm_polygons</a></span><span class="op">(</span>fill_alpha <span class="op">=</span> <span class="fl">0.5</span>, fill <span class="op">=</span> <span class="st">"#CEE6F3"</span>, col <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span>                         </span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html" class="external-link">tm_shape</a></span><span class="op">(</span>shp <span class="op">=</span> <span class="va">bewwre_range</span>, name <span class="op">=</span> <span class="st">"Bewick's Wren Range"</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># add range polygon, define color</span></span>
-<span>    <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html" class="external-link">tm_polygons</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.5</span>, col <span class="op">=</span> <span class="st">"#B4CFE1"</span>, border.col <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span>                         </span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html" class="external-link">tm_polygons</a></span><span class="op">(</span>fill_alpha <span class="op">=</span> <span class="fl">0.5</span>, fill <span class="op">=</span> <span class="st">"#B4CFE1"</span>, col <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span>                         </span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html" class="external-link">tm_shape</a></span><span class="op">(</span><span class="va">flagged_nests</span><span class="op">)</span> <span class="op">+</span>                                 <span class="co"># add nest points, color by "Flagged.Attempt"</span></span>
-<span>    <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html" class="external-link">tm_dots</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"Flagged.Location"</span>, </span>
-<span>            palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#B31B1B"</span>, <span class="st">"#457999"</span><span class="op">)</span>,</span>
-<span>            border.col <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span>    </span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html" class="external-link">tm_dots</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"Flagged.Location"</span>, </span>
+<span>          palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#B31B1B"</span>, <span class="st">"#457999"</span><span class="op">)</span><span class="op">)</span>    </span>
 <span><span class="va">map</span></span></code></pre></div>
 <div class="float">
 <img src="plot-buffered.png" alt="Map of the United States overlaid with the Bewick’s Wren typical breeding range polygon, plus an added 50km buffer zone (lighter blue). Points represent the reported locations of Bewick’s Wren nests, with those outside the buffer being red while those inside are blue."><div class="figcaption">Map of the United States overlaid with the
@@ -336,7 +354,7 @@ are blue.</div>
 <p><br></p>
 <p>We can now quickly filter out those nests with flagged locations
 outside of our defined range.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Remove flagged attempts</span></span>
 <span><span class="va">nests_cleanlocs</span> <span class="op">&lt;-</span> <span class="va">flagged_nests</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Flagged.Location</span> <span class="op">==</span> <span class="st">"In-Range"</span><span class="op">)</span></span></code></pre></div>
 <p><br></p>
@@ -381,7 +399,7 @@ stage. “Total” refers to the maximum number of days from the initiation
 of nest building though fledging. In this example we will continue using
 NestWatch data for Bewick’s Wren and Carolina Wren:</p>
 <p>First, we will load, clean, and estimate missing values:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## 1. Load, Clean, &amp; Estimate Data </span></span>
 <span></span>
 <span><span class="co"># Load the supplied `wrens` dataset</span></span>
@@ -419,7 +437,7 @@ to account for allowable variation in length. Again,
 between first build and fledge. For example here, Bewick’s Wren
 typically build nests within 8 days. So we might say max build time is
 10 days, and lay + incubation + nestling + build = 60 days:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## 2. Phenologically filter data by limiting dataset to nests with dates within the maximum possible range.</span></span>
 <span></span>
 <span><span class="co"># Create simple df with maximum allowable # days in each nest phase for Bewick's and Carolina Wrens.</span></span>
@@ -464,7 +482,7 @@ for you to manually inspect.</p>
 <p><br> We can visualize the distribution of active nesting periods of
 Carolina Wrens in our example before and after being filtered and
 trimmed.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Calculate the unfiltered date span of each nest</span></span>
 <span><span class="va">unfiltered</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Species.Code</span> <span class="op">==</span> <span class="st">"carwre"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>                       <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">Attempt.ID</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">Visit.Datetime</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
@@ -502,7 +520,7 @@ trimmed.</p>
 <span></span>
 <span><span class="va">p1</span></span></code></pre></div>
 <p><img src="d_Data-Filtering_files/figure-html/visualize%20filtering-1.png" alt="A histogram displaying the distrubution of nesting periods before and after filtering." width="100%" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p2</span></span></code></pre></div>
 <p><img src="d_Data-Filtering_files/figure-html/visualize%20filtering-2.png" alt="A histogram displaying the distrubution of nesting periods before and after filtering." width="100%" style="display: block; margin: auto;"></p>
 <p>We can see in the unfiltered plot that there were more than a few

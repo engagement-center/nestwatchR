@@ -94,7 +94,7 @@ library(tmap)
 tmap_mode("view")                                       # starts interactive plot
 map <- tm_basemap("Esri.WorldGrayCanvas") +             # define basemap
   tm_shape(nest_points) +                               # add nest point data
-  tm_symbols(shape = 21,                                # defines shape as cicle w/ border
+  tm_symbols(shape = 21,                                # defines shape as circle w/ border
              fill = "Species.Name",                     # define what colors map to
              fill.scale =                               # colors
                 tm_scale_categorical(values = c("#457999", "#8DCA8B")), 
