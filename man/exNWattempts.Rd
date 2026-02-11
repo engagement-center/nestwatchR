@@ -11,6 +11,6 @@ A dataframe with 10 observations of 32 variables. See <https://doi.org/10.1002/e
 exNWattempts
 }
 \description{
-A random set of 10 nesting attempts from the NewstWatch database to use used in running R documentation exmaples.
+A random set of 10 nesting attempts from the NewstWatch database to use used in running R documentation examples.
 }
 \keyword{datasets}

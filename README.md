@@ -57,7 +57,7 @@ if (!requireNamespace("remotes", quietly = TRUE)) {
 remotes::install_github("engagement-center/nestwatchR")
 ```
 
-## Data access :globe_with_meridians:
+<br> <br> \## Data access :globe_with_meridians:
 
 Data from NestWatch are free to access either from the
 [`nw.getdata()`](https://engagement-center.github.io/nestwatchR/reference/nw.getdata.html)
@@ -104,8 +104,8 @@ If you use the NestWatch Open Dataset or this R package, please cite:
 <blockquote>
 
 **Dataset (replace with appropriate version \# and year):**</br> Bailey,
-R. L., L. Larson, D. Bonter. 2025. “NestWatch Open Dataset.” Mendeley
-Data, V5. DOI:
+R. L., L. Larson, D. Bonter. 2026. “NestWatch Open Dataset.” Mendeley
+Data, V6. DOI:
 [10.17632/wjf794z7gc](https://doi.org/10.17632/wjf794z7gc)</a>
 
 **Data Paper:**</br> Bailey, R. L., L. Larson, and D. N. Bonter. 2024.
@@ -114,7 +114,7 @@ Success.” Ecology 105(2): e4230. DOI:
 [10.1002/ecy.4230](https://doi.org/10.1002/ecy.4230)</a>
 
 **NestWatch R Package (replace appropriate version \# and year):**<br>
-Savides, K., R. L. Bailey, & D. Bonter. 2025. NestWatch Data Products
+Savides, K., R. L. Bailey, & D. N. Bonter. 2025. NestWatch Data Products
 (Version 0.00.00) \[Computer software\].
 <https://github.com/engagement-center/2024-NestWatch-Package-Internal>
 
@@ -129,20 +129,20 @@ covering introductory usage of NestWatch data, please see the following
 Vignettes:
 
 - [Introduction to NestWatch Data and Data
-  Access](https://engagement-center.github.io/nestwatchR/articles/a_Into-and-Data-Access.html):
+  Access](https://engagement-center.github.io/nestwatchR/articles/a_Intro-and-Data-Access.html):
   covers data access, available data products, definitions of data
   fields, and an introduction to structure and format of data files
 - [Conduct Common NestWatch Data Cleaning
   Procedures](https://engagement-center.github.io/nestwatchR/articles/b_Data-Cleaning.html):
   demonstrates how and when to use a variety of common data cleaning
   procedures designed for NestWatch data
+- [Estimate NestWatch Summary
+  Dates](https://engagement-center.github.io/nestwatchR/articles/c_Data-Estimation.html):
+  demonstrates functions to estimate missing summary values
 - [Filter NestWatch Data on Finer
-  Scales](https://engagement-center.github.io/nestwatchR/articles/c_Data-Filtering.html):
+  Scales](https://engagement-center.github.io/nestwatchR/articles/d_Data-Filtering.html):
   demonstrates the use of species-level data filters and functions to
   estimate missing values
-- [Estimate NestWatch Summary
-  Dates](https://engagement-center.github.io/nestwatchR/articles/d_Data-Estimation.html):
-  demonstrates functions to estimate missing summary values
 
 <br> <br>
 

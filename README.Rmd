@@ -53,7 +53,8 @@ if (!requireNamespace("remotes", quietly = TRUE)) {
 remotes::install_github("engagement-center/nestwatchR")
 ```
 
-
+<br>
+<br>
 ## Data access :globe_with_meridians:
 
 Data from NestWatch are free to access either from the [`nw.getdata()`](https://engagement-center.github.io/nestwatchR/reference/nw.getdata.html) function in R or as a direct download from the [Mendeley Data Archive](https://data.mendeley.com/datasets/wjf794z7gc/2) or NestWatch website. NestWatch Open Dataset by Cornell Lab of Ornithology is licensed under CC BY-NC 4.0. We encourage researchers seeking to conduct formal analyses to use these data. As with any dataset, knowing the data structure, understanding the metadata, grasping the data collection protocols, and being aware of the unique aspects of the program are all critical for conducting analyses and interpreting results in ways that provide meaningful insights. Prior to analysis, we encourage all users of NestWatch Data to read the article ["Download Raw NestWatch Data for Analysis"](https://nestwatch.org/explore/nestwatch-open-dataset-downloads/) article on our website.
@@ -76,7 +77,7 @@ If you use the NestWatch Open Dataset or this R package, please cite:
 
 <blockquote>
 
-**Dataset (replace with appropriate version \# and year):**</br> Bailey, R. L., L. Larson, D. Bonter. 2025. “NestWatch Open Dataset." Mendeley Data, V5. DOI: [10.17632/wjf794z7gc](https://doi.org/10.17632/wjf794z7gc)</a>
+**Dataset (replace with appropriate version \# and year):**</br> Bailey, R. L., L. Larson, D. Bonter. 2026. “NestWatch Open Dataset." Mendeley Data, V6. DOI: [10.17632/wjf794z7gc](https://doi.org/10.17632/wjf794z7gc)</a>
 
 **Data Paper:**</br> Bailey, R. L., L. Larson, and D. N. Bonter. 2024. “NestWatch: An Open-Access, Long-Term Data Set on Avian Reproductive Success.” Ecology 105(2): e4230. DOI: [10.1002/ecy.4230](https://doi.org/10.1002/ecy.4230)</a>
 
@@ -91,7 +92,7 @@ If you use the NestWatch Open Dataset or this R package, please cite:
 
 For full function documentation, including a series of vignettes covering introductory usage of NestWatch data, please see the following Vignettes:
 
--   [Introduction to NestWatch Data and Data Access](https://engagement-center.github.io/nestwatchR/articles/a_Into-and-Data-Access.html): covers data access, available data products, definitions of data fields, and an introduction to structure and format of data files
+-   [Introduction to NestWatch Data and Data Access](https://engagement-center.github.io/nestwatchR/articles/a_Intro-and-Data-Access.html): covers data access, available data products, definitions of data fields, and an introduction to structure and format of data files
 -   [Conduct Common NestWatch Data Cleaning Procedures](https://engagement-center.github.io/nestwatchR/articles/b_Data-Cleaning.html): demonstrates how and when to use a variety of common data cleaning procedures designed for NestWatch data
 -   [Estimate NestWatch Summary Dates](https://engagement-center.github.io/nestwatchR/articles/c_Data-Estimation.html): demonstrates functions to estimate missing summary values
 -   [Filter NestWatch Data on Finer Scales](https://engagement-center.github.io/nestwatchR/articles/d_Data-Filtering.html): demonstrates the use of species-level data filters and functions to estimate missing values

@@ -443,13 +443,13 @@ typically build nests within 8 days. So we might say max build time is
 <span><span class="co"># How many attempts were flagged?</span></span>
 <span><span class="va">flagged</span> <span class="op">&lt;-</span> <span class="va">flagged_phenology</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Flagged.Attempt</span> <span class="op">==</span> <span class="st">"FLAGGED"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">flagged</span><span class="op">$</span><span class="va">Attempt.ID</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 448</span></span>
+<span><span class="co">#&gt; [1] 594</span></span>
 <span><span class="co"># &gt; [1] 448       # number of attempts which were flagged</span></span>
 <span></span>
 <span><span class="co"># How many checks were flagged?</span></span>
 <span><span class="va">flagged</span> <span class="op">&lt;-</span> <span class="va">flagged_phenology</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Flagged.Check</span> <span class="op">==</span> <span class="st">"FLAGGED"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">flagged</span><span class="op">$</span><span class="va">Attempt.ID</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 769</span></span>
+<span><span class="co">#&gt; [1] 996</span></span>
 <span><span class="co"># &gt; [1] 769       # number of checks which were flagged</span></span></code></pre></div>
 <p><br></p>
 <p>This function also has the logical argument
