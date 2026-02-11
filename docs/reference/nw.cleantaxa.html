@@ -48,10 +48,10 @@ a "taxonomic roll up" of subspecies to the species level.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">nw.cleantaxa</span><span class="op">(</span></span>
 <span>  <span class="va">data</span>,</span>
-<span>  spuh <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  slash <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  hybrid <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  rollsubspecies <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  rm_spuh <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  rm_slash <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  rm_hybrid <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  roll_subspecies <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  output <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -64,28 +64,28 @@ a "taxonomic roll up" of subspecies to the species level.</p>
 <dd><p>dataframe; A dataframe containing NestWatch data.</p></dd>
 
 
-<dt id="arg-spuh">spuh<a class="anchor" aria-label="anchor" href="#arg-spuh"></a></dt>
+<dt id="arg-rm-spuh">rm_spuh<a class="anchor" aria-label="anchor" href="#arg-rm-spuh"></a></dt>
 <dd><p>logical; Should attempt with "sp." be removed?</p><ul><li><p>if <code>NULL</code>, the default, retains identified rows in the output dataframe.</p></li>
 <li><p>if <code>TRUE</code>, removes identified rows from the output dataframe.</p></li>
 <li><p>if <code>FALSE</code>, retains identified rows in the output dataframe.</p></li>
 </ul></dd>
 
 
-<dt id="arg-slash">slash<a class="anchor" aria-label="anchor" href="#arg-slash"></a></dt>
+<dt id="arg-rm-slash">rm_slash<a class="anchor" aria-label="anchor" href="#arg-rm-slash"></a></dt>
 <dd><p>logical; Should attempt with "/" be removed?</p><ul><li><p>if <code>NULL</code>, the default, retains identified rows in the output dataframe.</p></li>
 <li><p>if <code>TRUE</code>, removes identified rows from the output dataframe.</p></li>
 <li><p>if <code>FALSE</code>, retains identified rows in the output dataframe.</p></li>
 </ul></dd>
 
 
-<dt id="arg-hybrid">hybrid<a class="anchor" aria-label="anchor" href="#arg-hybrid"></a></dt>
+<dt id="arg-rm-hybrid">rm_hybrid<a class="anchor" aria-label="anchor" href="#arg-rm-hybrid"></a></dt>
 <dd><p>logical; Should attempt with "(hybrid)" be removed?</p><ul><li><p>if <code>NULL</code>, the default, retains identified rows in the output dataframe.</p></li>
 <li><p>if <code>TRUE</code>, removes identified rows from the output dataframe.</p></li>
 <li><p>if <code>FALSE</code>, retains identified rows in the output dataframe.</p></li>
 </ul></dd>
 
 
-<dt id="arg-rollsubspecies">rollsubspecies<a class="anchor" aria-label="anchor" href="#arg-rollsubspecies"></a></dt>
+<dt id="arg-roll-subspecies">roll_subspecies<a class="anchor" aria-label="anchor" href="#arg-roll-subspecies"></a></dt>
 <dd><p>logical; Should attempt with Species.Name of the form "species (subspecies/form) be rolled up to the species level?
 Uses the current eBird taxonomy as in <code><a href="https://cornelllabofornithology.github.io/auk/reference/ebird_taxonomy.html" class="external-link">auk::ebird_taxonomy</a></code>.</p><ul><li><p>if <code>NULL</code>, the default, retains original Species.Names and Species.Codes.</p></li>
 <li><p>if <code>TRUE</code>, performs taxonomic roll up for all attempts with subspecies/form designation and updates Species.Code.</p></li>
@@ -125,10 +125,10 @@ according to the current version of eBird taxonomy in <code><a href="https://cor
 <span class="r-in"><span>                Species.Code <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"houwre1"</span>, <span class="st">"houwre1"</span>, <span class="st">"chicka1"</span>, <span class="st">"y00701"</span>, <span class="st">"x00004"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Remove just ".sp" attempts</span></span></span>
-<span class="r-in"><span><span class="fu">nw.cleantaxa</span><span class="op">(</span><span class="va">df</span>, spuh <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">nw.cleantaxa</span><span class="op">(</span><span class="va">df</span>, rm_spuh <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Remove "/" and hybrid attempts, roll up subspecies to species</span></span></span>
-<span class="r-in"><span><span class="fu">nw.cleantaxa</span><span class="op">(</span><span class="va">df</span>, slash <span class="op">=</span> <span class="cn">TRUE</span>, hybrid <span class="op">=</span> <span class="cn">TRUE</span>, rollsubspecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">nw.cleantaxa</span><span class="op">(</span><span class="va">df</span>, rm_slash <span class="op">=</span> <span class="cn">TRUE</span>, rm_hybrid <span class="op">=</span> <span class="cn">TRUE</span>, roll_subspecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

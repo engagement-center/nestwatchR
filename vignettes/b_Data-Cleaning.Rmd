@@ -89,7 +89,7 @@ sp."), slashes (i.e., "Tree/Violet-green Swallow"), hybrids (i.e.,
 [`nw.cleantaxa()`](https://engagement-center.github.io/nestwatchR/reference/nw.cleantaxa.html)
 helps filter out and/or "roll up" these taxonomic units. This function
 uses a NestWatch dataframe as `data =` and has logical arguments
-`spuh =`, `slash =`, `hybrid =`, and `rollsubspecies =` where `T`
+`rm_spuh =`, `rm_slash =`, `rm_hybrid =`, and `roll_subspecies =` where `T`
 removes attempts with those spuh, slash, or hybrid designations and subspecies/forms are
 "rolled up" to the species level (i.e., "Downy Woodpecker (eastern)" →
 "Downy Woodpecker"). If arguments are set to `F` or `NULL` the filtering
@@ -137,7 +137,7 @@ may decide to omit spuhs and slashes:
 
 ```{r cleantaxa 2, eval = T, echo = T}
 # Remove spuhs and slashes
-nw.cleantaxa(data = df, spuh = T, slash = T, output = "ex1")
+nw.cleantaxa(data = df, rm_spuh = T, rm_slash = T, output = "ex1")
 
 ex1
 ```
@@ -153,7 +153,7 @@ Consider whether or not there may be biologically relevant differences
 in nesting behavior, phenology, or other parameters between different
 subspecies/forms before analyzing data at that level. If these potential
 differences are not biologically relevant to the analysis, the analyst
-may opt to `rollsubspecies = T` to combine subspecies and/or forms to
+may opt to `roll_subspecies = T` to combine subspecies and/or forms to
 the species level.
 
 Nesting attempts involving parents of different species, a hybrid
@@ -170,7 +170,7 @@ not exported in the public dataset.
 
 ```{r cleantaxa3, eval = T, echo = T}
 # Remove hybrids and roll up subspecies
-nw.cleantaxa(data = df, hybrid = T, rollsubspecies = T, output = "ex2")
+nw.cleantaxa(data = df, rm_hybrid = T, roll_subspecies = T, output = "ex2")
 
 ex2
 ```
