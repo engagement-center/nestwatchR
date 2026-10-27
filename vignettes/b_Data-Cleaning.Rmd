@@ -28,7 +28,7 @@ library(dplyr)
 
 This data cleaning vignette will cover several different methods for
 cleaning data found within the [NestWatch Open
-Dataset](https://data.mendeley.com/datasets/wjf794z7gc/2). NestWatch
+Dataset](https://data.mendeley.com/datasets/wjf794z7gc). NestWatch
 data are collected by volunteer participants (researchers and the
 public) and are known to contain some common errors and inconsistencies.
 Thus, these data should be considered as "raw", and the analyst should
@@ -72,7 +72,7 @@ review process. We recommend that data analysts map nest locations and
 screen for likely location errors. See the
 [`nw.filterspatial()`](https://engagement-center.github.io/nestwatchR/reference/nw.filterspatial.html)
 and [Filtering
-Vignette](https://engagement-center.github.io/nestwatchR/articles/c_Data-Filtering.html)
+Vignette](https://engagement-center.github.io/nestwatchR/articles/d_Data-Filtering.html)
 for more information on spatial filtering.
 
 <br>
@@ -124,8 +124,8 @@ df
 
 ### Spuhs & Slashes
 
-Correct usage of a "spuh" would, for example, be if a participant
-observed a chickadee nesting in a region of Black-capped/Carolina
+Correct usage of a "spuh" or "slash" would, for example, be if a participant
+observed a chickadee nesting in a region of Black-capped and Carolina
 Chickadee range overlap and was unable to confirm the exact species with
 certainty. The same would be true if a participant monitored a nest box
 of a swallow species and never saw the adults at a site where both Tree
@@ -220,8 +220,8 @@ nw.cleandata(data = df, mode = "flag", methods = c("a", "b", "c") , output = "cl
 
 ```
 
-Individual cleaning procedures are specified in a character vector of
-lowercase letters `a:k`. An optional `output =` argument is included to
+Individual cleaning procedures are specified in a character vector (not case-sensitive) of letters 
+`a:k`. An optional `output =` argument is included to
 optionally rename the resulting dataframe as well.
 
 <br>
@@ -282,7 +282,7 @@ i.  **Decrease-then-increase Eggs/Young:** Flag/remove attempts where
     attempts. If the analyst is looking at host response to depredation
     events or egg dumping you may choose to retain these records. <br>
     <br>
-j.  **Impossibly long attempts:** Flag attempts with implausible nesting
+j.  **Impossibly long attempts:** Flag/remove attempts with implausible nesting
     periods. Incorrect years are sometimes entered between date summary
     fields by participants. This may produce impossibly long nesting
     periods. To account for nesting phenologies in all hemispheres, this
