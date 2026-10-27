@@ -4,7 +4,7 @@
 <!-- badges: start -->
 
 [![Static
-Badge](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+Badge](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![Static
 Badge](https://img.shields.io/badge/Dataset%20License-CC%20BY--NC%204.0-blue)](https://creativecommons.org/licenses/by-nc/4.0/deed.en)
 [![Static
@@ -12,25 +12,18 @@ Badge](https://img.shields.io/badge/Code%20License-GPL%20v3-blue)](https://www.g
 
 <!-- badges: end   -->
 
-## Development Tasks :construction:
-
-This repository is in early development with plans to add additional
-functions to create an R package to facilitate accessibility.
-
-🔲 Internal testing
-
 ## Overview :pushpin:
 
 [NestWatch](http://www.nestwatch.org) is a participatory science project
-operated by the [Cornell Lab of Ornithology](bird.cornell.edu). Since
-1965, members of the public have been following a standardized protocol
-for observing and reporting the nests of birds in the United States and
-Canada (and more recently, globally). This data set contains raw nest
-records submitted to NestWatch, including millions of nest check
-observations from hundreds of thousands of nest attempts (\>750,000 in
-2025). The purpose of this repository is to provide a collection of
-functions to aid in accessing and analyzing the wealth of nesting data
-contained in the NestWatch database.
+operated by the [Cornell Lab of Ornithology](https://birds.cornell.edu).
+Since 1965, members of the public have been following a standardized
+protocol for observing and reporting the nests of birds in the United
+States and Canada (and more recently, globally). This data set contains
+raw nest records submitted to NestWatch, including millions of nest
+check observations from hundreds of thousands of nest attempts
+(\>750,000 in 2025). The purpose of this repository is to provide a
+collection of functions to aid in accessing and cleaning the wealth of
+nesting data contained in the NestWatch database.
 
 **The metadata paper associated with this dataset [(Bailey et
 al. 2023)](https://doi.org/10.1002/ecy.4230) is critical for
@@ -42,8 +35,11 @@ here](https://nestwatch.org/explore/nestwatch-open-dataset-downloads/).
 
 ## Installation :computer:
 
-This package is under active development and is likely to have bugs and
-unexpected issues. Presently, the package exists off-CRAN in the public
+This package remains under continued development, expanding
+functionality to better serve our research audience, and therefor may
+have bugs and unexpected issues. If you encounter any unexpected errors
+or issues or have suggestions, please report the bug or reach out to the
+package maintainer. Presently, the package exists off-CRAN in the public
 [`engagement-center/nestwatchR`](https://github.com/engagement-center/nestwatchR)
 GitHub repository. To install the package on your local machine, run the
 following code:
@@ -57,20 +53,22 @@ if (!requireNamespace("remotes", quietly = TRUE)) {
 remotes::install_github("engagement-center/nestwatchR")
 ```
 
-<br> <br> \## Data access :globe_with_meridians:
+<br> <br>
+
+## Data access :globe_with_meridians:
 
 Data from NestWatch are free to access either from the
 [`nw.getdata()`](https://engagement-center.github.io/nestwatchR/reference/nw.getdata.html)
 function in R or as a direct download from the [Mendeley Data
-Archive](https://data.mendeley.com/datasets/wjf794z7gc/2) or NestWatch
-website. NestWatch Open Dataset by Cornell Lab of Ornithology is
-licensed under CC BY-NC 4.0. We encourage researchers seeking to conduct
-formal analyses to use these data. As with any dataset, knowing the data
-structure, understanding the metadata, grasping the data collection
-protocols, and being aware of the unique aspects of the program are all
-critical for conducting analyses and interpreting results in ways that
-provide meaningful insights. Prior to analysis, we encourage all users
-of NestWatch Data to read the article [“Download Raw NestWatch Data for
+Archive](https://data.mendeley.com/datasets/wjf794z7gc). NestWatch Open
+Dataset by Cornell Lab of Ornithology is licensed under CC BY-NC 4.0. We
+encourage researchers seeking to conduct formal analyses to use these
+data. As with any dataset, knowing the data structure, understanding the
+metadata, grasping the data collection protocols, and being aware of the
+unique aspects of the program are all critical for conducting analyses
+and interpreting results in ways that provide meaningful insights. Prior
+to analysis, we encourage all users of NestWatch Data to read the
+article [“Download Raw NestWatch Data for
 Analysis”](https://nestwatch.org/explore/nestwatch-open-dataset-downloads/)
 article on our website.
 
@@ -78,9 +76,10 @@ article on our website.
 
 ## Versions :memo:
 
-This package is on Version 0.0 and will be updated to maintain
+This package is on Version 1.0.0 and will be updated to maintain
 functionality and improve accessibility to the NestWatch datasets. If
-you encounter issues while using the package, you can submit an
+you encounter issues while using the package or have suggestions, you
+can submit an
 [issue](https://github.com/engagement-center/nestwatchR/issues) on
 GitHub or [contact us
 directly](mailto:kim.savides@cornell.edu?subject=nestwatchR%Issue%%3A).
@@ -114,8 +113,8 @@ Success.” Ecology 105(2): e4230. DOI:
 [10.1002/ecy.4230](https://doi.org/10.1002/ecy.4230)</a>
 
 **NestWatch R Package (replace appropriate version \# and year):**<br>
-Savides, K., R. L. Bailey, & D. N. Bonter. 2025. NestWatch Data Products
-(Version 0.00.00) \[Computer software\].
+Savides, K., R. L. Bailey, & D. N. Bonter. 2026. NestWatch Data Products
+(Version 1.0.0) \[Computer software\].
 <https://github.com/engagement-center/2024-NestWatch-Package-Internal>
 
 </blockquote>
@@ -124,8 +123,8 @@ Savides, K., R. L. Bailey, & D. N. Bonter. 2025. NestWatch Data Products
 
 ## Vignettes :books:
 
-For full function documentation, including a series of vignettes
-covering introductory usage of NestWatch data, please see the following
+For full function documentation, including a series of examples covering
+introductory usage of NestWatch data, please see the following
 Vignettes:
 
 - [Introduction to NestWatch Data and Data
