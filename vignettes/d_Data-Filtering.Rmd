@@ -27,9 +27,9 @@ Before analysis, researchers should consider conducting finer-scale filtering in
 
 ## Filtering Species
 
-Limiting the dataset to just a few species can easily be done using the pipe (`%>%`). If you are unfamiliar with "piping", see the [`migritrr`](https://magrittr.tidyverse.org/) package. Below we will subset the version 1 of the NestWatch dataset to include only attempts for Bewick's Wren ("bewwre") and Carolina Wren ("carwre"). The code below walks through download, merging, and filtering to species from scratch.
+Limiting the dataset to just a few species can easily be done using the pipe (`%>%` or `|>`). If you are unfamiliar with "piping", see the [`migritrr`](https://magrittr.tidyverse.org/) package. Below we will subset the version 1 of the NestWatch dataset to include only attempts for Bewick's Wren ("bewwre") and Carolina Wren ("carwre"). The code below walks through download, merging, and filtering to species from scratch.
 
-Note that subspecies and identifiable forms of species have different species codes than the main species. For example, Carolina Wren's species code is "carwre" but Carolina Wren (Northern) has the code "carwre1". If you wish to include all subspecies/forms, make sure to run `nw.cleantaxa(data = data, rollsubspecies = T)` or lookup the species codes you would like to include by referencing the eBird taxonomy table using auk::ebird_taxonomy.
+Note that subspecies and identifiable forms of species have different species codes than the main species. For example, Carolina Wren's species code is "carwre" but Carolina Wren (Northern) has the code "carwre1". If you wish to include all subspecies/forms, make sure to run `nw.cleantaxa(data = data, rollsubspecies = T)` or lookup the species codes you would like to include by referencing the eBird taxonomy table using [`auk::ebird_taxonomy`](https://cornelllabofornithology.github.io/auk/reference/ebird_taxonomy.html).
 
 ```{r filter to spp, eval = F}
 library(nestwatchR)
@@ -48,7 +48,7 @@ unique(wrens$Species.Name)
 
 ```
 
-<br> This "wrens" data subset from dataset Version 1 is also included within the package for quick access using `wrens <- nestwatchR::wren_quickstart`:
+<br> This `wrens` data subset from dataset Version 1 is also included within the package for quick access using `wrens <- nestwatchR::wren_quickstart`.
 
 ```{r load the data, eval = T, echo = F, message=FALSE, }
 library(dplyr)
@@ -76,7 +76,7 @@ wrens <- wrens %>% select(Attempt.ID, Latitude, Longitude, Species.Name,
 
 ```
 
-Now that we have a single line of data for each nest, we can plot our points. Do note that depending on your sample size, your map may take a while to plot. If you think this might be happening, try plotting just a subset of the points at a time or switching the tmap mode to "plot" (see tmap documentation for more details).
+Now that we have a single line of data for each nest, we can plot our points. Do note that depending on your sample size, your map may take a while to plot. If you think this might be happening, try plotting just a subset of the points at a time or switching the tmap mode to "plot" (see [tmap documentation](https://r-tmap.github.io/tmap/reference/tmap_mode.html) for more details).
 
 ```{r wren nests, eval = F, echo = T}
 # Create a spatial object from nest data
@@ -105,6 +105,7 @@ map
 ```
 
 ![Map of the United States overlayed with points representing Bewick's Wren (blue) and Carolina Wren (green) nest locations.](wren-nests.png)
+
 
 By looking at this map, we can see that there are several suspicious nests identified as Bewick's Wrens in the eastern United States. Bewick's Wrens are not typically recorded east of the Mississippi River, so some of these records could be misidentified. We could decide on a subset of states/provinces to filter out-of-range nest attempts, but a better method might be to filter nest locations based on a range map.
 
@@ -208,7 +209,7 @@ We can now see that there are more than a few nests outside of the typical Bewic
 If we zoom in to central Colorado, we can see there are a few Bewick's Wren nests just outside the range border.
 
 ![A zoomed in map of Colorado showing two nest locations not too far outside of the typical range of the Bewick's Wren.](colorado-zoom.png)
-
+<br>
 We might choose to keep nests like these in our analysis, because they could be correctly identified and just a bit outside the typical range. Let's define a buffer zone to keep such nests but exclude those well outside the expected range:
 
 ```{r run spatial filter, eval = F, echo = T}
@@ -235,8 +236,9 @@ map <- tm_basemap("Esri.WorldGrayCanvas") +                 # define basemap
   tm_shape(shp = bewwre_range, name = "Bewick's Wren Range") +  # add range polygon, define color
   tm_polygons(fill_alpha = 0.5, fill = "#B4CFE1", col = NULL) +                         
   tm_shape(flagged_nests) +                                 # add nest points, color by "Flagged.Attempt"
-  tm_dots(col = "Flagged.Location", 
-          palette = c("#B31B1B", "#457999"))    
+  tm_dots(fill = "Flagged.Location", 
+          fill.scale = tm_scale_categorical(values = c("#B31B1B", "#457999")))    
+
 map
 
 
@@ -299,12 +301,15 @@ nw.estfledge(data = data, phenology = avg_phen, output = "data")
 <br>
 Now we can create the maximum allowable periods dataframe and run phenological filtering. Here we choose the maximum values for incubation, nestling, and total to be the mean value plus several days to account for allowable variation in length. Again, `total = ` represents the maximum nesting period, spanning between first build and fledge. For example here, Bewick's Wren typically build nests within 8 days. So we might say max build time is 10 days, and lay + incubation + nestling + build = 60 days:
 ```{r phen filtering, eval = T}
-## 2. Phenologically filter data by limiting dataset to nests with dates within the maximum possible range.
+## 2. Phenologically filter data by limiting dataset to nests with dates within 
+##    the maximum possible range.
 
-# Create simple df with maximum allowable # days in each nest phase for Bewick's and Carolina Wrens.
-# You can provide data for a single species or multiple species to be run at the same time.
-# We suggest adding a few days of buffer to average incubation, nesting, and total 
-# nesting period lengths. This is your judgement call based on the biology of the focal species.
+# Create simple df with maximum allowable # days in each nest phase for Bewick's
+# and Carolina Wrens. You can provide data for a single species or multiple 
+# species to be run at the same time. We suggest adding a few days of buffer to 
+# average incubation, nesting, and total nesting period lengths. This is your 
+# judgement call based on the biology of the focal species.
+
 max_days <- 
   data.frame(species =  c("bewwre", "carwre"),
              lay = c(8, 6),           # max recorded clutch size for focal species
@@ -322,12 +327,12 @@ nw.filterphenology(data = data,
 # How many attempts were flagged?
 flagged <- flagged_phenology %>% filter(Flagged.Attempt == "FLAGGED")
 length(unique(flagged$Attempt.ID))
-# > [1] 448       # number of attempts which were flagged
+# > [1] 594       # number of attempts which were flagged
 
 # How many checks were flagged?
 flagged <- flagged_phenology %>% filter(Flagged.Check == "FLAGGED")
 length(unique(flagged$Attempt.ID))
-# > [1] 769       # number of checks which were flagged
+# > [1] 996       # number of checks which were flagged
 ```
 
 <br>
@@ -378,4 +383,4 @@ p2
 
 ```
 
-We can see in the unfiltered plot that there were more than a few nests with long nesting periods before filtering. After filtering out 448 attempts deemed "too long", we are left with 2,539 attempts to continue an analysis with. Note that this function does not just trim the attempts by length. If you look closely you will see the distribution of nesting periods left of the cutoff has changed slightly (see the bar directly left of the dashed line has been reduced by several hundred attempts, and th other bars have increased slightly). This is due to removing days of nest checks post-fledging from the total nesting period. 
+We can see in the unfiltered plot that there were more than a few nests with long nesting periods before filtering out. Note that this function does not just trim the attempts by length. If you look closely you will see the distribution of nesting periods to the left of the cutoff has changed slightly (i.e., the bar directly left of the dashed line has been reduced by several hundred attempts, and the other bars have increased slightly). This is due to removing days of nest checks post-fledging from the total nesting period. 
