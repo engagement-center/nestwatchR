@@ -194,7 +194,7 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = F, ou
     temp_2 <- temp %>% filter(had_young == FALSE)
     temp_2 <- temp_2 %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime) %>%      # group checks by attempt and arrange by date
       mutate(is_positive = !is.na(Host.Eggs.Count) & Host.Eggs.Count > 0,
-             first_zero_after_positive = which(Host.Eggs.Count == 0 & cumsum(is_positive) > 0)[1]) %>% # finds first 0 young after positive
+             first_zero_after_positive = which(Host.Eggs.Count == 0 & cumsum(is_positive) > 0)[1]) %>% # finds first 0 egg after positive
       mutate(keep = row_number() <= first_zero_after_positive) %>%    # label rows to keep as TRUE else FALSE
       filter(keep == "FALSE") %>% pull(Visit.ID)
 
