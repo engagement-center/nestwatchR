@@ -280,13 +280,14 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = F, ou
       data$Flagged.Check[rows] <- "FLAGGED"
     } # end if trimming is set to TRUE
 
+
+  } # end loop over each species
+
+  # If not filtering to active period, remove the flagged check column
     if(isFALSE(trim_to_active)){
       # Remove unused column
       data <- data %>% select(-Flagged.Check)
     } # end if trimming is set to FALSE
-
-  } # end loop over each species
-
 
 
 
@@ -319,8 +320,11 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = F, ou
     data <- data[!grepl("FLAGGED", data$Flagged.Attempt), ]
     data <- data %>% select(-Flagged.Attempt)
 
-    data <- data[!grepl("FLAGGED", data$Flagged.Check), ]
-    data <- data %>% select(-Flagged.Check)
+      # If trimming to active, and removing, remove those too
+      if(isTRUE(trim_to_active)){
+          data <- data[!grepl("FLAGGED", data$Flagged.Check), ]
+          data <- data %>% select(-Flagged.Check)
+      }
 
 
     # Export resulting dataframe
