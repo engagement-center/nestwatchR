@@ -19,8 +19,10 @@
 #'   \item \strong{Total}: The number of days representing the maximum expected total nesting period (spanning first initial nest building to last fledge) for each species.
 #'   }
 #' @param trim_to_active logical; TRUE or FALSE indicating if nest check data should be trimmed to include only those rows where the nest was active
-#' (in build, lay, incubation, presence of life young). The first check observing a fledge or fail event is retained, but subsequent checks would be
-#' targeted for flag/removal. Flag/removal follows \code{mode}.
+#' (in build, lay, incubation, presence of live young). Build status is considered when Nest.Status is "in" or "cn" (for incomplete or complete nest) but
+#' no eggs or young have been detected yet.  The first check observing a fledge or fail event is retained, but subsequent checks would be
+#' targeted for flag/removal. Flag/removal follows \code{mode}. Note that this will include cases where a nest may have been abandoned, found after failure, found after fledging, or
+#' other cases of inactivity. See \link[nestwatchr]{nw.filteractive} to isolate checks to eggs and young only.
 #' @param output character; An optional character string to custom name the output dataframe
 #'
 #' @details This function calculates the number of days between \code{First.Lay.Date}, \code{Hatch.Date}, and \code{Fledge.Date} date values, comparing
@@ -87,7 +89,7 @@
 #'                    Live.Host.Young.Count = c("0", "4", "0", "4"),
 #'                    Nest.Status = rep(NA, 4))
 #' nw.filterphenology(data = data, max_phenology = phenology, mode = "flag")
-nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = F, output = NULL){
+nw.filterphenology_mod <- function(data, mode, max_phenology, trim_to_active = F, output = NULL){
 
   #####################################
   ###   Function Parameters Check   ###
@@ -98,9 +100,10 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = F, ou
     stop("Argument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
   }
   # Stop if dataframe is not a NW merged dataframe
-  if (all(!(c("Species.Code", "Visit.ID") %in% names(data)))){
+  if (!all(c("Species.Code", "Visit.ID") %in% names(data))) {
     stop("Argument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
   }
+
   # Stops Function if 'mode' is not specified.
   if (missing(mode)) {
     stop("Invalid 'mode'. Please provide either 'flag' or 'remove'.")
@@ -132,6 +135,7 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = F, ou
 
 
 
+
   #####################################
   ###            Setup              ###
   #####################################
@@ -154,7 +158,17 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = F, ou
   spp_col <- grep("species", colnames(phen), ignore.case = TRUE)                # get the spp column index
 
 
-  for (sp in phen[[spp_col]]){
+
+
+  # Incase more spp are supplied in phenology vs dataset
+  species_to_process <- intersect(unique(data$Species.Code), unique(phen[[spp_col]]))  #get spp included in both
+
+
+  # START LOOP OVER SPP
+
+  for (sp in species_to_process) {
+    spp_data <- data %>% filter(Species.Code == sp)
+    spp_phen <- phen %>% filter(.data[[names(phen)[spp_col]]] == sp)
 
     spp_data <- data %>% filter(Species.Code == sp)                         # Filter the dataset to just the sp of interest
     spp_col <- grep("species", colnames(phen), ignore.case = TRUE)          # get the spp column index
@@ -167,6 +181,14 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = F, ou
     total <- spp_phen[[grep("total", colnames(spp_phen))]]
 
 
+    # Mark nests that only have a single row of data, those can nto be used for this check-by-check check
+    spp_data <- spp_data %>% group_by(Attempt.ID) %>% mutate(check_count = n())
+    toflag <- NULL  # adding placeholders
+    to_flag_visits <- NULL
+
+
+    # if (spp_data$check_count > 1) ...
+    temp_start <- spp_data %>% filter(check_count > 1)
 
 
     ################################################################
@@ -174,27 +196,43 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = F, ou
     ################################################################
 
     # Temp trim preceding empty nest checks from each attempt
-    temp <- spp_data %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime, .by_group = T) %>%      # group checks by attempt and arrange by date
-      mutate(CumulativeMax = cummax(Host.Eggs.Count)) %>%       # make column for cumulative eggs
-      filter(!(Host.Eggs.Count == 0 & CumulativeMax == 0)) %>%  # remove checks up until egg count != 0
-      select(-CumulativeMax)                                    # remove temporary column
+    temp <- temp_start %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime, .by_group = TRUE) %>%  # group checks by attempt and arrange by date
+      mutate(has_contents = coalesce(Host.Eggs.Count > 0, FALSE) |                    # If is contents
+               coalesce(Live.Host.Young.Count > 0, FALSE) |
+               coalesce(Host.Eggs.Present.Uncounted > 0, FALSE) |
+               coalesce(Live.Host.Young.Present.Uncounted > 0, FALSE) |
+               coalesce(Adult.Activity == "ra", FALSE),                   # or adult is on
+             CumulativeMax = cummax(as.integer(has_contents))) %>%         # then mark it as 1
+      filter(CumulativeMax != 0) %>%                             # remove checks up until cumax count != 0
+      select(-CumulativeMax)                                     # remove temporary column
+
+
+
 
     # Trim trailing empty nest checks after fledge/fail
     # Create a column to designate if each attempt had or did not have live young at any point
-    temp <- spp_data %>% group_by(Attempt.ID) %>% mutate(had_young = any(Live.Host.Young.Count > 0, na.rm = TRUE))
+    temp <- temp %>% group_by(Attempt.ID) %>% mutate(had_young = any((Live.Host.Young.Count > 0 |
+                                                                        Live.Host.Young.Present.Uncounted > 0), na.rm = TRUE))
 
     # If young were present:
-    temp_1 <- temp %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime, .by_group = T) %>%
-      mutate(is_positive = !is.na(Live.Host.Young.Count) & Live.Host.Young.Count > 0,
-             first_zero_after_positive = which(Live.Host.Young.Count == 0 & cumsum(is_positive) > 0)[1]) %>% # finds first 0 young after positive
-      mutate(keep = row_number() <= first_zero_after_positive) %>%    # label rows to keep as TRUE else FALSE
-      filter(keep == "FALSE") %>% pull(Visit.ID)
+    temp_1 <- temp %>% filter(had_young == TRUE) %>%
+      group_by(Attempt.ID) %>% arrange(Visit.Datetime, .by_group = TRUE) %>%
+      mutate(pos_eggyoung = case_when(if_any(c(Live.Host.Young.Count, Live.Host.Young.Present.Uncounted,
+                                               Host.Eggs.Count, Host.Eggs.Present.Uncounted), ~ dplyr::coalesce(.x >= 1, FALSE)) |
+                                        if_any(Adult.Activity, ~ dplyr::coalesce(.x == "ra", FALSE)) ~ 1,
+                                      TRUE ~ 0)) %>%
+      mutate(first_zero_after_positive = which(pos_eggyoung == 0 & cumsum(pos_eggyoung) > 0)[1]) %>% # finds first 0 young after positive
+      mutate(keep = row_number() <= first_zero_after_positive) %>%  # label rows to keep as TRUE else FALSE
+      filter(keep == FALSE) %>%
+      pull(Visit.ID)
 
     # If young were not present:
     temp_2 <- temp %>% filter(had_young == FALSE)
     temp_2 <- temp_2 %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime, .by_group = T) %>%      # group checks by attempt and arrange by date
-      mutate(is_positive = !is.na(Host.Eggs.Count) & Host.Eggs.Count > 0,
-             first_zero_after_positive = which(Host.Eggs.Count == 0 & cumsum(is_positive) > 0)[1]) %>% # finds first 0 egg after positive
+      mutate(pos_eggs = (!is.na(Host.Eggs.Count) & Host.Eggs.Count > 0) |      # mark active if poss egg count or
+               (!is.na(Host.Eggs.Present.Uncounted) & Host.Eggs.Present.Uncounted == 1) | # or if present and not counted
+               (is.na(Host.Eggs.Count) & is.na(Host.Eggs.Present.Uncounted) & Adult.Activity %in% c("ra"))) %>%          # if count is NA and adults did not flush
+      mutate(first_zero_after_positive = which(Host.Eggs.Count == 0 & cumsum(pos_eggs) > 0)[1]) %>% # finds first 0 egg after positive
       mutate(keep = row_number() <= first_zero_after_positive) %>%    # label rows to keep as TRUE else FALSE
       filter(keep == "FALSE") %>% pull(Visit.ID)
 
@@ -202,7 +240,7 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = F, ou
     to_flag_visits <- c(temp_1, temp_2)                               # combine temp 1 and 2
 
     # Remove preceding checks
-    temp_3 <- spp_data %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime, .by_group = T) %>%
+    temp_3 <- temp_start %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime, .by_group = T) %>%
       mutate(first_valid_row = which( # The nest is a being built (status == "in" or "cn")
         (Nest.Status == "in" | Nest.Status == "cn") |
           # The nest has contents (eggs or young counted/present)
@@ -218,13 +256,21 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = F, ou
 
 
     # Calculate active nesting period
-    temp <- spp_data %>% group_by(Attempt.ID) %>%
+    temp <- temp_start %>% group_by(Attempt.ID) %>%
       filter(!Visit.ID %in% to_flag_visits) %>%  # look at just active nesting period (build included)
-      mutate(period_length = as.numeric(max(Visit.Datetime) - min(Visit.Datetime))) %>%  # cal nesting period
-      filter(period_length > total)                                                      # filter to long attempts
+      filter(n() > 0) %>%                        # for cases where we have mulitple lines
+      mutate(period_length = as.numeric(max(Visit.Datetime, na.rm = TRUE) - min(Visit.Datetime, na.rm = TRUE))) %>%  # calc period
+      filter(period_length > total)               # filter to long attempts
     toflag <- temp %>% pull(Attempt.ID) %>% unique()  # create vector to hold unique attempt.IDs to flag bc too long
 
 
+
+
+
+
+    # end if only a single row of data for an attempt, return to spp_data
+
+    spp_data <- spp_data %>% select(-check_count)
 
     ############################################################
     ###        Flag Long Attempts based on benchmarks        ###
@@ -268,6 +314,9 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = F, ou
     ###        Flag Attempts       ###
     ##################################
 
+    # Arraneg the df nicely
+    data <- data %>% arrange(Attempt.ID, Visit.Datetime)
+
     # Flag in original dataset
     # Flag long attempts
     rows <- which(data$Attempt.ID %in% toflag)
@@ -284,10 +333,10 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = F, ou
   } # end loop over each species
 
   # If not filtering to active period, remove the flagged check column
-    if(isFALSE(trim_to_active)){
-      # Remove unused column
-      data <- data %>% select(-Flagged.Check)
-    } # end if trimming is set to FALSE
+  if(isFALSE(trim_to_active)){
+    # Remove unused column
+    data <- data %>% select(-Flagged.Check)
+  } # end if trimming is set to FALSE
 
 
 
@@ -320,11 +369,11 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = F, ou
     data <- data[!grepl("FLAGGED", data$Flagged.Attempt), ]
     data <- data %>% select(-Flagged.Attempt)
 
-      # If trimming to active, and removing, remove those too
-      if(isTRUE(trim_to_active)){
-          data <- data[!grepl("FLAGGED", data$Flagged.Check), ]
-          data <- data %>% select(-Flagged.Check)
-      }
+    # If trimming to active, and removing, remove those too
+    if(isTRUE(trim_to_active)){
+      data <- data[!grepl("FLAGGED", data$Flagged.Check), ]
+      data <- data %>% select(-Flagged.Check)
+    }
 
 
     # Export resulting dataframe
@@ -340,3 +389,6 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = F, ou
 
 
 } # end function
+
+
+#
