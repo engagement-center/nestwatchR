@@ -3,7 +3,8 @@
 #' @description To provide additional checks on data quality before analysis, an analyst may want to filter out nesting attempts which were
 #' recorded to have nesting phenologies of unexpectedly long lengths. This function allows an analyst to specify species-specific values for nest phenologies
 #' using expected days in the lay, incubation, nestling, and total nesting periods. By defining these allowable time frames an analyst can flag or
-#' remove "run-on" nest attempts or nests which do not match the specie's life history.
+#' remove "run-on" nest attempts or nests which do not match the specie's life history. This function only uses values for host eggs/young, and
+#' does not factor in brood parasite eggs or young.
 #'
 #'
 #' @param data dataframe; A dataframe of merged NestWatch attempt and visits data. Date columns must have class \code{Date}
