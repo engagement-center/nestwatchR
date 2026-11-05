@@ -174,7 +174,7 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = F, ou
     ################################################################
 
     # Temp trim preceding empty nest checks from each attempt
-    temp <- spp_data %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime) %>%      # group checks by attempt and arrange by date
+    temp <- spp_data %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime, .by_group = T) %>%      # group checks by attempt and arrange by date
       mutate(CumulativeMax = cummax(Host.Eggs.Count)) %>%       # make column for cumulative eggs
       filter(!(Host.Eggs.Count == 0 & CumulativeMax == 0)) %>%  # remove checks up until egg count != 0
       select(-CumulativeMax)                                    # remove temporary column
@@ -184,7 +184,7 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = F, ou
     temp <- spp_data %>% group_by(Attempt.ID) %>% mutate(had_young = any(Live.Host.Young.Count > 0, na.rm = TRUE))
 
     # If young were present:
-    temp_1 <- temp %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime) %>%
+    temp_1 <- temp %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime, .by_group = T) %>%
       mutate(is_positive = !is.na(Live.Host.Young.Count) & Live.Host.Young.Count > 0,
              first_zero_after_positive = which(Live.Host.Young.Count == 0 & cumsum(is_positive) > 0)[1]) %>% # finds first 0 young after positive
       mutate(keep = row_number() <= first_zero_after_positive) %>%    # label rows to keep as TRUE else FALSE
@@ -192,7 +192,7 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = F, ou
 
     # If young were not present:
     temp_2 <- temp %>% filter(had_young == FALSE)
-    temp_2 <- temp_2 %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime) %>%      # group checks by attempt and arrange by date
+    temp_2 <- temp_2 %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime, .by_group = T) %>%      # group checks by attempt and arrange by date
       mutate(is_positive = !is.na(Host.Eggs.Count) & Host.Eggs.Count > 0,
              first_zero_after_positive = which(Host.Eggs.Count == 0 & cumsum(is_positive) > 0)[1]) %>% # finds first 0 egg after positive
       mutate(keep = row_number() <= first_zero_after_positive) %>%    # label rows to keep as TRUE else FALSE
@@ -202,7 +202,7 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = F, ou
     to_flag_visits <- c(temp_1, temp_2)                               # combine temp 1 and 2
 
     # Remove preceding checks
-    temp_3 <- spp_data %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime) %>%
+    temp_3 <- spp_data %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime, .by_group = T) %>%
       mutate(first_valid_row = which( # The nest is a being built (status == "in" or "cn")
         (Nest.Status == "in" | Nest.Status == "cn") |
           # The nest has contents (eggs or young counted/present)
