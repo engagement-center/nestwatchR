@@ -144,7 +144,7 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = F, ou
   # Initiate column names
   Flagged.Attempt <- Flagged.Check <- Attempt.ID <- Species.Code <- First.Lay.Date <- Hatch.Date <- Fledge.Date <- NA
   Visit.Datetime <- max_date <- min_date <- date_difference <- Live.Host.Young.Count <- Host.Egg.Count <- NA
-  toflag <- species <- Host.Eggs.Count <- CumulativeMax <- is_positive <- first_zero_after_positive <- pos_egg <- NA
+  toflag <- species <- Host.Eggs.Count <- CumulativeMax <- is_positive <- first_zero_after_positive <- pos_eggs <- NA
   keep <- Visit.ID <- had_young <- Nest.Status <- Host.Eggs.Present.Uncounted <- has_contents <- pos_eggyoung <- NA
   first_valid_row <- period_length <- Live.Host.Young.Present.Uncounted <- check_count <- Adult.Activity <- NA
 
@@ -257,12 +257,14 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = F, ou
 
 
     # Calculate active nesting period
-    temp <- temp_start %>% group_by(Attempt.ID) %>%
+    if (nrow(temp_start > 0))  {   # this will throw an warning if temp_start has no dtaa in it
+      temp <- temp_start %>% group_by(Attempt.ID) %>%
       filter(!Visit.ID %in% to_flag_visits) %>%  # look at just active nesting period (build included)
-      filter(n() > 0) %>%                        # for cases where we have mulitple lines
-      mutate(period_length = as.numeric(max(Visit.Datetime, na.rm = TRUE) - min(Visit.Datetime, na.rm = TRUE))) %>%  # calc period
+      filter(n() > 0) %>%                        # for cases where we have multiple lines
+      mutate(period_length = as.numeric(max(Visit.Datetime, na.rm = TRUE) - min(Visit.Datetime, na.rm = TRUE))) #%>%  # calc period
       filter(period_length > total)               # filter to long attempts
-    toflag <- temp %>% pull(Attempt.ID) %>% unique()  # create vector to hold unique attempt.IDs to flag bc too long
+          toflag <- temp %>% pull(Attempt.ID) %>% unique()  # create vector to hold unique attempt.IDs to flag bc too long
+    }
 
 
 
