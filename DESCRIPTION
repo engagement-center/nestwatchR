@@ -1,7 +1,7 @@
 Package: nestwatchR
 Type: Package
 Title: Download, Clean, and Filter NestWatch Data
-Version: 0.0.100
+Version: 1.0.0
 Authors@R:
     c(person(given = "Kim",
              family = "Savides",
