@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Filter NestWatch Data on Finer Scales • nestwatchR</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Filter NestWatch Data on Finer Scales">
 </head>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">nestwatchR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.100</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,8 +74,8 @@ species Y), or limiting nest attempts to a certain geographic area.</p>
 <h2 id="filtering-species">Filtering Species<a class="anchor" aria-label="anchor" href="#filtering-species"></a>
 </h2>
 <p>Limiting the dataset to just a few species can easily be done using
-the pipe (<code>%&gt;%</code>). If you are unfamiliar with “piping”, see
-the <a href="https://magrittr.tidyverse.org/" class="external-link"><code>migritrr</code></a>
+the pipe (<code>%&gt;%</code> or <code>|&gt;</code>). If you are
+unfamiliar with “piping”, see the <a href="https://magrittr.tidyverse.org/" class="external-link"><code>migritrr</code></a>
 package. Below we will subset the version 1 of the NestWatch dataset to
 include only attempts for Bewick’s Wren (“bewwre”) and Carolina Wren
 (“carwre”). The code below walks through download, merging, and
@@ -86,7 +86,7 @@ species code is “carwre” but Carolina Wren (Northern) has the code
 “carwre1”. If you wish to include all subspecies/forms, make sure to run
 <code>nw.cleantaxa(data = data, rollsubspecies = T)</code> or lookup the
 species codes you would like to include by referencing the eBird
-taxonomy table using auk::ebird_taxonomy.</p>
+taxonomy table using <a href="https://cornelllabofornithology.github.io/auk/reference/ebird_taxonomy.html" class="external-link"><code>auk::ebird_taxonomy</code></a>.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(nestwatchR)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
@@ -100,9 +100,9 @@ taxonomy table using auk::ebird_taxonomy.</p>
 <span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="co"># View what species are in the new dataset</span></span>
 <span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="fu">unique</span>(wrens<span class="sc">$</span>Species.Name)</span>
 <span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="sc">&gt;</span> [<span class="dv">1</span>] <span class="st">"Carolina Wren"</span> <span class="st">"Bewick's Wren"</span></span></code></pre></div>
-<p><br> This “wrens” data subset from dataset Version 1 is also included
-within the package for quick access using
-<code>wrens &lt;- nestwatchR::wren_quickstart</code>:</p>
+<p><br> This <code>wrens</code> data subset from dataset Version 1 is
+also included within the package for quick access using
+<code>wrens &lt;- nestwatchR::wren_quickstart</code>.</p>
 <p><br></p>
 </div>
 <div class="section level2">
@@ -145,7 +145,8 @@ clutch size and outcome.</p>
 points. Do note that depending on your sample size, your map may take a
 while to plot. If you think this might be happening, try plotting just a
 subset of the points at a time or switching the tmap mode to “plot” (see
-tmap documentation for more details).</p>
+<a href="https://r-tmap.github.io/tmap/reference/tmap_mode.html" class="external-link">tmap
+documentation</a> for more details).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create a spatial object from nest data</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
@@ -208,7 +209,7 @@ depending on what Status &amp; Trends data product is available.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Obtain and set an ebird access key</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ebird.github.io/ebirdst/" class="external-link">ebirdst</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://ebird.github.io/ebirdst/reference/set_ebirdst_access_key.html" class="external-link">set_ebirdst_access_key</a></span><span class="op">(</span><span class="st">"pasteyourkeyhere"</span><span class="op">)</span>      <span class="co"># you only need to do this once, R will remember it</span></span>
+<span><span class="fu">set_ebirdst_access_key</span><span class="op">(</span><span class="st">"pasteyourkeyhere"</span><span class="op">)</span>      <span class="co"># you only need to do this once, R will remember it</span></span>
 <span></span>
 <span><span class="co"># Define what species you want to download by their 6-letter code</span></span>
 <span><span class="va">spp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bewwre"</span>, <span class="st">"carwre"</span><span class="op">)</span></span>
@@ -219,7 +220,7 @@ depending on what Status &amp; Trends data product is available.</p>
 <span></span>
 <span><span class="co"># Download range maps by species</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="va">spp</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://ebird.github.io/ebirdst/reference/ebirdst_download_status.html" class="external-link">ebirdst_download_status</a></span><span class="op">(</span>species <span class="op">=</span> <span class="va">i</span>, download_abundance <span class="op">=</span> <span class="cn">FALSE</span>, </span>
+<span>  <span class="fu">ebirdst_download_status</span><span class="op">(</span>species <span class="op">=</span> <span class="va">i</span>, download_abundance <span class="op">=</span> <span class="cn">FALSE</span>, </span>
 <span>                          download_ranges <span class="op">=</span> <span class="cn">TRUE</span>, pattern <span class="op">=</span> <span class="st">"_smooth_27km_"</span>, </span>
 <span>                          path <span class="op">=</span> <span class="va">spatialdata_path</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
@@ -311,12 +312,7 @@ of NestWatch data at this time. Finally, the optional
 spatially-cleaned dataframe.</p>
 <p>If we zoom in to central Colorado, we can see there are a few
 Bewick’s Wren nests just outside the range border.</p>
-<div class="float">
-<img src="colorado-zoom.png" alt="A zoomed in map of Colorado showing two nest locations not too far outside of the typical range of the Bewick’s Wren."><div class="figcaption">A zoomed in map of Colorado showing two nest
-locations not too far outside of the typical range of the Bewick’s
-Wren.</div>
-</div>
-<p>We might choose to keep nests like these in our analysis, because
+<p><img src="colorado-zoom.png" alt="A zoomed in map of Colorado showing two nest locations not too far outside of the typical range of the Bewick’s Wren."><br> We might choose to keep nests like these in our analysis, because
 they could be correctly identified and just a bit outside the typical
 range. Let’s define a buffer zone to keep such nests but exclude those
 well outside the expected range:</p>
@@ -341,8 +337,9 @@ review (and would be removed if mode was set to “remove”):</p>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html" class="external-link">tm_shape</a></span><span class="op">(</span>shp <span class="op">=</span> <span class="va">bewwre_range</span>, name <span class="op">=</span> <span class="st">"Bewick's Wren Range"</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># add range polygon, define color</span></span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html" class="external-link">tm_polygons</a></span><span class="op">(</span>fill_alpha <span class="op">=</span> <span class="fl">0.5</span>, fill <span class="op">=</span> <span class="st">"#B4CFE1"</span>, col <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span>                         </span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html" class="external-link">tm_shape</a></span><span class="op">(</span><span class="va">flagged_nests</span><span class="op">)</span> <span class="op">+</span>                                 <span class="co"># add nest points, color by "Flagged.Attempt"</span></span>
-<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html" class="external-link">tm_dots</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"Flagged.Location"</span>, </span>
-<span>          palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#B31B1B"</span>, <span class="st">"#457999"</span><span class="op">)</span><span class="op">)</span>    </span>
+<span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_symbols.html" class="external-link">tm_dots</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Flagged.Location"</span>, </span>
+<span>          fill.scale <span class="op">=</span> <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_scale_categorical.html" class="external-link">tm_scale_categorical</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#B31B1B"</span>, <span class="st">"#457999"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>    </span>
+<span></span>
 <span><span class="va">map</span></span></code></pre></div>
 <div class="float">
 <img src="plot-buffered.png" alt="Map of the United States overlaid with the Bewick’s Wren typical breeding range polygon, plus an added 50km buffer zone (lighter blue). Points represent the reported locations of Bewick’s Wren nests, with those outside the buffer being red while those inside are blue."><div class="figcaption">Map of the United States overlaid with the
@@ -438,12 +435,15 @@ between first build and fledge. For example here, Bewick’s Wren
 typically build nests within 8 days. So we might say max build time is
 10 days, and lay + incubation + nestling + build = 60 days:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## 2. Phenologically filter data by limiting dataset to nests with dates within the maximum possible range.</span></span>
+<code class="sourceCode R"><span><span class="co">## 2. Phenologically filter data by limiting dataset to nests with dates within </span></span>
+<span><span class="co">##    the maximum possible range.</span></span>
 <span></span>
-<span><span class="co"># Create simple df with maximum allowable # days in each nest phase for Bewick's and Carolina Wrens.</span></span>
-<span><span class="co"># You can provide data for a single species or multiple species to be run at the same time.</span></span>
-<span><span class="co"># We suggest adding a few days of buffer to average incubation, nesting, and total </span></span>
-<span><span class="co"># nesting period lengths. This is your judgement call based on the biology of the focal species.</span></span>
+<span><span class="co"># Create simple df with maximum allowable # days in each nest phase for Bewick's</span></span>
+<span><span class="co"># and Carolina Wrens. You can provide data for a single species or multiple </span></span>
+<span><span class="co"># species to be run at the same time. We suggest adding a few days of buffer to </span></span>
+<span><span class="co"># average incubation, nesting, and total nesting period lengths. This is your </span></span>
+<span><span class="co"># judgement call based on the biology of the focal species.</span></span>
+<span></span>
 <span><span class="va">max_days</span> <span class="op">&lt;-</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>species <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bewwre"</span>, <span class="st">"carwre"</span><span class="op">)</span>,</span>
 <span>             lay <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">8</span>, <span class="fl">6</span><span class="op">)</span>,           <span class="co"># max recorded clutch size for focal species</span></span>
@@ -461,14 +461,14 @@ typically build nests within 8 days. So we might say max build time is
 <span><span class="co"># How many attempts were flagged?</span></span>
 <span><span class="va">flagged</span> <span class="op">&lt;-</span> <span class="va">flagged_phenology</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Flagged.Attempt</span> <span class="op">==</span> <span class="st">"FLAGGED"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">flagged</span><span class="op">$</span><span class="va">Attempt.ID</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 594</span></span>
-<span><span class="co"># &gt; [1] 448       # number of attempts which were flagged</span></span>
+<span><span class="co">#&gt; [1] 592</span></span>
+<span><span class="co"># &gt; [1] 592       # number of attempts which were flagged</span></span>
 <span></span>
 <span><span class="co"># How many checks were flagged?</span></span>
 <span><span class="va">flagged</span> <span class="op">&lt;-</span> <span class="va">flagged_phenology</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Flagged.Check</span> <span class="op">==</span> <span class="st">"FLAGGED"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">flagged</span><span class="op">$</span><span class="va">Attempt.ID</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 996</span></span>
-<span><span class="co"># &gt; [1] 769       # number of checks which were flagged</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 1044</span></span>
+<span><span class="co"># &gt; [1] 1044       # number of checks which were flagged</span></span></code></pre></div>
 <p><br></p>
 <p>This function also has the logical argument
 <code>trim_to_active</code> (used in the above example). This argument
@@ -519,20 +519,18 @@ trimmed.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">p1</span></span></code></pre></div>
-<p><img src="d_Data-Filtering_files/figure-html/visualize%20filtering-1.png" alt="A histogram displaying the distrubution of nesting periods before and after filtering." width="100%" style="display: block; margin: auto;"></p>
+<p><img src="d_Data-Filtering_files/figure-html/visualize%20filtering-1.png" class="r-plt" alt="A histogram displaying the distrubution of nesting periods before and after filtering." width="100%" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p2</span></span></code></pre></div>
-<p><img src="d_Data-Filtering_files/figure-html/visualize%20filtering-2.png" alt="A histogram displaying the distrubution of nesting periods before and after filtering." width="100%" style="display: block; margin: auto;"></p>
+<p><img src="d_Data-Filtering_files/figure-html/visualize%20filtering-2.png" class="r-plt" alt="A histogram displaying the distrubution of nesting periods before and after filtering." width="100%" style="display: block; margin: auto;"></p>
 <p>We can see in the unfiltered plot that there were more than a few
-nests with long nesting periods before filtering. After filtering out
-448 attempts deemed “too long”, we are left with 2,539 attempts to
-continue an analysis with. Note that this function does not just trim
-the attempts by length. If you look closely you will see the
-distribution of nesting periods left of the cutoff has changed slightly
-(see the bar directly left of the dashed line has been reduced by
-several hundred attempts, and th other bars have increased slightly).
-This is due to removing days of nest checks post-fledging from the total
-nesting period.</p>
+nests with long nesting periods before filtering out. Note that this
+function does not just trim the attempts by length. If you look closely
+you will see the distribution of nesting periods to the left of the
+cutoff has changed slightly (i.e., the bar directly left of the dashed
+line has been reduced by several hundred attempts, and the other bars
+have increased slightly). This is due to removing days of nest checks
+post-fledging from the total nesting period.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
@@ -545,7 +543,7 @@ nesting period.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

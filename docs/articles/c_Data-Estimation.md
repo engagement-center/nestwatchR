@@ -1,0 +1,226 @@
+# Estimate NestWatch Summary Dates
+
+The [NestWatch Open
+Dataset](https://data.mendeley.com/datasets/wjf794z7gc) holds a wealth
+of nesting data acquired from different sources. Due to participant
+omissions, differing protocols over time, and assimilation of other
+datasets, missing data fields are to be expected. For instance, a
+participant may forget to input the clutch size, but reliable clutch
+size information may exist in the nest visits section if the participant
+recorded numbers of eggs and chicks over multiple nest checks. The
+`nw.est...` family of functions help users estimate `Clutch.Size`,
+`First.Lay.Date`, `Hatch.Date`, and `Fledge.Date`.
+
+Each of these four estimation functions are coded to generate estimates
+for missing values, when possible, based on the best data available for
+each nesting attempt. Though these functions aim to use the best
+available data, the precision of the resulting estimates cannot be
+guaranteed. As the analyst, you will need to make judgement calls in
+each step below based on your research goals and the biology of your
+focal species.
+
+\
+
+## Estimate Clutch Size
+
+The maximum clutch size is often missing in NestWatch nest summary data.
+[`nw.estclutchsize()`](https://engagement-center.github.io/nestwatchR/reference/nw.estclutchsize.html)
+takes a merged NestWatch dataframe as `data =`, and has an optional
+`output =` argument to rename the resulting dataframe.
+
+This function looks for data contained in several columns to estimate
+the maximum clutch size for the nesting attempt. Because NestWatch
+participants do not usually visit each nest daily or record all data
+fields on every visit, the data needed to estimate clutch size may be
+spread over many columns in the nest visits table. The function looks,
+by Attempt.ID, in the nest visits and summary data and finds (1) the
+maximum egg count, (2) the unhatched eggs count, (3) the maximum young
+count (dead + alive), and (4) the number of fledglings recorded. From
+these summaries, the function calculates the maximum number (during each
+nest check) of observed (1) host eggs, (2) young (alive/dead) +
+unhatched eggs, and (3) fledged + unhatched eggs, to generate the
+maximum contents of the nest at each nest stage (lay/incubation,
+nestling, and fledging).
+
+Depending on the data available, the certainty of the clutch size
+estimate may vary, or in some cases, may not be estimable. For instance,
+a successful nest with 4 eggs recorded on several checks and 4 fledged
+young observed would have high certainty that the clutch size was 4.
+However, if a nest was observed with 2 eggs on one check and a week
+later was found depredated, then the clutch size is not certain (more
+eggs could have been laid, but were not detected). In this case, the
+clutch size would be estimated as 2, but may have been higher depending
+on the exact (unobserved) failure date.
+
+``` r
+
+# Load wrens example data
+wrens <- nestwatchR::wren_quickstart
+length(unique(wrens$Attempt.ID))
+# > [1] 7626    # total attempts in wrens
+
+# How many attempts have missing clutch sizes?
+empty_clutchsize <- wrens %>% filter(is.na(Clutch.Size))
+length(unique(empty_clutchsize$Attempt.ID))
+# > [1] 2228    # number of attempts with 'NA' for clutch.size
+
+# Run estclutchsize
+nw.estclutchsize(data = wrens, output = "estimated.clutch")
+still_empty <- estimated.clutch %>% filter(is.na(Clutch.Size))
+length(unique(still_empty$Attempt.ID))
+# > [1] 376     # number of attempts with inestimable clutch size
+```
+
+\
+
+## Estimate First Lay Date
+
+The date when the first egg was laid (first lay date) can be reliably
+estimated if the nest was visited during the egg-laying phase. Precision
+of estimates will decrease for nests found later in the nesting cycle.
+The function
+[`nw.estfirstlay()`](https://engagement-center.github.io/nestwatchR/reference/nw.estfirstlay.html)
+can help you identify which attempts have enough data to estimate lay
+dates. This function takes a merged NestWatch dataframe as `data =`, a
+user-provided average nest phenology dataframe (`phenology =`, see below
+for details), and has an optional `output =` argument to rename the
+resulting dataframe.
+
+This function uses data spread across several data fields within the
+NestWatch dataset to estimate the lay date of the first egg of the
+attempt’s clutch. In order, the function determines if (1) the nest was
+visited during the egg-laying phase, (2) the attempt has a hatch date,
+and (3) if the nest has a fledge date. By checking in this order, the
+function estimates the lay date from the most proximal event date.
+CAUTION: If the nest was visited during laying, the estimated lay date
+will likely be more precise than if estimated from the fledge date
+because there is variation in incubation and nestling timeframes. By
+counting backwards in time from the most proximal event through the
+appropriate nest phases, we can estimate first lay dates. The timeframe
+between these events (laying, incubation, nestling, fledging), varies by
+species and may vary due to other variables like latitude. To account
+for this, this function takes the required `phenology =` argument, which
+is a user-provided dataframe with expected, average species-level nest
+phenology data (you could use mean, median, or mode number of days,
+whichever is most relevant to your study). In this example, both species
+typically lay one egg per day, but this could be adjusted to accommodate
+species with longer egg-laying intervals such as raptors, large
+waterfowl, etc., where Eggs.per.day can = 0.5 for an egg-laying interval
+of one egg every other day:
+
+``` r
+
+phenology <- data.frame(Species = c("bewwre", "carwre"),
+                        Clutch.Size  = c(5, 4), # mean clutch size
+                        Eggs.per.Day = c(1, 1), # typical laying frequency
+                        Incubation   = c(16, 16), # mean incubation period
+                        Nestling     = c(16, 13)) # mean nestling period
+
+DT::datatable(phenology, options = list(paging = F, scrollX = T, searching  = F))
+```
+
+As in this example, you can input phenological data for multiple species
+to estimate first lay dates for each.
+
+``` r
+
+# Reuse `estimated.clutch` data from above
+length(unique(estimated.clutch$Attempt.ID))
+# > [1] 7626    # total attempts in estimated.clutch
+
+# How many attempts have missing first lay dates?
+empty_firstlay <- estimated.clutch %>% filter(is.na(First.Lay.Date))
+length(unique(empty_firstlay$Attempt.ID))
+# > [1] 3008    # number of nest attempts with 'NA' for first lay date
+
+# Run estfirstlay
+nw.estfirstlay(data = estimated.clutch, phenology = phenology, output = "estimated.lay")
+still_empty <- estimated.lay %>% filter(is.na(First.Lay.Date))
+length(unique(still_empty$Attempt.ID))
+# > [1] 2392     # number of first lay dates not estimated
+```
+
+\
+
+## Estimate Hatch Date
+
+For nesting attempts where young hatched, hatch dates may be estimable
+if first lay date or fledge date is known. The function
+[`nw.esthatch()`](https://engagement-center.github.io/nestwatchR/reference/nw.esthatch.html)
+takes a merged NestWatch dataframe as `data =`, the same user-provided,
+average nest phenology dataframe as above (`phenology =`, see above for
+details), and has an optional `output =` argument to rename the
+resulting dataframe.
+
+This function checks, in order, if (1) the Young.Total were recorded or
+if the nest fledged (positive indication of hatching), (2) then if a
+hatch date is available, and finally (3) if a known (non-estimated)
+fledge date is available. If these requirements are met, the function
+uses the user-input nest phenology time frames to estimate hatch date
+date. Estimated dates are denoted with a 1 in
+`data$Hatch.Date.Estimated`.
+
+Note that NestWatch does not have a data field for specific nestling
+age, but rather has a categorical nestling age score (i.e.”naked young”,
+“partially feathered young”). Due to the uncertainty in day-age of this
+score between species and possibly between observers, this function does
+not utilize these data.
+
+``` r
+
+# Reuse `estimated.lay` data from above
+length(unique(estimated.lay$Attempt.ID))
+# > [1] 7626    # total attempts in estimated.lay
+
+# How many attempts have missing hatch dates?
+empty_hatch <- estimated.lay %>% filter(is.na(Hatch.Date))
+length(unique(empty_hatch$Attempt.ID))
+# > [1] 3680    # number of nest attempts with 'NA' hatch dates
+
+# Run esthatch
+nw.esthatch(data = estimated.lay, phenology = phenology, output = "estimated.hatch")
+still_empty <- estimated.hatch %>% filter(is.na(Hatch.Date))
+length(unique(still_empty$Attempt.ID))
+# > [1] 3207     # number of hatch dates not estimated
+```
+
+\
+
+## Estimate Fledge Date
+
+For nesting attempts where young were known to have fledged, fledge
+dates may be estimable if hatch date or first lay date is known. The
+function
+[`nw.estfledge()`](https://engagement-center.github.io/nestwatchR/reference/nw.estfledge.html),
+like those estimation functions above, takes a merged NestWatch
+dataframe as `data =`, the user-provided, average nest phenology
+dataframe from above (`phenology =`, see above for details), and has an
+optional `output =` argument to rename the resulting dataframe.
+
+This function checks, in order, (1) if the nest fledged successfully,
+and (2) if a Hatch.Date was recorded or then (3) if a First.Lay.Date was
+recorded. If these requirements are met, the function uses user-input
+nest phenology time frames to estimate fledge date. Estimated dates are
+denoted with a 1 in `data$Fledge.Date.Estimated`.
+
+CAUTION: Nestling periods can be quite variable, depending upon parental
+behavior, environmental conditions, food availability, etc. Use
+estimated fledge dates with caution.
+
+``` r
+
+# Reuse `estimated.hatch` data from above
+length(unique(estimated.hatch$Attempt.ID))
+# > [1] 7626    # total attempts in estimated.hatch
+
+# How many attempts have missing fledge dates?
+empty_fledge <- estimated.hatch %>% filter(is.na(Fledge.Date))
+length(unique(empty_fledge$Attempt.ID))
+# > [1] 3779    # number of nest attempts with 'NA' fledge dates
+
+# Run estfledge
+nw.estfledge(data = estimated.hatch, phenology = phenology, output = "estimated.fledge")
+still_empty <- estimated.fledge %>% filter(is.na(Fledge.Date))
+length(unique(still_empty$Attempt.ID))
+# > [1] 3483     # number of fledge dates not estimated
+```
