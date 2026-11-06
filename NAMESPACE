@@ -7,24 +7,33 @@ export(nw.estclutchsize)
 export(nw.estfirstlay)
 export(nw.estfledge)
 export(nw.esthatch)
+export(nw.filteractive)
 export(nw.filterphenology)
 export(nw.filterspatial)
 export(nw.getdata)
 export(nw.mergedata)
 import(auk)
 import(dplyr)
-importFrom(httr,GET)
-importFrom(httr,content)
-importFrom(httr,http_status)
+importFrom(httr,
+  GET,
+  content,
+  http_status
+)
 importFrom(jsonlite,fromJSON)
-importFrom(lubridate,parse_date_time)
-importFrom(lubridate,year)
+importFrom(lubridate,
+  parse_date_time,
+  year
+)
 importFrom(magrittr,"%>%")
 importFrom(readr,read_csv)
-importFrom(sf,st_buffer)
-importFrom(sf,st_intersection)
-importFrom(sf,st_transform)
-importFrom(stats,complete.cases)
-importFrom(stats,na.omit)
+importFrom(sf,
+  st_buffer,
+  st_intersection,
+  st_transform
+)
+importFrom(stats,
+  complete.cases,
+  na.omit
+)
 importFrom(stringr,str_detect)
 importFrom(utils,download.file)
