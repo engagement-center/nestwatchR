@@ -23,7 +23,7 @@
 #' (in build, lay, incubation, presence of live young). Build status is considered when Nest.Status is "in" or "cn" (for incomplete or complete nest) but
 #' no eggs or young have been detected yet.  The first check observing a fledge or fail event is retained, but subsequent checks would be
 #' targeted for flag/removal. Flag/removal follows \code{mode}. Note that this will include cases where a nest may have been abandoned, found after failure, found after fledging, or
-#' other cases of inactivity. See \link[nestwatchr]{nw.filteractive} to isolate checks to eggs and young only.
+#' other cases of inactivity. See \link[nestwatchR]{nw.filteractive} to isolate checks to eggs and young only.
 #' @param output character; An optional character string to custom name the output dataframe
 #'
 #' @details This function calculates the number of days between \code{First.Lay.Date}, \code{Hatch.Date}, and \code{Fledge.Date} date values, comparing
@@ -69,7 +69,7 @@
 #' nw.filterphenology(data = data,
 #'                    max_phenology = phenology,
 #'                    mode = "flag",
-#'                    trim_to_active = F)
+#'                    trim_to_active = FALSE)
 #'
 #'
 #' # Simplified NestWatch dataset with nest visits data
@@ -93,8 +93,8 @@
 #' nw.filterphenology(data = data,
 #'                    max_phenology = phenology,
 #'                    mode = "flag",
-#'                    trim_to_active = T)
-nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = F, output = NULL){
+#'                    trim_to_active = TRUE)
+nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = FALSE, output = NULL){
 
   #####################################
   ###   Function Parameters Check   ###
@@ -265,7 +265,7 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = F, ou
       temp <- temp_start %>% group_by(Attempt.ID) %>%
       filter(!Visit.ID %in% to_flag_visits) %>%  # look at just active nesting period (build included)
       filter(n() > 0) %>%                        # for cases where we have multiple lines
-      mutate(period_length = as.numeric(max(Visit.Datetime, na.rm = TRUE) - min(Visit.Datetime, na.rm = TRUE))) #%>%  # calc period
+      mutate(period_length = as.numeric(max(Visit.Datetime, na.rm = TRUE) - min(Visit.Datetime, na.rm = TRUE))) %>%  # calc period
       filter(period_length > total)               # filter to long attempts
           toflag <- temp %>% pull(Attempt.ID) %>% unique()  # create vector to hold unique attempt.IDs to flag bc too long
     }
