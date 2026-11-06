@@ -327,12 +327,12 @@ nw.filterphenology(data = data,
 # How many attempts were flagged?
 flagged <- flagged_phenology %>% filter(Flagged.Attempt == "FLAGGED")
 length(unique(flagged$Attempt.ID))
-# > [1] 594       # number of attempts which were flagged
+# > [1] 592       # number of attempts which were flagged
 
 # How many checks were flagged?
 flagged <- flagged_phenology %>% filter(Flagged.Check == "FLAGGED")
 length(unique(flagged$Attempt.ID))
-# > [1] 996       # number of checks which were flagged
+# > [1] 1044       # number of checks which were flagged
 ```
 
 <br>
