@@ -76,24 +76,22 @@ nw.getdata <- function(version = NULL) {
 
 
   ### 4. Prep for and output
-  pos <- 1
-  envir = as.environment(pos)
 
   files <- list.files("temp-dir", pattern = "\\.csv$", full.names = TRUE)    # get list of .csv files
-  NW.attempts <- suppressMessages(readr::read_csv(grep("attempt", files, value = TRUE)))     # filter to get Attempt/Location dataset and move to Global Environment
-  NW.checks   <- suppressMessages(readr::read_csv(grep("check",   files, value = TRUE)))    # filter to get Nest Visits dataset and move to Global Environment
+  NW.attempts <- suppressMessages(readr::read_csv(grep("attempt", files, value = TRUE)))     # filter to get Attempt/Location dataset
+  NW.checks   <- suppressMessages(readr::read_csv(grep("check",   files, value = TRUE)))    # filter to get Nest Visits dataset
 
   # Replace spaces in column names with "."
   names(NW.attempts) <- gsub(" ", ".", names(NW.attempts))
   names(NW.checks) <- gsub(" ", ".", names(NW.checks))
 
   # Assign
-  assign("NW.attempts", NW.attempts, envir = envir)
-  assign("NW.checks", NW.checks, envir = envir)
+  assign("NW.attempts", NW.attempts, envir = parent.frame())
+  assign("NW.checks", NW.checks, envir = parent.frame())
 
   unlink("temp-dir", recursive = TRUE)                              # remove the temporary directory
 
-  message(paste0("NestWatch Open Dataset (v", v, ") have been loaded to your global environment."))
+  message(paste0("NestWatch Open Dataset (v", v, ") have been loaded to your environment."))
 
 
 

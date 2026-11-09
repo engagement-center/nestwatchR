@@ -44,11 +44,6 @@ nw.estclutchsize <- function(data, output = NULL){
   ####  Check arguments  ####
   ###########################
 
-  # Stop function if output was not named AND no assignment arrow was used
-  if ((interactive() && sys.nframe() == 1) & is.null(output)) {
-    stop("Please either assign the output to an object or specify an output name using output = 'object_name'.")
-  }
-
   # Check the dataframe is merged NW data
   if (missing(data)){
     stop("Argument 'data' must be a dataframe of merged NestWatch attempts and visits data.")
@@ -180,21 +175,24 @@ nw.estclutchsize <- function(data, output = NULL){
   ####        Output data       ####
   ##################################
 
+
   # Prep for and Export resulting dataframe
-  pos <- 1
-  envir = as.environment(pos)
 
+  if (!is.null(output)) {
+    if (!is.character(output) || length(output) != 1) {
+      stop("The 'output' argument must be a single character string.")
+    }
 
+    # Assign the dataframe to the user's calling environment (parent.frame())
+    assign(output, out, envir = parent.frame())
 
-  # Export resulting dataframe
-  if (is.null(output)) {
-    filtered.data <- NULL
-    assign("filtered.data", out, envir = envir)
-  } else {
-    assign(paste0(output), out, envir = envir)
+    # Return invisibly so it doesn't double-print to the console
+    return(invisible(out))
   }
 
+  # Standard  return if output = NULL
+  out
 
-} # end of function
 
 
+} #end func

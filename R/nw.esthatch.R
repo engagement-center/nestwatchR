@@ -199,16 +199,26 @@ nw.esthatch <- function(data, phenology, output = NULL) {
   ##################################
 
   # Prep for and Export resulting dataframe
-  pos <- 1
-  envir = as.environment(pos)
 
-  if (is.null(output)) {
-    estimated.hatch <- NULL
-    assign("estimated.hatch", data, envir = envir)
-  } else {
-    assign(paste0(output), data, envir = envir)
+  if (!is.null(output)) {
+    if (!is.character(output) || length(output) != 1) {
+      stop("The 'output' argument must be a single character string.")
+    }
+
+    # Assign the dataframe to the user's calling environment (parent.frame())
+    assign(output, data, envir = parent.frame())
+
+    # Return invisibly so it doesn't double-print to the console
+    return(invisible(data))
+
   }
 
+  # Standard  return if output = NULL
+  data
+
+
 } # end func
+
+
 
 

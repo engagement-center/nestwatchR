@@ -305,9 +305,9 @@ nw.cleandata <- function(data, mode, methods, output = NULL) {
         # J. Flag attempts where the # days between the first check and the last check are > 365 days (Snowy Albatross nest span)
         # or where year of summary dates is not in the check year
         temp <- data %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime) %>%                             # group by attempt
-                         mutate(date_span = as.numeric(max(Visit.Datetime) - min(Visit.Datetime))) %>%    # calc max check date span
-                         filter(date_span >= 365) %>%                                                     # filter to long attempts
-                         pull(Attempt.ID) %>% unique()                                                    # get unique attempt.ids to flag
+          mutate(date_span = as.numeric(max(Visit.Datetime) - min(Visit.Datetime))) %>%    # calc max check date span
+          filter(date_span >= 365) %>%                                                     # filter to long attempts
+          pull(Attempt.ID) %>% unique()                                                    # get unique attempt.ids to flag
 
         # Flag attempts
         toflag <- c(temp)
@@ -316,33 +316,33 @@ nw.cleandata <- function(data, mode, methods, output = NULL) {
         data$Flagged.Attempt[rows] <- "FLAGGED"
         rm(temp)
 
-      # Unused, included better in nw.filterphenology()
-      # } else if (m == "l") {
-      #   # L. Trim trailing nest checks post fledge/fail
-      #   # Create a column to designate if each attempt had or did not have live young at any point
-      #   temp <- data %>% group_by(Attempt.ID) %>% mutate(had_young = any(Live.Host.Young.Count > 0, na.rm = TRUE))
-      #
-      #   # If young were present:
-      #   temp_1 <- temp %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime) %>%
-      #     mutate(is_positive = !is.na(Live.Host.Young.Count) & Live.Host.Young.Count > 0,
-      #            first_zero_after_positive = which(Live.Host.Young.Count == 0 & cumsum(is_positive) > 0)[1]) %>% # finds first 0 young after possitive
-      #     mutate(keep = row_number() <= first_zero_after_positive) %>%    # label rows to keep as TRUE else FALSE
-      #     filter(keep == "FALSE") %>% pull(Visit.ID)
-      #
-      #   # If young were not present:
-      #   temp_2 <- temp %>% filter(had_young == FALSE)
-      #   temp_2 <- temp_2 %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime) %>%      # group checks by attempt and arrange by date
-      #     mutate(is_positive = !is.na(Host.Eggs.Count) & Host.Eggs.Count > 0,
-      #            first_zero_after_positive = which(Host.Eggs.Count == 0 & cumsum(is_positive) > 0)[1]) %>% # finds first 0 young after possitive
-      #     mutate(keep = row_number() <= first_zero_after_positive) %>%    # label rows to keep as TRUE else FALSE
-      #     filter(keep == "FALSE") %>% pull(Visit.ID)
-      #
-      #   # Flag bad checks
-      #   toflag <- c(temp_1, temp_2)
-      #   toflag <- unique(toflag)
-      #   rows <- which(data$Visit.ID %in% toflag)
-      #   data$Flagged.Attempt[rows] <- "FLAGGED"
-      #   rm(temp_1, temp_2)
+        # Unused, included better in nw.filterphenology()
+        # } else if (m == "l") {
+        #   # L. Trim trailing nest checks post fledge/fail
+        #   # Create a column to designate if each attempt had or did not have live young at any point
+        #   temp <- data %>% group_by(Attempt.ID) %>% mutate(had_young = any(Live.Host.Young.Count > 0, na.rm = TRUE))
+        #
+        #   # If young were present:
+        #   temp_1 <- temp %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime) %>%
+        #     mutate(is_positive = !is.na(Live.Host.Young.Count) & Live.Host.Young.Count > 0,
+        #            first_zero_after_positive = which(Live.Host.Young.Count == 0 & cumsum(is_positive) > 0)[1]) %>% # finds first 0 young after possitive
+        #     mutate(keep = row_number() <= first_zero_after_positive) %>%    # label rows to keep as TRUE else FALSE
+        #     filter(keep == "FALSE") %>% pull(Visit.ID)
+        #
+        #   # If young were not present:
+        #   temp_2 <- temp %>% filter(had_young == FALSE)
+        #   temp_2 <- temp_2 %>% group_by(Attempt.ID) %>% arrange(Visit.Datetime) %>%      # group checks by attempt and arrange by date
+        #     mutate(is_positive = !is.na(Host.Eggs.Count) & Host.Eggs.Count > 0,
+        #            first_zero_after_positive = which(Host.Eggs.Count == 0 & cumsum(is_positive) > 0)[1]) %>% # finds first 0 young after possitive
+        #     mutate(keep = row_number() <= first_zero_after_positive) %>%    # label rows to keep as TRUE else FALSE
+        #     filter(keep == "FALSE") %>% pull(Visit.ID)
+        #
+        #   # Flag bad checks
+        #   toflag <- c(temp_1, temp_2)
+        #   toflag <- unique(toflag)
+        #   rows <- which(data$Visit.ID %in% toflag)
+        #   data$Flagged.Attempt[rows] <- "FLAGGED"
+        #   rm(temp_1, temp_2)
 
 
       } # end last method code chunk
@@ -366,14 +366,30 @@ nw.cleandata <- function(data, mode, methods, output = NULL) {
   # If mode == "flag"
   if (mode == "flag") {
     # Export resulting dataframe
-    if (is.null(output)) {
-      cleaned.data <- NULL
-      assign("cleaned.data", data, envir = envir)
-    } else {
-      assign(paste0(output), data, envir = envir)
+    # If `output` is mentioned
+    if (!is.null(output)) {
+      if (!is.character(output) || length(output) != 1) {
+        stop("The 'output' argument must be a single character string.")
+      }
+
+      # Assign the dataframe to the user's calling environment (parent.frame())
+      assign(output, data, envir = parent.frame())
+      message("... Identified nesting attempts have been noted with 'FLAGGED' in the new column 'Flagged.Attempt'.")
+
+
+      # Return invisibly so it doesn't double-print to the console
+      return(invisible(data))
     }
+
     message("... Identified nesting attempts have been noted with 'FLAGGED' in the new column 'Flagged.Attempt'.")
+    # Standard  return if output = NULL
+    data
+
+
   } else {
+
+
+
 
 
     #####################################
@@ -385,14 +401,28 @@ nw.cleandata <- function(data, mode, methods, output = NULL) {
     data <- data[!grepl("FLAGGED", data$Flagged.Attempt), ]
     data <- data %>% select(-Flagged.Attempt)
 
+
     # Export resulting dataframe
-    if (is.null(output)) {
-      cleaned.data <- NULL
-      assign("cleaned.data", data, envir = envir)
-    } else {
-      assign(paste0(output), data, envir = envir)
+    # If `output` is mentioned
+    if (!is.null(output)) {
+      if (!is.character(output) || length(output) != 1) {
+        stop("The 'output' argument must be a single character string.")
+      }
+
+      # Assign the dataframe to the user's calling environment (parent.frame())
+      assign(output, data, envir = parent.frame())
+
+      # Return invisibly so it doesn't double-print to the console
+      return(invisible(data))
+      message("... Identified nesting attempts have been removed from the new dataset.")
+
     }
+
     message("... Identified nesting attempts have been removed from the new dataset.")
+    # Standard  return if output = NULL
+    data
   }
+
+
 } ##### end whole function
 

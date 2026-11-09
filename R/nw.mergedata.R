@@ -56,12 +56,12 @@ nw.mergedata <- function(attempts, checks, output = NULL) {
   data$Visit.Datetime <- parse_date_time(data$Visit.Datetime, orders = c("Y-m-d H:M:S", "Y-m-d")) # datetime handling fix
 
   # Prep for and output
-  pos <- 1
-  envir = as.environment(pos)
-  if (is.null(output)) {
-    assign("merged", data, envir = envir)
+  if (!is.null(output)) {
+    assign(output, data, envir = parent.frame())
+    return(invisible(data))
+
   } else {
-    assign(paste0(output), data, envir = envir)
+    data
 
   }
 

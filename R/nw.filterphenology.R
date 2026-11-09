@@ -351,21 +351,29 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = FALSE
   ###        Mode == "flag"         ###
   #####################################
 
-  pos <- 1
-  envir <- as.environment(pos)
-
-  # If mode == "flag"
+   # If mode == "flag"
   if (mode == "flag") {
-    # Export resulting dataframe
-    if (is.null(output)) {
-      filtered.data <- NULL
-      assign("filtered.data", data, envir = envir)
-    } else {
-      assign(paste0(output), data, envir = envir)
+  # Export resulting dataframe
+  # If `output` is mentioned
+  if (!is.null(output)) {
+    if (!is.character(output) || length(output) != 1) {
+      stop("The 'output' argument must be a single character string.")
     }
-    message("... Identified nesting attempts have been noted with 'FLAGGED' in the new dataset in column 'Flagged.Attempt' & 'Flagged.Check'.")
-  } else {
 
+    # Assign the dataframe to the user's calling environment (parent.frame())
+    assign(output, data, envir = parent.frame())
+    message("... Identified nesting attempts have been noted with 'FLAGGED' in the columns 'Flagged.Attempt' & 'Flagged.Check'.")
+
+
+    # Return invisibly so it doesn't double-print to the console
+    return(invisible(data))
+  }
+
+  message("... Identified nesting attempts have been noted with 'FLAGGED' in the columns 'Flagged.Attempt' & 'Flagged.Check'.")
+  # Standard  return if output = NULL
+  data
+
+  } else {
 
     #####################################
     ###       Mode == "remove"        ###
@@ -384,18 +392,24 @@ nw.filterphenology <- function(data, mode, max_phenology, trim_to_active = FALSE
 
 
     # Export resulting dataframe
-    if (is.null(output)) {
-      filtered.data <- NULL
-      assign("filtered.data", data, envir = envir)
-    } else {
-      assign(paste0(output), data, envir = envir)
+    # If `output` is mentioned
+    if (!is.null(output)) {
+      if (!is.character(output) || length(output) != 1) {
+        stop("The 'output' argument must be a single character string.")
+      }
+
+      # Assign the dataframe to the user's calling environment (parent.frame())
+      assign(output, data, envir = parent.frame())
+
+      # Return invisibly so it doesn't double-print to the console
+      return(invisible(data))
+      message("... Identified nesting attempts have been removed from the new dataset.")
+
     }
+
     message("... Identified nesting attempts have been removed from the new dataset.")
+    # Standard  return if output = NULL
+    data
   }
 
-
-
 } # end function
-
-
-#
