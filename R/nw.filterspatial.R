@@ -49,7 +49,6 @@
 #'                   proj = "+proj=longlat +datum=WGS84 +no_defs",
 #'                   output = "geofiltered.data")
 #'
-
 nw.filterspatial  <- function(points, polygon, mode, buffer = F, buffer_units = NULL, buffer_output = NULL, proj = NULL, output = NULL) {
 
   #####################################
@@ -161,16 +160,17 @@ nw.filterspatial  <- function(points, polygon, mode, buffer = F, buffer_units = 
     } else {
       polygon <- st_buffer(polygon, dist = buffer * 1.069 * 1000)               # or create a mi buffer
     }
-    inside <- st_intersection(points, polygon) %>% pull(Attempt.ID) %>% unique() # get the Attempt.ID of points inside the buffered polygon
+    inside <- points %>% filter(lengths(st_intersects(., polygon)) > 0) %>%
+                         pull(Attempt.ID) %>%
+                         unique()
+
+    # Get rows of Attempts inside buffered range, flag those not
     rows <- which(points$Attempt.ID %in% inside)                                # get row numbers of Attempts to keep
     points$Flagged.Location[-rows] <- "FLAGGED"                                 # flag attempts that were outside the buffered polygon
 
-    # If outputting buffered polygon
-    # Prep for output, then output
-    pos <- 1
-    envir = as.environment(pos)
-    if (buffer_output) {
-      assign("polygon_buffered", polygon, envir = envir)
+    # If outputting buffered polygon, then output to env
+    if (isTRUE(buffer_output)) {
+      assign("polygon_buffered", polygon, envir = parent.frame())
     }
   } # end buffer loop
 
@@ -180,7 +180,9 @@ nw.filterspatial  <- function(points, polygon, mode, buffer = F, buffer_units = 
   #####################################
 
   if (missing(buffer)) {
-    inside <- st_intersection(points, polygon) %>% pull(Attempt.ID) %>% unique() # get the Attempt.ID of points inside the buffered polygon
+    inside <- points %>% filter(lengths(st_intersects(., polygon)) > 0) %>%
+                         pull(Attempt.ID) %>%
+                         unique() # get the Attempt.ID of points inside the buffered polygon
     rows <- which(points$Attempt.ID %in% inside)                            # get row numbers of Attempts to keep
     points$Flagged.Location[-rows] <- "FLAGGED"                             # flag attempts that were outside the buffered polygon
   }
@@ -192,17 +194,27 @@ nw.filterspatial  <- function(points, polygon, mode, buffer = F, buffer_units = 
 
   if (mode == "flag") {
     # Export resulting dataframe
-    # Prep for output, then output
-    pos <- 1
-    envir = as.environment(pos)
+    # If `output` is mentioned
+    if (!is.null(output)) {
+      if (!is.character(output) || length(output) != 1) {
+        stop("The 'output' argument must be a single character string.")
+      }
 
-    if (is.null(output)) {                                                      # if output name is not provided
-      assign("geofiltered.data", points, envir = envir)                         # name of new dataframe will be "geofiltered.data"
-    } else {                                                                    # if output name is provided
-      assign(paste0(output), points, envir = envir)                        # name of new dataframe will be argument of "output"
+      # Assign the dataframe to the user's calling environment (parent.frame())
+      message("... Identified nesting attempts have been noted with 'FLAGGED' in the column 'Flagged.Location'.")
+      assign(output, points, envir = parent.frame())
+
+      # Return invisibly so it doesn't double-print to the console
+      return(invisible(points))
     }
-    message("... Identified nesting attempts have been noted with 'FLAGGED' in the new dataset in column 'Flagged.Location'.")
+
+    message("... Identified nesting attempts have been noted with 'FLAGGED' in the column 'Flagged.Location'.")
+    # Standard  return if output = NULL
+    points
+
+
   } else {
+
 
     #####################################
     ###       Mode == "remove"        ###
@@ -215,19 +227,25 @@ nw.filterspatial  <- function(points, polygon, mode, buffer = F, buffer_units = 
 
     # Export resulting dataframe
     # Prep for output, then output
-    pos <- 1
-    envir = as.environment(pos)
+    if (!is.null(output)) {
+      if (!is.character(output) || length(output) != 1) {
+        stop("The 'output' argument must be a single character string.")
+      }
 
-    if (is.null(output)) {                                                        # if output name is not provided
-      assign("geofiltered.data", points, envir = envir)                           # name of new dataframe will be "geofiltered.data"
-    } else {                                                                      # if output name is provided
-      assign(paste0(output), points, envir = envir)                          # name of new dataframe will be argument of "output"
+      # Assign the dataframe to the user's calling environment (parent.frame())
+      assign(output, points, envir = parent.frame())
+
+      # Return invisibly so it doesn't double-print to the console
+      return(invisible(points))
+      message("... Identified nesting attempts have been removed from the dataset.")
+
     }
-    message("... Identified nesting attempts have been removed from the new dataset.")
 
-  } # end of mode = remove chunk
+    message("... Identified nesting attempts have been removed from the dataset.")
+    # Standard  return if output = NULL
+    points
 
-
+  } # end mode = remove
 
 
 } # end
