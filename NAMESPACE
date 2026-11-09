@@ -28,7 +28,7 @@ importFrom(magrittr,"%>%")
 importFrom(readr,read_csv)
 importFrom(sf,
   st_buffer,
-  st_intersection,
+  st_intersects,
   st_transform
 )
 importFrom(stats,

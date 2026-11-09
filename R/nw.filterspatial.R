@@ -14,7 +14,7 @@
 #'
 #' @importFrom sf st_transform
 #' @importFrom sf st_buffer
-#' @importFrom sf st_intersection
+#' @importFrom sf st_intersects
 #'
 #' @return sf; A spatial dataframe
 #' @export
@@ -124,7 +124,7 @@ nw.filterspatial  <- function(points, polygon, mode, buffer = F, buffer_units = 
   #####################################
 
   # Initiate NestWatch column names
-  Attempt.ID <- Flagged.Location <- NULL
+  Attempt.ID <- Flagged.Location <- . <- NULL
 
   # Set up existing points dataframe for flagging
   points <- points %>% mutate(Flagged.Location = NA)
