@@ -8,7 +8,7 @@
 #' @param mode \code{"flag"} or \code{"remove"}; A character string defining if the user wants the identified nesting attempts to be flagged with "FLAGGED" in a new column. Or removed from the dataset.
 #' @param buffer numeric; Optional distance to buffer around the polygon
 #' @param buffer_units \code{"km"} or \code{"mi"}; A character string defining the buffer distance units as either kilometers or miles.
-#' @param buffer_output logical; Optionally export the generated buffered polygon to the global enviornment.
+#' @param buffer_output logical; Optionally export the generated buffered polygon to the enviornment.
 #' @param proj a PROJ.4 string; Optional definition for map projection. Defaults to Lambert Conformal Conic.
 #' @param output character; An optional character string to custom name the output spatial dataframe.
 #'

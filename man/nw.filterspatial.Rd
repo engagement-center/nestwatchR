@@ -26,7 +26,7 @@ nw.filterspatial(
 
 \item{buffer_units}{\code{"km"} or \code{"mi"}; A character string defining the buffer distance units as either kilometers or miles.}
 
-\item{buffer_output}{logical; Optionally export the generated buffered polygon to the global enviornment.}
+\item{buffer_output}{logical; Optionally export the generated buffered polygon to the enviornment.}
 
 \item{proj}{a PROJ.4 string; Optional definition for map projection. Defaults to Lambert Conformal Conic.}
 
