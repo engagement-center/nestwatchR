@@ -49,7 +49,7 @@ nw.filterspatial(
 - buffer_output:
 
   logical; Optionally export the generated buffered polygon to the
-  global enviornment.
+  enviornment.
 
 - proj:
 
@@ -99,11 +99,10 @@ random_points <- data.frame(Attempt.ID = seq(1:30),
 points_sf <- sf::st_as_sf(random_points, coords = c("x", "y"), crs = 4326)
 
 # Run the spatial filter
-nw.filterspatial(points = points_sf,
-                  polygon = square_polygon,
-                  mode = "flag",
-                  proj = "+proj=longlat +datum=WGS84 +no_defs",
-                  output = "geofiltered.data")
-#> Warning: attribute variables are assumed to be spatially constant throughout all geometries
-#> ... Identified nesting attempts have been noted with 'FLAGGED' in the new dataset in column 'Flagged.Location'.
+geofiltered_data <-
+  nw.filterspatial(points = points_sf,
+                   polygon = square_polygon,
+                   mode = "flag",
+                   proj = "+proj=longlat +datum=WGS84 +no_defs")
+#> ... Identified nesting attempts have been noted with 'FLAGGED' in the column 'Flagged.Location'.
 ```

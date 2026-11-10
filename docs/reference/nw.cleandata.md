@@ -141,14 +141,14 @@ procedures `a:k`.\
 wrens <- nestwatchR::wren_quickstart
 
 # Flag data not meeting procedures e, f, g, and h
-nw.cleandata(data = wrens, mode = "flag",
-             methods = c("e", "f", "g", "h"))
+out_1 <- nw.cleandata(data = wrens, mode = "flag",
+                      methods = c("e", "f", "g", "h"))
 #> ... Beginning to identify nesting attempts that do not meet the criteria. This may take a minute ...
 #> ... Identified nesting attempts have been noted with 'FLAGGED' in the new column 'Flagged.Attempt'.
 
 # Remove data not meeting procedures j or k.
-nw.cleandata(data = wrens, mode = "remove",
-             methods = c("j", "k"))
+out_2 <- nw.cleandata(data = wrens, mode = "remove",
+                      methods = c("j", "k"))
 #> ... Beginning to identify nesting attempts that do not meet the criteria. This may take a minute ...
 #> ... Identified nesting attempts have been removed from the new dataset.
 ```

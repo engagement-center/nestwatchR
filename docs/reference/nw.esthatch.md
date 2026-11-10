@@ -88,6 +88,6 @@ phenology <- data.frame(Species = c("carwre"),
                         Nestling     = c(13))
 
 # Run function
-nw.esthatch(data = data, phenology = phenology)
+out <- nw.esthatch(data = data, phenology = phenology)
 #> ... Estimating hatch dates, this may take some time ...
 ```

@@ -129,7 +129,15 @@ nw.filterphenology(data = data,
                    max_phenology = phenology,
                    mode = "flag",
                    trim_to_active = FALSE)
-#> ... Identified nesting attempts have been noted with 'FLAGGED' in the new dataset in column 'Flagged.Attempt' & 'Flagged.Check'.
+#> ... Identified nesting attempts have been noted with 'FLAGGED' in the columns 'Flagged.Attempt' & 'Flagged.Check'.
+#>   Flagged.Attempt Attempt.ID Species.Code First.Lay.Date Hatch.Date Fledge.Date
+#> 1         FLAGGED       A001       carwre     2026-05-23 2026-07-14  2026-07-30
+#>   Visit.ID Visit.Datetime Nest.Status Adult.Activity Host.Eggs.Count
+#> 1       NA           <NA>          NA             NA              NA
+#>   Host.Eggs.Present.Uncounted Live.Host.Young.Count
+#> 1                          NA                    NA
+#>   Live.Host.Young.Present.Uncounted
+#> 1                                NA
 
 
 # Simplified NestWatch dataset with nest visits data
@@ -150,9 +158,9 @@ data <- data.frame(Attempt.ID = c("A002"),
                   Live.Host.Young.Count = c(0, 0, 0, 0, 5, 0, 0),
                    Live.Host.Young.Present.Uncounted = rep(NA, 7))
 
-nw.filterphenology(data = data,
-                   max_phenology = phenology,
-                   mode = "flag",
-                   trim_to_active = TRUE)
-#> ... Identified nesting attempts have been noted with 'FLAGGED' in the new dataset in column 'Flagged.Attempt' & 'Flagged.Check'.
+out <- nw.filterphenology(data = data,
+                          max_phenology = phenology,
+                          mode = "flag",
+                          trim_to_active = TRUE)
+#> ... Identified nesting attempts have been noted with 'FLAGGED' in the columns 'Flagged.Attempt' & 'Flagged.Check'.
 ```

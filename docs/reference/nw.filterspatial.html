@@ -83,7 +83,7 @@ option buffer argument which can be used to add a specific distance buffer aroun
 
 
 <dt id="arg-buffer-output">buffer_output<a class="anchor" aria-label="anchor" href="#arg-buffer-output"></a></dt>
-<dd><p>logical; Optionally export the generated buffered polygon to the global enviornment.</p></dd>
+<dd><p>logical; Optionally export the generated buffered polygon to the enviornment.</p></dd>
 
 
 <dt id="arg-proj">proj<a class="anchor" aria-label="anchor" href="#arg-proj"></a></dt>
@@ -132,13 +132,12 @@ option buffer argument which can be used to add a specific distance buffer aroun
 <span class="r-in"><span><span class="va">points_sf</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">random_points</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Run the spatial filter</span></span></span>
-<span class="r-in"><span><span class="fu">nw.filterspatial</span><span class="op">(</span>points <span class="op">=</span> <span class="va">points_sf</span>,</span></span>
-<span class="r-in"><span>                  polygon <span class="op">=</span> <span class="va">square_polygon</span>,</span></span>
-<span class="r-in"><span>                  mode <span class="op">=</span> <span class="st">"flag"</span>,</span></span>
-<span class="r-in"><span>                  proj <span class="op">=</span> <span class="st">"+proj=longlat +datum=WGS84 +no_defs"</span>,</span></span>
-<span class="r-in"><span>                  output <span class="op">=</span> <span class="st">"geofiltered.data"</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>attribute variables are assumed to be spatially constant throughout all geometries</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ... Identified nesting attempts have been noted with 'FLAGGED' in the new dataset in column 'Flagged.Location'.</span>
+<span class="r-in"><span><span class="va">geofiltered_data</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span>  <span class="fu">nw.filterspatial</span><span class="op">(</span>points <span class="op">=</span> <span class="va">points_sf</span>,</span></span>
+<span class="r-in"><span>                   polygon <span class="op">=</span> <span class="va">square_polygon</span>,</span></span>
+<span class="r-in"><span>                   mode <span class="op">=</span> <span class="st">"flag"</span>,</span></span>
+<span class="r-in"><span>                   proj <span class="op">=</span> <span class="st">"+proj=longlat +datum=WGS84 +no_defs"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ... Identified nesting attempts have been noted with 'FLAGGED' in the column 'Flagged.Location'.</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

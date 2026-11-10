@@ -101,6 +101,6 @@ data <- data.frame(Attempt.ID = c("A1", "A1", "A1", "A1", "A1"),
                   Brood.Parasite.Live.Young.Present.Uncounted = c(0, 0, NA, 0, 0),
                   Nest.Status = rep(NA, 5))
 
-nw.filteractive(data = data, mode = "flag")
-#> ... Identified nesting attempts have been noted with 'FLAGGED' in the new dataset in column 'Flagged.Check'.
+out <- nw.filteractive(data = data, mode = "flag")
+#> ... Identified nesting attempts have been noted with 'FLAGGED' in the in column 'Flagged.Check'.
 ```

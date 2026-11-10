@@ -125,14 +125,14 @@ deciding what cleaning procedures to conduct. This function contains 11 cleaning
 <span class="r-in"><span><span class="va">wrens</span> <span class="op">&lt;-</span> <span class="fu">nestwatchR</span><span class="fu">::</span><span class="va"><a href="wren_quickstart.html">wren_quickstart</a></span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Flag data not meeting procedures e, f, g, and h</span></span></span>
-<span class="r-in"><span><span class="fu">nw.cleandata</span><span class="op">(</span>data <span class="op">=</span> <span class="va">wrens</span>, mode <span class="op">=</span> <span class="st">"flag"</span>,</span></span>
-<span class="r-in"><span>             methods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"e"</span>, <span class="st">"f"</span>, <span class="st">"g"</span>, <span class="st">"h"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">out_1</span> <span class="op">&lt;-</span> <span class="fu">nw.cleandata</span><span class="op">(</span>data <span class="op">=</span> <span class="va">wrens</span>, mode <span class="op">=</span> <span class="st">"flag"</span>,</span></span>
+<span class="r-in"><span>                      methods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"e"</span>, <span class="st">"f"</span>, <span class="st">"g"</span>, <span class="st">"h"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ... Beginning to identify nesting attempts that do not meet the criteria. This may take a minute ...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ... Identified nesting attempts have been noted with 'FLAGGED' in the new column 'Flagged.Attempt'.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Remove data not meeting procedures j or k.</span></span></span>
-<span class="r-in"><span><span class="fu">nw.cleandata</span><span class="op">(</span>data <span class="op">=</span> <span class="va">wrens</span>, mode <span class="op">=</span> <span class="st">"remove"</span>,</span></span>
-<span class="r-in"><span>             methods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"j"</span>, <span class="st">"k"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">out_2</span> <span class="op">&lt;-</span> <span class="fu">nw.cleandata</span><span class="op">(</span>data <span class="op">=</span> <span class="va">wrens</span>, mode <span class="op">=</span> <span class="st">"remove"</span>,</span></span>
+<span class="r-in"><span>                      methods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"j"</span>, <span class="st">"k"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ... Beginning to identify nesting attempts that do not meet the criteria. This may take a minute ...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ... Identified nesting attempts have been removed from the new dataset.</span>
 </code></pre></div>

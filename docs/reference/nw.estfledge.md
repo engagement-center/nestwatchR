@@ -87,6 +87,6 @@ phenology <- data.frame(Species = c("carwre"),
                         Incubation   = c(16),
                         Nestling     = c(13))
 
-nw.estfledge(data = data, phenology = phenology)
+out <- nw.estfledge(data = data, phenology = phenology)
 #> ... Estimating fledge dates, this may take some time ...
 ```
