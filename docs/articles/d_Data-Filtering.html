@@ -133,9 +133,9 @@ within R.</p>
 <p>First, to limit stress on our plotting instrument, we will limit the
 dataset to include only one line of data for each nest. If you would
 like certain variables of the nest, like clutch size, fledge/fail date,
-or substrate, to be visible when you click on individual points, but
-sure to select those columns here. In this example, we will select
-clutch size and outcome.</p>
+or substrate to be visible when you click on individual points, but sure
+to select those columns here. In this example, we will select clutch
+size and outcome.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Select a few columns that your are interest in plotting</span></span>
 <span><span class="va">wrens</span> <span class="op">&lt;-</span> <span class="va">wrens</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Attempt.ID</span>, <span class="va">Latitude</span>, <span class="va">Longitude</span>, <span class="va">Species.Name</span>, </span>
@@ -192,24 +192,25 @@ which Status and Trend Models have been run. These data are easily
 accessible in R through the <a href="https://ebird.github.io/ebirdst/" class="external-link"><code>ebirdst</code></a>
 package. To access these eBird data, you will need to acquire a free
 access key. This key will give you access to Status and Trends Data
-within R. For more information and to acquire an access key, see the <a href="https://ebird.github.io/ebirdst/" class="external-link">documentation here</a>.</p>
+within R. For more information and to acquire an access key, see the <a href="https://ebird.github.io/ebirdst/" class="external-link">documentation here</a> and fill
+out the <a href="https://ebird.org/st/request" class="external-link">access form here</a> to
+generate your access key.</p>
 <p>We can use our unique access key to download the range map of
 Bewick’s Wren and Carolina Wren. Note, you will need the 6-letter
 species codes of those species you would like to download, not their
 alpha code or common name. By modifying the access key, species, and
 download location in the code below, you can download and open the range
-polygons to your global environment. This code selects only the breeding
+polygons to your R environment. This code selects only the breeding
 range layer if available, and if unavailable then selects the resident
 range layer. Note: You only need to input your access key once (R will
 store it for you!) and you only need to download the range maps once
-(you may get an error if you rerun <a href="https://ebird.github.io/ebirdst/reference/ebirdst_download_status.html" class="external-link"><code>ebirdst_download_status()</code></a>
-when the data already exists at the <code>spatialdata_path</code>
-location). You may also need to modify the year in the code below
-depending on what Status &amp; Trends data product is available.</p>
+(you may get an error or warning message if you attempt to re-download a
+file when the data already exists at the <code>spatialdata_path</code>
+location).</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Obtain and set an ebird access key</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ebird.github.io/ebirdst/" class="external-link">ebirdst</a></span><span class="op">)</span></span>
-<span><span class="fu">set_ebirdst_access_key</span><span class="op">(</span><span class="st">"pasteyourkeyhere"</span><span class="op">)</span>      <span class="co"># you only need to do this once, R will remember it</span></span>
+<span><span class="fu"><a href="https://ebird.github.io/ebirdst/reference/set_ebirdst_access_key.html" class="external-link">set_ebirdst_access_key</a></span><span class="op">(</span><span class="st">"pasteyourkeyhere"</span><span class="op">)</span>      <span class="co"># you only need to do this once, R will remember it</span></span>
 <span></span>
 <span><span class="co"># Define what species you want to download by their 6-letter code</span></span>
 <span><span class="va">spp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bewwre"</span>, <span class="st">"carwre"</span><span class="op">)</span></span>
@@ -220,44 +221,23 @@ depending on what Status &amp; Trends data product is available.</p>
 <span></span>
 <span><span class="co"># Download range maps by species</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="va">spp</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu">ebirdst_download_status</span><span class="op">(</span>species <span class="op">=</span> <span class="va">i</span>, download_abundance <span class="op">=</span> <span class="cn">FALSE</span>, </span>
-<span>                          download_ranges <span class="op">=</span> <span class="cn">TRUE</span>, pattern <span class="op">=</span> <span class="st">"_smooth_27km_"</span>, </span>
-<span>                          path <span class="op">=</span> <span class="va">spatialdata_path</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="co"># You may need to modify the year below to reflect the appropriate S&amp;T product that downloaded</span></span>
-<span><span class="co"># Read in the range files</span></span>
-<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="va">spp</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="co"># Generate the path to the .gpkg files</span></span>
-<span>  <span class="va">file_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">spatialdata_path</span>, <span class="st">"/2023/"</span>, <span class="va">i</span>, <span class="st">"/ranges/"</span>, <span class="va">i</span>, <span class="st">"_range_smooth_27km_2023.gpkg"</span><span class="op">)</span></span>
-<span>  <span class="co"># Read in the .gpkg file</span></span>
-<span>  <span class="va">range_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="va">file_path</span><span class="op">)</span></span>
-<span>  <span class="co"># Generate the name for the object</span></span>
+<span>  <span class="co"># Prep the object name</span></span>
 <span>  <span class="va">object_name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">i</span>, <span class="st">"_range"</span><span class="op">)</span></span>
-<span>  <span class="co"># Assign the value to the dynamically-generated object name</span></span>
+<span>  <span class="co"># Download and load the range polygons</span></span>
+<span>  <span class="va">range_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ebird.github.io/ebirdst/reference/load_ranges.html" class="external-link">load_ranges</a></span><span class="op">(</span>species <span class="op">=</span> <span class="va">i</span>, resolution <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"27km"</span><span class="op">)</span>,</span>
+<span>                             smoothed <span class="op">=</span> <span class="cn">TRUE</span>, path <span class="op">=</span> <span class="va">spatialdata_path</span>,</span>
+<span>                             force <span class="op">=</span> <span class="cn">FALSE</span>, show_progress <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="co"># Select just the breeding layer if it exists, else select resident layer</span></span>
+<span>  <span class="va">range_data</span> <span class="op">&lt;-</span> <span class="va">range_data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">season</span> <span class="op">==</span> <span class="kw">if</span> <span class="op">(</span><span class="st">"breeding"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">season</span><span class="op">)</span> <span class="st">"breeding"</span> <span class="kw">else</span> <span class="st">"resident"</span><span class="op">)</span></span>
+<span>  <span class="co"># Project the polygons to match our points data</span></span>
+<span>  <span class="va">range_data</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">range_data</span>, crs <span class="op">=</span> <span class="va">proj</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/assign.html" class="external-link">assign</a></span><span class="op">(</span><span class="va">object_name</span>, <span class="va">range_data</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">range_data</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="co"># Select just breeding layer if available, else resident layer</span></span>
-<span><span class="va">object_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">spp</span>, <span class="st">"range"</span>, sep <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span></span>
-<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="va">object_names</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="kw">if</span> <span class="op">(</span><span class="va">i</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html" class="external-link">ls</a></span><span class="op">(</span>envir <span class="op">=</span> <span class="va">.GlobalEnv</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/get.html" class="external-link">get</a></span><span class="op">(</span><span class="va">i</span>, envir <span class="op">=</span> <span class="va">.GlobalEnv</span><span class="op">)</span></span>
-<span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">season</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"breeding"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>      <span class="va">data</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">season</span> <span class="op">==</span> <span class="st">"breeding"</span><span class="op">)</span></span>
-<span>      <span class="va">data</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">nest_points</span>, crs <span class="op">=</span> <span class="va">proj</span><span class="op">)</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/assign.html" class="external-link">assign</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span>, <span class="va">data</span>, envir <span class="op">=</span> <span class="va">.GlobalEnv</span><span class="op">)</span></span>
-<span>    <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>      <span class="va">data</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">season</span> <span class="op">==</span> <span class="st">"resident"</span><span class="op">)</span></span>
-<span>      <span class="va">data</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">nest_points</span>, crs <span class="op">=</span> <span class="va">proj</span><span class="op">)</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/assign.html" class="external-link">assign</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">i</span><span class="op">)</span>, <span class="va">data</span>, envir <span class="op">=</span> <span class="va">.GlobalEnv</span><span class="op">)</span><span class="op">}</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
-<span><span class="op">}</span></span>
 <span></span>
 <span><span class="co"># Clean up intermediate objects</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">file_path</span>, <span class="va">i</span>, <span class="va">object_name</span>, <span class="va">object_names</span>, <span class="va">spatialdata_path</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">i</span>, <span class="va">object_name</span>, <span class="va">spp</span>, <span class="va">spatialdata_path</span>, <span class="va">range_data</span><span class="op">)</span></span></code></pre></div>
 <p><br> Now that we have range polygons for Bewick’s Wrens and Carolina
 Wrens, we can add them to our map and investigate our nest locations a
 bit closer. Let’s plot just the Bewick’s Wren data.</p>
@@ -301,15 +281,13 @@ argument <code>buffer =</code> where the user may define a distance
 outside the polygon for which nest locations will be allowed. This
 distance can be either in kilometers or miles and should be defined
 using <code>buffer_units = "km"</code> or <code>= "mi"</code>. The
-resulting buffer polygon may be optionally exported to the global
-environment for saving or plotting using the logical
-<code>buffer_output = T</code>. The user may also define their desired
-projection using <code>proj =</code> and inputting a PROJ.4 string. If a
-projection is not provided, then the function will default to the
-Lambert Conformal Conic which is well suited for plotting the majority
-of NestWatch data at this time. Finally, the optional
-<code>output =</code> argument can be used to name the resulting
-spatially-cleaned dataframe.</p>
+resulting buffer polygon may be optionally exported to the environment
+for saving or plotting using the logical <code>buffer_output = T</code>.
+The user may also define their desired projection using
+<code>proj =</code> and inputting a PROJ.4 string. If a projection is
+not provided, then the function will default to the Lambert Conformal
+Conic which is well suited for plotting the majority of NestWatch data
+at this time.</p>
 <p>If we zoom in to central Colorado, we can see there are a few
 Bewick’s Wren nests just outside the range border.</p>
 <p><img src="colorado-zoom.png" alt="A zoomed in map of Colorado showing two nest locations not too far outside of the typical range of the Bewick’s Wren."><br> We might choose to keep nests like these in our analysis, because
@@ -317,14 +295,15 @@ they could be correctly identified and just a bit outside the typical
 range. Let’s define a buffer zone to keep such nests but exclude those
 well outside the expected range:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/nw.filterspatial.html">nw.filterspatial</a></span><span class="op">(</span>points <span class="op">=</span> <span class="va">bewwre</span>,                    <span class="co"># Bewick's Wren nest points </span></span>
-<span>                 polygon <span class="op">=</span> <span class="va">bewwre_range</span>,             <span class="co"># Bewick's Wren range shapefile</span></span>
-<span>                 mode <span class="op">=</span> <span class="st">"flag"</span>,                      <span class="co"># flag points outside </span></span>
-<span>                 buffer <span class="op">=</span> <span class="fl">50</span>,                        <span class="co"># add a 50km buffer zone</span></span>
-<span>                 buffer_units <span class="op">=</span> <span class="st">"km"</span>,                <span class="co"># units = km</span></span>
-<span>                 buffer_output <span class="op">=</span> <span class="cn">T</span>,                  <span class="co"># yes, output the buffer polygon</span></span>
-<span>                 proj <span class="op">=</span> <span class="st">"+proj=lcc +lon_0=-90 +lat_1=33 +lat_2=45"</span>,   <span class="co"># LCC from above</span></span>
-<span>                 output <span class="op">=</span> <span class="st">"flagged_nests"</span><span class="op">)</span>           <span class="co"># define the output name</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">flagged_nests</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="fu"><a href="../reference/nw.filterspatial.html">nw.filterspatial</a></span><span class="op">(</span>points <span class="op">=</span> <span class="va">bewwre</span>,                    <span class="co"># Bewick's Wren nest points </span></span>
+<span>                   polygon <span class="op">=</span> <span class="va">bewwre_range</span>,             <span class="co"># Bewick's Wren range shapefile</span></span>
+<span>                   mode <span class="op">=</span> <span class="st">"flag"</span>,                      <span class="co"># flag points outside </span></span>
+<span>                   buffer <span class="op">=</span> <span class="fl">50</span>,                        <span class="co"># add a 50km buffer zone</span></span>
+<span>                   buffer_units <span class="op">=</span> <span class="st">"km"</span>,                <span class="co"># units = km</span></span>
+<span>                   buffer_output <span class="op">=</span> <span class="cn">T</span>,                  <span class="co"># yes, output the buffer polygon</span></span>
+<span>                   proj <span class="op">=</span> <span class="st">"+proj=lcc +lon_0=-90 +lat_1=33 +lat_2=45"</span><span class="co"># LCC from above</span></span>
+<span>                   <span class="op">)</span>           </span></code></pre></div>
 <p><br> We can plot the results to see which points were flagged for
 review (and would be removed if mode was set to “remove”):</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
@@ -406,10 +385,10 @@ NestWatch data for Bewick’s Wren and Carolina Wren:</p>
 <span><span class="co"># &gt; [1] 7626      # number of nesting attempts for Bewick's and Carolina Wren</span></span>
 <span></span>
 <span><span class="co"># Run cleaning function </span></span>
-<span><span class="fu"><a href="../reference/nw.cleandata.html">nw.cleandata</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span>, </span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nw.cleandata.html">nw.cleandata</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span>, </span>
 <span>             mode <span class="op">=</span> <span class="st">"remove"</span>, </span>
-<span>             methods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>, <span class="st">"d"</span>, <span class="st">"e"</span>, <span class="st">"f"</span>, <span class="st">"g"</span>, <span class="st">"h"</span>, <span class="st">"i"</span>, <span class="st">"j"</span>, <span class="st">"k"</span><span class="op">)</span>,</span>
-<span>             output <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span>
+<span>             methods <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>, <span class="st">"d"</span>, <span class="st">"e"</span>, <span class="st">"f"</span>, <span class="st">"g"</span>, <span class="st">"h"</span>, <span class="st">"i"</span>, <span class="st">"j"</span>, <span class="st">"k"</span><span class="op">)</span></span>
+<span>             <span class="op">)</span></span>
 <span></span>
 <span><span class="co"># First, run summary date estimation functions:</span></span>
 <span><span class="co"># Missing summary data will be estimated, when possible, by using AVERAGE values </span></span>
@@ -422,10 +401,10 @@ NestWatch data for Bewick’s Wren and Carolina Wren:</p>
 <span>                       Incubation   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">16</span>, <span class="fl">16</span><span class="op">)</span>,</span>
 <span>                       Nestling     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">16</span>, <span class="fl">13</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/nw.estclutchsize.html">nw.estclutchsize</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span>, output <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/nw.estfirstlay.html">nw.estfirstlay</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span>, phenology <span class="op">=</span> <span class="va">avg_phen</span>, output <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/nw.esthatch.html">nw.esthatch</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span>, phenology <span class="op">=</span> <span class="va">avg_phen</span>, output <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/nw.estfledge.html">nw.estfledge</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span>, phenology <span class="op">=</span> <span class="va">avg_phen</span>, output <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nw.estclutchsize.html">nw.estclutchsize</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span><span class="op">)</span></span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nw.estfirstlay.html">nw.estfirstlay</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span>, phenology <span class="op">=</span> <span class="va">avg_phen</span><span class="op">)</span></span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nw.esthatch.html">nw.esthatch</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span>, phenology <span class="op">=</span> <span class="va">avg_phen</span><span class="op">)</span></span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nw.estfledge.html">nw.estfledge</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span>, phenology <span class="op">=</span> <span class="va">avg_phen</span><span class="op">)</span></span></code></pre></div>
 <p><br> Now we can create the maximum allowable periods dataframe and
 run phenological filtering. Here we choose the maximum values for
 incubation, nestling, and total to be the mean value plus several days
@@ -452,11 +431,11 @@ typically build nests within 8 days. So we might say max build time is
 <span>             total <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">60</span>, <span class="fl">55</span><span class="op">)</span><span class="op">)</span>       <span class="co"># mean days build to fledge, plus a bit of buffer</span></span>
 <span></span>
 <span><span class="co"># Filter attempts based on nesting phenology</span></span>
-<span><span class="fu"><a href="../reference/nw.filterphenology.html">nw.filterphenology</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span>,</span>
-<span>                   mode <span class="op">=</span> <span class="st">"flag"</span>, </span>
-<span>                   max_phenology <span class="op">=</span> <span class="va">max_days</span>, </span>
-<span>                   trim_to_active <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                   output <span class="op">=</span> <span class="st">"flagged_phenology"</span><span class="op">)</span></span>
+<span><span class="va">flagged_phenology</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="fu"><a href="../reference/nw.filterphenology.html">nw.filterphenology</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span>,</span>
+<span>                     mode <span class="op">=</span> <span class="st">"flag"</span>, </span>
+<span>                     max_phenology <span class="op">=</span> <span class="va">max_days</span>, </span>
+<span>                     trim_to_active <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># How many attempts were flagged?</span></span>
 <span><span class="va">flagged</span> <span class="op">&lt;-</span> <span class="va">flagged_phenology</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Flagged.Attempt</span> <span class="op">==</span> <span class="st">"FLAGGED"</span><span class="op">)</span></span>
@@ -478,7 +457,10 @@ should be noted for flagging or removal. By setting this argument to
 <code>TRUE</code>, individual nest checks outside the active period will
 be removed if <code>mode = "remove"</code> or noted with a
 <code>"FLAGGED"</code> tag in the new <code>Flagged.Check</code> column
-for you to manually inspect.</p>
+for you to manually inspect. See also
+[<code><a href="../reference/nw.filteractive.html">nw.filteractive()</a></code>]{(<a href="https://engagement-center.github.io/nestwatchR/reference/nw.filteractive.html" class="uri">https://engagement-center.github.io/nestwatchR/reference/nw.filteractive.html</a>)},
+which removes checks in build and optionally includes or excludes the
+check on which fail ro fledge was first detected.</p>
 <p><br> We can visualize the distribution of active nesting periods of
 Carolina Wrens in our example before and after being filtered and
 trimmed.</p>

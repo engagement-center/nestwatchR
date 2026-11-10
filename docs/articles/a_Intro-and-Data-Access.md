@@ -62,8 +62,8 @@ There are two data products available for download via the function
 The only argument, `version =`, to this function defines the version of
 the dataset to be downloaded and defaults to the latest version if left
 blank. This function will download, unzip, and import two dataframes to
-the global environment. Depending on your connection speed, this may
-take a few minutes.
+the environment. Depending on your connection speed, this may take a few
+minutes.
 
 ``` r
 
@@ -74,7 +74,7 @@ nw.getdata()
 nw.getdata(version = 1)
 ```
 
-Once run, two dataframes will be available in the global environment:
+Once run, two dataframes will be available in the environment:
 `NW.attempts` and `NW.checks`. These dataframes are not yet saved to
 your machine–you may wish to use
 [`write.csv()`](https://www.rdocumentation.org/packages/AlphaPart/versions/0.9.8/topics/write.csv)
@@ -357,14 +357,13 @@ dataframes, and having a single merged dataset facilitates these steps.
 The two dataframes can be merged using
 [`nestwatchR::nw.mergedata()`](https://engagement-center.github.io/nestwatchR/reference/nw.mergedata.html).
 This function has three arguments: `attempts =` and `checks =` are used
-to define the appropriate dataframe and the optional `output =` can be
-used to specify the name of the resulting merged dataframe.
+to define the appropriate dataframe.
 
 ``` r
 
 library(dplyr)
 
 # Merge Attempts and Checks
-nw.mergedata(attempts = NW.attempts, checks = NW.checks, output = "merged.data")
-head(merged.data, 20)
+merged_data <- nw.mergedata(attempts = NW.attempts, checks = NW.checks)
+head(merged_data, 20)
 ```

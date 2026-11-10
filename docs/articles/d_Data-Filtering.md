@@ -84,9 +84,9 @@ on coordinate reference systems and projections within R.
 First, to limit stress on our plotting instrument, we will limit the
 dataset to include only one line of data for each nest. If you would
 like certain variables of the nest, like clutch size, fledge/fail date,
-or substrate, to be visible when you click on individual points, but
-sure to select those columns here. In this example, we will select
-clutch size and outcome.
+or substrate to be visible when you click on individual points, but sure
+to select those columns here. In this example, we will select clutch
+size and outcome.
 
 ``` r
 
@@ -154,22 +154,20 @@ run. These data are easily accessible in R through the
 eBird data, you will need to acquire a free access key. This key will
 give you access to Status and Trends Data within R. For more information
 and to acquire an access key, see the [documentation
-here](https://ebird.github.io/ebirdst/).
+here](https://ebird.github.io/ebirdst/) and fill out the [access form
+here](https://ebird.org/st/request) to generate your access key.
 
 We can use our unique access key to download the range map of Bewick’s
 Wren and Carolina Wren. Note, you will need the 6-letter species codes
 of those species you would like to download, not their alpha code or
 common name. By modifying the access key, species, and download location
 in the code below, you can download and open the range polygons to your
-global environment. This code selects only the breeding range layer if
+R environment. This code selects only the breeding range layer if
 available, and if unavailable then selects the resident range layer.
 Note: You only need to input your access key once (R will store it for
 you!) and you only need to download the range maps once (you may get an
-error if you rerun
-[`ebirdst_download_status()`](https://ebird.github.io/ebirdst/reference/ebirdst_download_status.html)
-when the data already exists at the `spatialdata_path` location). You
-may also need to modify the year in the code below depending on what
-Status & Trends data product is available.
+error or warning message if you attempt to re-download a file when the
+data already exists at the `spatialdata_path` location).
 
 ``` r
 
@@ -186,44 +184,23 @@ spatialdata_path <- c("spatial")
 
 # Download range maps by species
 for (i in spp) {
-  ebirdst_download_status(species = i, download_abundance = FALSE, 
-                          download_ranges = TRUE, pattern = "_smooth_27km_", 
-                          path = spatialdata_path)
-}
-
-# You may need to modify the year below to reflect the appropriate S&T product that downloaded
-# Read in the range files
-for (i in spp) {
-  # Generate the path to the .gpkg files
-  file_path <- paste0(spatialdata_path, "/2023/", i, "/ranges/", i, "_range_smooth_27km_2023.gpkg")
-  # Read in the .gpkg file
-  range_data <- st_read(file_path)
-  # Generate the name for the object
+  # Prep the object name
   object_name <- paste0(i, "_range")
-  # Assign the value to the dynamically-generated object name
+  # Download and load the range polygons
+  range_data <- load_ranges(species = i, resolution = c("27km"),
+                             smoothed = TRUE, path = spatialdata_path,
+                             force = FALSE, show_progress = interactive())
+  # Select just the breeding layer if it exists, else select resident layer
+  range_data <- range_data %>% 
+    filter(season == if ("breeding" %in% season) "breeding" else "resident")
+  # Project the polygons to match our points data
+  range_data <- sf::st_transform(range_data, crs = proj)
   assign(object_name, range_data)
-  rm(range_data)
 }
 
-# Select just breeding layer if available, else resident layer
-object_names <- paste(spp, "range", sep = "_")
-for (i in object_names) {
-  if (i %in% ls(envir = .GlobalEnv)) {
-    data <- get(i, envir = .GlobalEnv)
-    if (any(data$season %in% "breeding")) {
-      data <- data %>% filter(season == "breeding")
-      data <- data %>% st_transform(nest_points, crs = proj)
-      assign(paste0(i), data, envir = .GlobalEnv)
-    } else {
-      data <- data %>% filter(season == "resident")
-      data <- data %>% st_transform(nest_points, crs = proj)
-      assign(paste0(i), data, envir = .GlobalEnv)}
-    rm(data)
-  }
-}
 
 # Clean up intermediate objects
-rm(file_path, i, object_name, object_names, spatialdata_path)
+rm(i, object_name, spp, spatialdata_path, range_data)
 ```
 
 \
@@ -277,13 +254,12 @@ has an optional buffer argument `buffer =` where the user may define a
 distance outside the polygon for which nest locations will be allowed.
 This distance can be either in kilometers or miles and should be defined
 using `buffer_units = "km"` or `= "mi"`. The resulting buffer polygon
-may be optionally exported to the global environment for saving or
-plotting using the logical `buffer_output = T`. The user may also define
-their desired projection using `proj =` and inputting a PROJ.4 string.
-If a projection is not provided, then the function will default to the
+may be optionally exported to the environment for saving or plotting
+using the logical `buffer_output = T`. The user may also define their
+desired projection using `proj =` and inputting a PROJ.4 string. If a
+projection is not provided, then the function will default to the
 Lambert Conformal Conic which is well suited for plotting the majority
-of NestWatch data at this time. Finally, the optional `output =`
-argument can be used to name the resulting spatially-cleaned dataframe.
+of NestWatch data at this time.
 
 If we zoom in to central Colorado, we can see there are a few Bewick’s
 Wren nests just outside the range border.
@@ -297,14 +273,15 @@ outside the expected range:
 
 ``` r
 
-nw.filterspatial(points = bewwre,                    # Bewick's Wren nest points 
-                 polygon = bewwre_range,             # Bewick's Wren range shapefile
-                 mode = "flag",                      # flag points outside 
-                 buffer = 50,                        # add a 50km buffer zone
-                 buffer_units = "km",                # units = km
-                 buffer_output = T,                  # yes, output the buffer polygon
-                 proj = "+proj=lcc +lon_0=-90 +lat_1=33 +lat_2=45",   # LCC from above
-                 output = "flagged_nests")           # define the output name
+flagged_nests <- 
+  nw.filterspatial(points = bewwre,                    # Bewick's Wren nest points 
+                   polygon = bewwre_range,             # Bewick's Wren range shapefile
+                   mode = "flag",                      # flag points outside 
+                   buffer = 50,                        # add a 50km buffer zone
+                   buffer_units = "km",                # units = km
+                   buffer_output = T,                  # yes, output the buffer polygon
+                   proj = "+proj=lcc +lon_0=-90 +lat_1=33 +lat_2=45"# LCC from above
+                   )           
 ```
 
 \
@@ -409,10 +386,10 @@ length(unique(data$Attempt.ID))
 # > [1] 7626      # number of nesting attempts for Bewick's and Carolina Wren
 
 # Run cleaning function 
-nw.cleandata(data = data, 
+data <- nw.cleandata(data = data, 
              mode = "remove", 
-             methods = c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"),
-             output = "data")
+             methods = c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k")
+             )
 
 # First, run summary date estimation functions:
 # Missing summary data will be estimated, when possible, by using AVERAGE values 
@@ -425,10 +402,10 @@ avg_phen <- data.frame(Species = c("bewwre", "carwre"),
                        Incubation   = c(16, 16),
                        Nestling     = c(16, 13))
 
-nw.estclutchsize(data = data, output = "data")
-nw.estfirstlay(data = data, phenology = avg_phen, output = "data")
-nw.esthatch(data = data, phenology = avg_phen, output = "data")
-nw.estfledge(data = data, phenology = avg_phen, output = "data")
+data <- nw.estclutchsize(data = data)
+data <- nw.estfirstlay(data = data, phenology = avg_phen)
+data <- nw.esthatch(data = data, phenology = avg_phen)
+data <- nw.estfledge(data = data, phenology = avg_phen)
 ```
 
 \
@@ -460,11 +437,11 @@ max_days <-
              total = c(60, 55))       # mean days build to fledge, plus a bit of buffer
 
 # Filter attempts based on nesting phenology
-nw.filterphenology(data = data,
-                   mode = "flag", 
-                   max_phenology = max_days, 
-                   trim_to_active = TRUE,
-                   output = "flagged_phenology")
+flagged_phenology <- 
+  nw.filterphenology(data = data,
+                     mode = "flag", 
+                     max_phenology = max_days, 
+                     trim_to_active = TRUE)
 
 # How many attempts were flagged?
 flagged <- flagged_phenology %>% filter(Flagged.Attempt == "FLAGGED")
@@ -488,7 +465,10 @@ after nest fledge/failure should be noted for flagging or removal. By
 setting this argument to `TRUE`, individual nest checks outside the
 active period will be removed if `mode = "remove"` or noted with a
 `"FLAGGED"` tag in the new `Flagged.Check` column for you to manually
-inspect.
+inspect. See also
+\[[`nw.filteractive()`](https://engagement-center.github.io/nestwatchR/reference/nw.filteractive.md)\]{(<https://engagement-center.github.io/nestwatchR/reference/nw.filteractive.html>)},
+which removes checks in build and optionally includes or excludes the
+check on which fail ro fledge was first detected.
 
 \
 We can visualize the distribution of active nesting periods of Carolina

@@ -67,10 +67,9 @@ uses a NestWatch dataframe as `data =` and has logical arguments
 `T` removes attempts with those spuh, slash, or hybrid designations and
 subspecies/forms are “rolled up” to the species level (i.e., “Downy
 Woodpecker (eastern)” → “Downy Woodpecker”). If arguments are set to `F`
-or `NULL` the filtering and/or roll up are not performed. The resulting
-dataframe may be optionally named with `output =`. This function changes
-both the common names and the species codes to reflect the changes made
-to the taxonomic unit.
+or `NULL` the filtering and/or roll up are not performed. This function
+changes both the common names and the species codes to reflect the
+changes made to the taxonomic unit.
 
 Taxonomy updates to the participant interface and internal database are
 implemented concurrently with updates from
@@ -119,7 +118,7 @@ may decide to omit spuhs and slashes:
 ``` r
 
 # Remove spuhs and slashes
-nw.cleantaxa(data = df, rm_spuh = T, rm_slash = T, output = "ex1")
+ex1 <- nw.cleantaxa(data = df, rm_spuh = T, rm_slash = T)
 
 ex1
 #>   Attempt.ID                           Species.Name Species.Code
@@ -157,7 +156,7 @@ not exported in the public dataset.
 ``` r
 
 # Remove hybrids and roll up subspecies
-nw.cleantaxa(data = df, rm_hybrid = T, roll_subspecies = T, output = "ex2")
+ex2 <- nw.cleantaxa(data = df, rm_hybrid = T, roll_subspecies = T)
 
 ex2
 #>   Attempt.ID              Species.Name Species.Code
@@ -205,16 +204,15 @@ the output.
 ``` r
 
 # Example of subsetting to 2 focal species: Carolina and Bewick's Wrens
-# Using output "merged.data" from `nw.mergedata()`
-df <- merged.data %>% filter(Species.Code %in% c("carwre", "bewwre"))
+# Using output "merged_data" from `nw.mergedata()`
+df <- merged_data %>% filter(Species.Code %in% c("carwre", "bewwre"))
 
 # Clean data function parameters
-nw.cleandata(data = df, mode = "flag", methods = c("a", "b", "c") , output = "cleaned.data")
+cleaned_data <- nw.cleandata(data = df, mode = "flag", methods = c("a", "b", "c"))
 ```
 
 Individual cleaning procedures are specified in a character vector (not
-case-sensitive) of letters `a:k`. An optional `output =` argument is
-included to optionally rename the resulting dataframe as well.
+case-sensitive) of letters `a:k`.
 
 \
 
@@ -317,18 +315,18 @@ attempts with questionable outcome codes).
 
 # Load and merge version 2 of dataset
 nw.getdata(version = 2)
-nw.mergedata(attempts = NW.attempts, checks = NW.checks, output = "merged.data")
-length(unique(merged.data$Attempt.ID))
+merged_data <- nw.mergedata(attempts = NW.attempts, checks = NW.checks)
+length(unique(merged_data$Attempt.ID))
 # > 648569    # Attempts in raw dataset
 
 
 # Remove attempts with known brood parasites (like Brown-headed Cowbird) as the nest species
-nw.cleandata(data = merged.data, mode = "remove", methods = "a", output = "no_parasite_spp")
+no_parasite_spp <- nw.cleandata(data = merged_data, mode = "remove", methods = "a")
 length(unique(no_parasite_spp$Attempt.ID))
 # > 648537    # Attempts after cleaning
 
 # Remove attempts using "j" and "k"
-nw.cleandata(data = merged.data, mode = "remove", methods = c("j", "k"), output = "no_longnests")
+no_longnests <- nw.cleandata(data = merged_data, mode = "remove", methods = c("j", "k"))
 length(unique(no_longnests$Attempt.ID))
 # > 646743    # Attempts after cleaning
 ```
