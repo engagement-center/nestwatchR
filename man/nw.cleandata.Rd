@@ -74,10 +74,10 @@ deciding what cleaning procedures to conduct. This function contains 11 cleaning
 wrens <- nestwatchR::wren_quickstart
 
 # Flag data not meeting procedures e, f, g, and h
-nw.cleandata(data = wrens, mode = "flag",
-             methods = c("e", "f", "g", "h"))
+out_1 <- nw.cleandata(data = wrens, mode = "flag",
+                      methods = c("e", "f", "g", "h"))
 
 # Remove data not meeting procedures j or k.
-nw.cleandata(data = wrens, mode = "remove",
-             methods = c("j", "k"))
+out_2 <- nw.cleandata(data = wrens, mode = "remove",
+                      methods = c("j", "k"))
 }

@@ -71,10 +71,10 @@ df <- data.frame(Attempt.ID = c(1, 1, 2, 3, 4),
                 Species.Code = c("houwre1", "houwre1", "chicka1", "y00701", "x00004"))
 
 # Remove just ".sp" attempts
-nw.cleantaxa(df, rm_spuh = TRUE)
+out <- nw.cleantaxa(df, rm_spuh = TRUE)
 
 # Remove "/" and hybrid attempts, roll up subspecies to species
-nw.cleantaxa(df, rm_slash = TRUE, rm_hybrid = TRUE, roll_subspecies = TRUE)
+out <- nw.cleantaxa(df, rm_slash = TRUE, rm_hybrid = TRUE, roll_subspecies = TRUE)
 }
 \seealso{
 \code{\link[auk:ebird_taxonomy]{auk::ebird_taxonomy}}

@@ -59,7 +59,7 @@
 #'                   Brood.Parasite.Live.Young.Present.Uncounted = c(0, 0, NA, 0, 0),
 #'                   Nest.Status = rep(NA, 5))
 #'
-#' nw.filteractive(data = data, mode = "flag")
+#' out <- nw.filteractive(data = data, mode = "flag")
 nw.filteractive <- function(data, mode, include_ffcheck = FALSE, output = NULL) {
 
   #####################################

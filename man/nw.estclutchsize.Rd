@@ -43,7 +43,7 @@ data <- data.frame(Attempt.ID = c(1, 2, 3, 4, 5, 6),
                    Dead.Host.Young.Count = c(0, NA, NA, 1, 0,1))
 
 # Estimate Clutch Sizes if NA
-nw.estclutchsize(data = data, output = "out")
+out <- nw.estclutchsize(data = data)
 
 out$Clutch.Size   # clutch size values
 out$Clutch.Size.Estimated   # binary indicator if clutch size is estimated (1) or not (0)

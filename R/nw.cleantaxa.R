@@ -54,10 +54,10 @@
 #'                 Species.Code = c("houwre1", "houwre1", "chicka1", "y00701", "x00004"))
 #'
 #' # Remove just ".sp" attempts
-#' nw.cleantaxa(df, rm_spuh = TRUE)
+#' out <- nw.cleantaxa(df, rm_spuh = TRUE)
 #'
 #' # Remove "/" and hybrid attempts, roll up subspecies to species
-#' nw.cleantaxa(df, rm_slash = TRUE, rm_hybrid = TRUE, roll_subspecies = TRUE)
+#' out <- nw.cleantaxa(df, rm_slash = TRUE, rm_hybrid = TRUE, roll_subspecies = TRUE)
 nw.cleantaxa <- function(data, rm_spuh = FALSE, rm_slash = FALSE, rm_hybrid = FALSE, roll_subspecies = FALSE, output = NULL){
 
   # Initialize Column Names

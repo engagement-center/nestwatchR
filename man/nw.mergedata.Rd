@@ -26,10 +26,10 @@ ex.attempts <- nestwatchR::exNWattempts
 ex.checks <- nestwatchR::exNWchecks
 
 # Merge example NestWatch datasets
-nw.mergedata(ex.attempts, ex.checks)
+merged_data <- nw.mergedata(ex.attempts, ex.checks)
 
 \dontrun{
 # Optionally specify the new dataframe name
-nw.mergedata(ex.attempts, ex.checks, output = "merged_data")
+merged_data <- nw.mergedata(ex.attempts, ex.checks)
 }
 }

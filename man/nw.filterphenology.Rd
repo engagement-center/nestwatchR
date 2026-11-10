@@ -103,8 +103,8 @@ data <- data.frame(Attempt.ID = c("A002"),
                   Live.Host.Young.Count = c(0, 0, 0, 0, 5, 0, 0),
                    Live.Host.Young.Present.Uncounted = rep(NA, 7))
 
-nw.filterphenology(data = data,
-                   max_phenology = phenology,
-                   mode = "flag",
-                   trim_to_active = TRUE)
+out <- nw.filterphenology(data = data,
+                          max_phenology = phenology,
+                          mode = "flag",
+                          trim_to_active = TRUE)
 }

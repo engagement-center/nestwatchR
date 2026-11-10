@@ -47,8 +47,8 @@
 #'                    Nestling     = c(13))
 #'
 #' # Run function
-#' nw.estfirstlay(data = data, phenology = phen, output = "estimated.lay")
-#' all(estimated.lay$First.Lay.Date == "2024-05-01")
+#' out <- nw.estfirstlay(data = data, phenology = phen)
+#' all(out$First.Lay.Date == "2024-05-01")
 
 nw.estfirstlay <- function(data, phenology, output = NULL) {
 

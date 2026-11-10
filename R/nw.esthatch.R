@@ -50,7 +50,7 @@
 #'                         Nestling     = c(13))
 #'
 #' # Run function
-#' nw.esthatch(data = data, phenology = phenology)
+#' out <- nw.esthatch(data = data, phenology = phenology)
 nw.esthatch <- function(data, phenology, output = NULL) {
 
   ###########################

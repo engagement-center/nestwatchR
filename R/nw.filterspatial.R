@@ -43,11 +43,11 @@
 #' points_sf <- sf::st_as_sf(random_points, coords = c("x", "y"), crs = 4326)
 #'
 #' # Run the spatial filter
-#' nw.filterspatial(points = points_sf,
-#'                   polygon = square_polygon,
-#'                   mode = "flag",
-#'                   proj = "+proj=longlat +datum=WGS84 +no_defs",
-#'                   output = "geofiltered.data")
+#' geofiltered_data <-
+#'   nw.filterspatial(points = points_sf,
+#'                    polygon = square_polygon,
+#'                    mode = "flag",
+#'                    proj = "+proj=longlat +datum=WGS84 +no_defs")
 #'
 nw.filterspatial  <- function(points, polygon, mode, buffer = F, buffer_units = NULL, buffer_output = NULL, proj = NULL, output = NULL) {
 
