@@ -146,7 +146,7 @@ better method might be to filter nest locations based on a range map.
 ### eBird Range Map Polygons
 
 The [eBird Status and Trends
-Products](https://science.ebird.org/en/status-and-trends) contain a
+Products](https://science.ebird.org/en/status-and-trends/) contain a
 wealth of information on bird populations. Among the available products
 are range maps of species for which Status and Trend Models have been
 run. These data are easily accessible in R through the
@@ -155,7 +155,7 @@ eBird data, you will need to acquire a free access key. This key will
 give you access to Status and Trends Data within R. For more information
 and to acquire an access key, see the [documentation
 here](https://ebird.github.io/ebirdst/) and fill out the [access form
-here](https://ebird.org/st/request) to generate your access key.
+here](https://ebird.org/st/request/) to generate your access key.
 
 We can use our unique access key to download the range map of Bewick’s
 Wren and Carolina Wren. Note, you will need the 6-letter species codes

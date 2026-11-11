@@ -1,7 +1,7 @@
 # Estimate NestWatch Summary Dates
 
 The [NestWatch Open
-Dataset](https://data.mendeley.com/datasets/wjf794z7gc) holds a wealth
+Dataset](https://data.mendeley.com/datasets/wjf794z7gc/) holds a wealth
 of nesting data acquired from different sources. Due to participant
 omissions, differing protocols over time, and assimilation of other
 datasets, missing data fields are to be expected. For instance, a

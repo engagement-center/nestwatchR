@@ -2,7 +2,7 @@
 
 This data cleaning vignette will cover several different methods for
 cleaning data found within the [NestWatch Open
-Dataset](https://data.mendeley.com/datasets/wjf794z7gc). NestWatch data
+Dataset](https://data.mendeley.com/datasets/wjf794z7gc/). NestWatch data
 are collected by volunteer participants (researchers and the public) and
 are known to contain some common errors and inconsistencies. Thus, these
 data should be considered as “raw”, and the analyst should consider
@@ -34,8 +34,8 @@ established for species nesting outside of the U.S. and Canada or for
 species that are seldom reported.
 
 NestWatch additionally implements a geographic review of species
-location based on filters curated by [eBird](https://ebird.org/home).
-For example, a participant should not be able to report a nest from a
+location based on filters curated by [eBird](https://ebird.org/). For
+example, a participant should not be able to report a nest from a
 species that is extremely rare at the locale, preventing many species
 identification errors. Note that for similar sympatric species,
 incorrect identifications are not flagged by this process (e.g., a
@@ -54,7 +54,7 @@ for more information on spatial filtering.
 ## Filtering & consolidating taxonomic units
 
 The NestWatch platform uses [eBird
-taxonomy](https://science.ebird.org/en/use-ebird-data/the-ebird-taxonomy)
+taxonomy](https://science.ebird.org/en/use-ebird-data/the-ebird-taxonomy/)
 to standardize species’ names. This allows participants to select any
 available eBird taxonomic unit, including “spuhs” (i.e., “chickadee
 sp.”), slashes (i.e., “Tree/Violet-green Swallow”), hybrids (i.e.,
@@ -82,7 +82,7 @@ corrections; we encourage the use of the most recent version. For more
 information, see
 [`auk::ebird_taxonomy`](https://cornelllabofornithology.github.io/auk/reference/ebird_taxonomy.html)
 and [eBird
-Taxonomy](https://science.ebird.org/en/use-ebird-data/the-ebird-taxonomy).
+Taxonomy](https://science.ebird.org/en/use-ebird-data/the-ebird-taxonomy/).
 
 ``` r
 
@@ -149,9 +149,9 @@ of the parents is uncertain. Additionally, participants may incorrectly
 select a hybrid species when they should have selected a spuh or slash
 species designation. If you are interested in validating attempts
 labeled with hybrid status, you may [request additional
-information](https://data.nestwatch.org/nw/contact) from NestWatch staff
-asking for the “notes” fields which may contain additional information
-not exported in the public dataset.
+information](https://data.nestwatch.org/nw/contact/) from NestWatch
+staff asking for the “notes” fields which may contain additional
+information not exported in the public dataset.
 
 ``` r
 

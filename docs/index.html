@@ -11,8 +11,8 @@
 <script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Download, Clean, and Filter NestWatch Data">
-<meta name="description" content="Provides tools for downloading, cleaning, and filtering data from the NestWatch database of bird nesting records. Functions assist users with common data-cleaning procedures for raw NestWatch data.">
-<meta property="og:description" content="Provides tools for downloading, cleaning, and filtering data from the NestWatch database of bird nesting records. Functions assist users with common data-cleaning procedures for raw NestWatch data.">
+<meta name="description" content="Provides tools for downloading, cleaning, and filtering data from the NestWatch Open Dataset (doi:10.17632/wjf794z7gc) of bird nesting records. NestWatch (&lt;https://nestwatch.org/&gt;) is a repository for bird nest records collected by both researchers and participatory scientists. Functions assist users with accessing the dataset, conducting common data-cleaning procedures, and identifying possible suspicious nesting records.">
+<meta property="og:description" content="Provides tools for downloading, cleaning, and filtering data from the NestWatch Open Dataset (doi:10.17632/wjf794z7gc) of bird nesting records. NestWatch (&lt;https://nestwatch.org/&gt;) is a repository for bird nest records collected by both researchers and participatory scientists. Functions assist users with accessing the dataset, conducting common data-cleaning procedures, and identifying possible suspicious nesting records.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -61,36 +61,36 @@
 <h2 id="overview-pushpin">Overview <span class="emoji" data-emoji="pushpin">📌</span>
 <a class="anchor" aria-label="anchor" href="#overview-pushpin"></a>
 </h2>
-<p><a href="http://www.nestwatch.org" class="external-link">NestWatch</a> is a participatory science project operated by the <a href="https://birds.cornell.edu" class="external-link">Cornell Lab of Ornithology</a>. Since 1965, members of the public have been following a standardized protocol for observing and reporting the nests of birds in the United States and Canada (and more recently, globally). This data set contains raw nest records submitted to NestWatch, including millions of nest check observations from hundreds of thousands of nest attempts (&gt;750,000 in 2025). The purpose of this repository is to provide a collection of functions to aid in accessing and cleaning the wealth of nesting data contained in the NestWatch database.</p>
+<p><a href="https://www.nestwatch.org/" class="external-link">NestWatch</a> is a participatory science project operated by the <a href="https://birds.cornell.edu/" class="external-link">Cornell Lab of Ornithology</a>. Since 1965, members of the public have been following a standardized protocol for observing and reporting the nests of birds in the United States and Canada (and more recently, globally). This data set contains raw nest records submitted to NestWatch, including millions of nest check observations from hundreds of thousands of nest attempts (&gt;750,000 in 2025). The purpose of this repository is to provide a collection of functions to aid in accessing and cleaning the wealth of nesting data contained in the NestWatch database.</p>
 <p><strong>The metadata paper associated with this dataset <a href="https://doi.org/10.1002/ecy.4230" class="external-link">(Bailey et al. 2023)</a> is critical for understanding and interpreting data fields and their contents</strong>. This dataset is scheduled for updates annually on or about January 31. Relevant details can also be found on the <a href="https://nestwatch.org/explore/nestwatch-open-dataset-downloads/" class="external-link">NestWatch website here</a>. <br><br></p>
 </div>
 <div class="section level2">
 <h2 id="installation-computer">Installation <span class="emoji" data-emoji="computer">💻</span>
 <a class="anchor" aria-label="anchor" href="#installation-computer"></a>
 </h2>
-<p>This package remains under continued development, expanding functionality to better serve our research audience, and therefor may have bugs and unexpected issues. If you encounter any unexpected errors or issues or have suggestions, please report the bug or reach out to the package maintainer. Presently, the package exists off-CRAN in the public <a href="https://github.com/engagement-center/nestwatchR" class="external-link"><code>engagement-center/nestwatchR</code></a> GitHub repository. To install the package on your local machine, run the following code:</p>
+<p>This package remains under continued development, expanding functionality to better serve our research audience, and therefor may have bugs and unexpected issues. If you encounter any unexpected errors or issues or have suggestions, please report the bug or reach out to the package maintainer. Presently, the package exists off-CRAN in the public <a href="https://github.com/engagement-center/nestwatchR/" class="external-link"><code>engagement-center/nestwatchR</code></a> GitHub repository. To install the package on your local machine, run the following code:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"remotes"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="co"># Install nestwatchR package in R</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"engagement-center/nestwatchR"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"engagement-center/nestwatchR"</span><span class="op">)</span></span></code></pre></div>
 <p><br><br></p>
 </div>
 <div class="section level2">
 <h2 id="data-access-globe_with_meridians">Data access <span class="emoji" data-emoji="globe_with_meridians">🌐</span>
 <a class="anchor" aria-label="anchor" href="#data-access-globe_with_meridians"></a>
 </h2>
-<p>Data from NestWatch are free to access either from the <a href="https://engagement-center.github.io/nestwatchR/reference/nw.getdata.html"><code>nw.getdata()</code></a> function in R or as a direct download from the <a href="https://data.mendeley.com/datasets/wjf794z7gc" class="external-link">Mendeley Data Archive</a>. NestWatch Open Dataset by Cornell Lab of Ornithology is licensed under CC BY-NC 4.0. We encourage researchers seeking to conduct formal analyses to use these data. As with any dataset, knowing the data structure, understanding the metadata, grasping the data collection protocols, and being aware of the unique aspects of the program are all critical for conducting analyses and interpreting results in ways that provide meaningful insights. Prior to analysis, we encourage all users of NestWatch Data to read the article <a href="https://nestwatch.org/explore/nestwatch-open-dataset-downloads/" class="external-link">“Download Raw NestWatch Data for Analysis”</a> article on our website.</p>
+<p>Data from NestWatch are free to access either from the <a href="https://engagement-center.github.io/nestwatchR/reference/nw.getdata.html"><code>nw.getdata()</code></a> function in R or as a direct download from the <a href="https://data.mendeley.com/datasets/wjf794z7gc/" class="external-link">Mendeley Data Archive</a>. NestWatch Open Dataset by Cornell Lab of Ornithology is licensed under CC BY-NC 4.0. We encourage researchers seeking to conduct formal analyses to use these data. As with any dataset, knowing the data structure, understanding the metadata, grasping the data collection protocols, and being aware of the unique aspects of the program are all critical for conducting analyses and interpreting results in ways that provide meaningful insights. Prior to analysis, we encourage all users of NestWatch Data to read the article <a href="https://nestwatch.org/explore/nestwatch-open-dataset-downloads/" class="external-link">“Download Raw NestWatch Data for Analysis”</a> article on our website.</p>
 <p><br><br></p>
 </div>
 <div class="section level2">
 <h2 id="versions-memo">Versions <span class="emoji" data-emoji="memo">📝</span>
 <a class="anchor" aria-label="anchor" href="#versions-memo"></a>
 </h2>
-<p>This package is on Version 1.0.0 and will be updated to maintain functionality and improve accessibility to the NestWatch datasets. If you encounter issues while using the package or have suggestions, you can submit an <a href="https://github.com/engagement-center/nestwatchR/issues" class="external-link">issue</a> on GitHub or <a href="mailto:kim.savides@cornell.edu?subject=nestwatchR%Issue%%3A">contact us directly</a>.</p>
-<p>The NestWatch Open Dataset is updated annually, by or around 31 January, with the previous year’s nesting records. NestWatch also updates the database with historical nest records being archived from other projects. To improve reproducibility in NestWatch analyses, each version of the dataset is archived in Mendeley, and each specific version can be downloaded either using the <a href="https://engagement-center.github.io/nestwatchR/reference/nw.getdata.html"><code>nw.getdata(version = )</code></a> function or by a direct download from the <a href="https://data.mendeley.com/datasets/wjf794z7gc/2" class="external-link">Mendeley archive</a>.</p>
+<p>This package is on Version 1.0.0 and will be updated to maintain functionality and improve accessibility to the NestWatch datasets. If you encounter issues while using the package or have suggestions, you can submit an <a href="https://github.com/engagement-center/nestwatchR/issues/" class="external-link">issue</a> on GitHub or <a href="mailto:kim.savides@cornell.edu?subject=nestwatchR%Issue%%3A">contact us directly</a>.</p>
+<p>The NestWatch Open Dataset is updated annually, by or around 31 January, with the previous year’s nesting records. NestWatch also updates the database with historical nest records being archived from other projects. To improve reproducibility in NestWatch analyses, each version of the dataset is archived in Mendeley, and each specific version can be downloaded either using the <a href="https://engagement-center.github.io/nestwatchR/reference/nw.getdata.html"><code>nw.getdata(version = )</code></a> function or by a direct download from the <a href="https://data.mendeley.com/datasets/wjf794z7gc/" class="external-link">Mendeley archive</a>.</p>
 <p><br><br></p>
 </div>
 <div class="section level2">
@@ -101,7 +101,7 @@
 <blockquote>
 <p><strong>Dataset (replace with appropriate version # and year):</strong> Bailey, R. L., L. Larson, D. Bonter. 2026. “NestWatch Open Dataset.” Mendeley Data, V6. DOI: <a href="https://doi.org/10.17632/wjf794z7gc" class="external-link">10.17632/wjf794z7gc</a></p>
 <p><strong>Data Paper:</strong> Bailey, R. L., L. Larson, and D. N. Bonter. 2024. “NestWatch: An Open-Access, Long-Term Data Set on Avian Reproductive Success.” Ecology 105(2): e4230. DOI: <a href="https://doi.org/10.1002/ecy.4230" class="external-link">10.1002/ecy.4230</a></p>
-<p><strong>NestWatch R Package (replace appropriate version # and year):</strong><br> Savides, K., R. L. Bailey, &amp; D. N. Bonter. 2026. NestWatch Data Products (Version 1.0.0) [Computer software]. <a href="https://github.com/engagement-center/2024-NestWatch-Package-Internal" class="external-link uri">https://github.com/engagement-center/2024-NestWatch-Package-Internal</a></p>
+<p><strong>NestWatch R Package (replace appropriate version # and year):</strong><br> Savides, K., R. L. Bailey, &amp; D. N. Bonter. 2026. NestWatch Data Products (Version 1.0.0) [Computer software]. <a href="https://github.com/engagement-center/nestwatchR/" class="external-link uri">https://github.com/engagement-center/nestwatchR/</a></p>
 </blockquote>
 <p><br><br></p>
 </div>
@@ -129,7 +129,7 @@
 <p>This quick start guide shows how to download data and plot the first lay dates of two species from the NestWatch Open Dataset: Carolina and Bewick’s wrens. Note that here we force the download of Version 1 of the NestWatch dataset for reproducibility. When running your own analyses, you will likely want to download the latest version of the NestWatch data (see <a href="https://engagement-center.github.io/nestwatchR/reference/nw.getdata.html"><code>nw.getdata()</code></a> for more information).</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load NestWatch Package</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://engagement-center.github.io/nestwatchR">nestwatchR</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://engagement-center.github.io/nestwatchR/">nestwatchR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Download NestWatch dataset by version</span></span>
@@ -233,7 +233,7 @@
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/engagement-center/nestwatchR/" class="external-link">Browse source code</a></li>
-<li><a href="https://github.com/engagement-center/nestwatchR/issues" class="external-link">Report a bug</a></li>
+<li><a href="https://github.com/engagement-center/nestwatchR/issues/" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 

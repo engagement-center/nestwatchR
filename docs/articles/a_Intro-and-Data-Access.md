@@ -4,26 +4,27 @@
 
 ## Background
 
-The goal of the [NestWatch](https://nestwatch.org), administered by [The
-Cornell Lab of Ornithology](https://www.birds.cornell.edu/home/), is to
-serve as a global, open access repository for data on the reproductive
-success of birds. NestWatch preserves data collected by members of the
-global participatory science community as well as professional
-researchers. The dataset, and these R tools, are freely available to
-enable the study of a suite of nesting parameters. NestWatch is designed
-to record data on the reproductive biology of birds, including when and
-where nesting occurs, the number of eggs laid, how many eggs hatch, and
-how many offspring survive to fledging. Our database may be useful for
-studying reproductive success and how it may be changing over time as a
-result of climate change, habitat alterations, urbanization, the spread
-of non-native plants and animals, and other topics. Researchers or
-members of the public interested in archiving nesting data for current
-and future use should visit the [NestWatch web
-site](https://nestwatch.org). Large data sets may be uploaded by
-contacting the [NestWatch Team](mailto:nestwatch@cornell.edu).
+The goal of the [NestWatch](https://nestwatch.org/), administered by
+[The Cornell Lab of Ornithology](https://www.birds.cornell.edu/home/),
+is to serve as a global, open access repository for data on the
+reproductive success of birds. NestWatch preserves data collected by
+members of the global participatory science community as well as
+professional researchers. The dataset, and these R tools, are freely
+available to enable the study of a suite of nesting parameters.
+NestWatch is designed to record data on the reproductive biology of
+birds, including when and where nesting occurs, the number of eggs laid,
+how many eggs hatch, and how many offspring survive to fledging. Our
+database may be useful for studying reproductive success and how it may
+be changing over time as a result of climate change, habitat
+alterations, urbanization, the spread of non-native plants and animals,
+and other topics. Researchers or members of the public interested in
+archiving nesting data for current and future use should visit the
+[NestWatch web site](https://nestwatch.org/). Large data sets may be
+uploaded by contacting the [NestWatch
+Team](mailto:nestwatch@cornell.edu).
 
 This vignette gives an overview of the [NestWatch Open
-Dataset](https://data.mendeley.com/datasets/wjf794z7gc), which
+Dataset](https://data.mendeley.com/datasets/wjf794z7gc/), which
 represents both nest-level parameters and individual nest checks.
 Knowledge of the structure of the database is critical for proper
 interpretation of the dataset. This example will discuss some of the 54
@@ -37,7 +38,7 @@ found in the NestWatch data paper, [Bailey et al.
 ## Data Access
 
 The NestWatch Open Dataset is freely accessible via a [Mendeley data
-repository](https://data.mendeley.com/datasets/wjf794z7gc) or the
+repository](https://data.mendeley.com/datasets/wjf794z7gc/) or the
 [`nestwatchR::nw.getdata()`](https://engagement-center.github.io/nestwatchR/reference/nw.getdata.html)
 function and is licensed under [CC BY-NC
 4.0](http://creativecommons.org/licenses/by-nc/4.0/?ref=chooser-v1).
@@ -77,7 +78,7 @@ nw.getdata(version = 1)
 Once run, two dataframes will be available in the environment:
 `NW.attempts` and `NW.checks`. These dataframes are not yet saved to
 your machine–you may wish to use
-[`write.csv()`](https://www.rdocumentation.org/packages/AlphaPart/versions/0.9.8/topics/write.csv)
+[`write.csv()`](https://www.rdocumentation.org/packages/AlphaPart/versions/0.9.8/topics/write.csv/)
 or [`saveRDS()`](https://rdrr.io/r/base/readRDS.html) to access these
 data again without the need to re-download the datasets.
 
@@ -194,7 +195,7 @@ fate, clutch size, first lay date, fledge date, etc.
 >   Birdhouse Network). It was retained later for continuity even after
 >   nest checks were enabled because some participants may choose not to
 >   enter all of their nest checks. See [Cooper
->   2014](https://link.springer.com/article/10.1007/s00484-013-0742-z)
+>   2014](https://link.springer.com/article/10.1007/s00484-013-0742-z/)
 >   for further details.
 > - **Hatch Date:** participant provided; date; Date when the first egg
 >   hatched.

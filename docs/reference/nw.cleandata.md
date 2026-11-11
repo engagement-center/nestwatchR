@@ -56,7 +56,7 @@ procedures `a:k`.\
   of the nest species. Users may choose to look at these data more
   closely if investigating brood parasitism. See the full list or
   obligate brood parasite species [click
-  here](https://https://engagement-center.github.io/nestwatchR/articles/b_Data-Cleaning.html#parasite-table).
+  here](https://engagement-center.github.io/nestwatchR/articles/b_Data-Cleaning.html#parasite-table).
 
 - `b`: Flag/remove attempts with of "no breeding behavior observed"
   (`u3`), "inactive" (`i`), and "not monitored" (`n`). These data likely

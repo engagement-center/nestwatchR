@@ -18,12 +18,12 @@ Source:
 
 Savides K, Bailey R, Bonter D (2026). *nestwatchR: Download, Clean, and
 Filter NestWatch Data*. R package version 1.0.0,
-<https://engagement-center.github.io/nestwatchR>.
+<https://engagement-center.github.io/nestwatchR/>.
 
     @Manual{,
       title = {nestwatchR: Download, Clean, and Filter NestWatch Data},
       author = {Kim Savides and Robyn L. Bailey and David N. Bonter},
       year = {2026},
       note = {R package version 1.0.0},
-      url = {https://engagement-center.github.io/nestwatchR},
+      url = {https://engagement-center.github.io/nestwatchR/},
     }

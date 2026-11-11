@@ -69,7 +69,7 @@
     
     
 <p>This data cleaning vignette will cover several different methods for
-cleaning data found within the <a href="https://data.mendeley.com/datasets/wjf794z7gc" class="external-link">NestWatch Open
+cleaning data found within the <a href="https://data.mendeley.com/datasets/wjf794z7gc/" class="external-link">NestWatch Open
 Dataset</a>. NestWatch data are collected by volunteer participants
 (researchers and the public) and are known to contain some common errors
 and inconsistencies. Thus, these data should be considered as “raw”, and
@@ -99,16 +99,15 @@ observations are relevant. Importantly, these initial biological filters
 have not been established for species nesting outside of the U.S. and
 Canada or for species that are seldom reported.</p>
 <p>NestWatch additionally implements a geographic review of species
-location based on filters curated by <a href="https://ebird.org/home" class="external-link">eBird</a>. For example, a participant
-should not be able to report a nest from a species that is extremely
-rare at the locale, preventing many species identification errors. Note
-that for similar sympatric species, incorrect identifications are not
-flagged by this process (e.g., a Black-capped Chickadee may be
-misidentified as a Carolina Chickadee in regions of range overlap).
-However, older reports, including historic data migrated to the
-NestWatch database, are not subjected to the same review process. We
-recommend that data analysts map nest locations and screen for likely
-location errors. See the <a href="https://engagement-center.github.io/nestwatchR/reference/nw.filterspatial.html"><code>nw.filterspatial()</code></a>
+location based on filters curated by <a href="https://ebird.org/" class="external-link">eBird</a>. For example, a participant should
+not be able to report a nest from a species that is extremely rare at
+the locale, preventing many species identification errors. Note that for
+similar sympatric species, incorrect identifications are not flagged by
+this process (e.g., a Black-capped Chickadee may be misidentified as a
+Carolina Chickadee in regions of range overlap). However, older reports,
+including historic data migrated to the NestWatch database, are not
+subjected to the same review process. We recommend that data analysts
+map nest locations and screen for likely location errors. See the <a href="https://engagement-center.github.io/nestwatchR/reference/nw.filterspatial.html"><code>nw.filterspatial()</code></a>
 and <a href="https://engagement-center.github.io/nestwatchR/articles/d_Data-Filtering.html">Filtering
 Vignette</a> for more information on spatial filtering.</p>
 <p><br></p>
@@ -116,7 +115,7 @@ Vignette</a> for more information on spatial filtering.</p>
 <div class="section level2">
 <h2 id="filtering-consolidating-taxonomic-units">Filtering &amp; consolidating taxonomic units<a class="anchor" aria-label="anchor" href="#filtering-consolidating-taxonomic-units"></a>
 </h2>
-<p>The NestWatch platform uses <a href="https://science.ebird.org/en/use-ebird-data/the-ebird-taxonomy" class="external-link">eBird
+<p>The NestWatch platform uses <a href="https://science.ebird.org/en/use-ebird-data/the-ebird-taxonomy/" class="external-link">eBird
 taxonomy</a> to standardize species’ names. This allows participants to
 select any available eBird taxonomic unit, including “spuhs” (i.e.,
 “chickadee sp.”), slashes (i.e., “Tree/Violet-green Swallow”), hybrids
@@ -140,7 +139,7 @@ January and may be taxonomically outdated for short periods of time
 of the NestWatch Open Dataset are not updated for taxonomic or other
 corrections; we encourage the use of the most recent version. For more
 information, see <a href="https://cornelllabofornithology.github.io/auk/reference/ebird_taxonomy.html" class="external-link"><code>auk::ebird_taxonomy</code></a>
-and <a href="https://science.ebird.org/en/use-ebird-data/the-ebird-taxonomy" class="external-link">eBird
+and <a href="https://science.ebird.org/en/use-ebird-data/the-ebird-taxonomy/" class="external-link">eBird
 Taxonomy</a>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Simple example dataframe</span></span>
@@ -200,7 +199,7 @@ hybrid species code was entered for a nest attempt, the species identity
 of the parents is uncertain. Additionally, participants may incorrectly
 select a hybrid species when they should have selected a spuh or slash
 species designation. If you are interested in validating attempts
-labeled with hybrid status, you may <a href="https://data.nestwatch.org/nw/contact" class="external-link">request additional
+labeled with hybrid status, you may <a href="https://data.nestwatch.org/nw/contact/" class="external-link">request additional
 information</a> from NestWatch staff asking for the “notes” fields which
 may contain additional information not exported in the public
 dataset.</p>
