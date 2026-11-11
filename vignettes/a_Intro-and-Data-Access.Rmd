@@ -30,7 +30,7 @@ library(nestwatchR)
 # Background {#background}
 
 The goal of the [NestWatch](https://nestwatch.org/), administered by [The
-Cornell Lab of Ornithology](https://www.birds.cornell.edu/home/), is to
+Cornell Lab of Ornithology](https://birds.cornell.edu/home/), is to
 serve as a global, open access repository for data on the reproductive
 success of birds. NestWatch preserves data collected by members of the
 global participatory science community as well as professional
@@ -102,7 +102,7 @@ nw.getdata(version = 1)
 Once run, two dataframes will be
 available in the environment: `NW.attempts` and `NW.checks`.
 These dataframes are not yet saved to your machine--you may wish to use
-[`write.csv()`](https://www.rdocumentation.org/packages/AlphaPart/versions/0.9.8/topics/write.csv/)
+[`write.csv()`](https://rdocumentation.org/packages/AlphaPart/versions/0.9.8/topics/write.csv/)
 or [`saveRDS()`](https://rdrr.io/r/base/readRDS.html) to access these
 data again without the need to re-download the datasets.
 
@@ -195,11 +195,11 @@ datatable(NW.attempts, options = list(paging = F, scrollX = T, searching  = F))
     participants with multiple Observer IDs.
 -   **Species Code:** participant provided; categorical; Taxonomic code
     for the identity of the nesting species. See [eBird
-    taxonomy](https://www.birds.cornell.edu/clementschecklist/download/)
+    taxonomy](https://birds.cornell.edu/clementschecklist/download/)
     for more details.
 -   **Species Name:** participant provided; categorical; Common name (in
     English) for the identity of the nesting species. See [eBird
-    taxonomy](https://www.birds.cornell.edu/clementschecklist/download/)
+    taxonomy](https://birds.cornell.edu/clementschecklist/download/)
     for more details.
 -   **Year:** assigned; integer; Year in which the nest attempt started.
 -   **Predator Guard:** participant provided; categorical; For nest
