@@ -18,7 +18,7 @@ Authors@R:
              comment = c(ORCID = "0000-0003-1768-1941")),
       person("Cornell Lab of Ornithology", role = "cph"))
 Maintainer: Kim Savides <kim.savides@cornell.edu>
-Description: Provides tools for downloading, cleaning, and filtering data from the NestWatch Open Dataset (<https://doi.org/10.17632/wjf794z7gc/>) of bird nesting records. NestWatch (<https://nestwatch.org/>) is a repository for bird nest records collected by both researchers and participatory scientists. Functions assist users with accessing the dataset, conducting common data-cleaning procedures, and identifying possible suspicious nesting records.
+Description: Provides tools for downloading, cleaning, and filtering data from the NestWatch Open Dataset (doi:10.17632/wjf794z7gc) of bird nesting records. NestWatch (<https://nestwatch.org/>) is a repository for bird nest records collected by both researchers and participatory scientists. Functions assist users with accessing the dataset, conducting common data-cleaning procedures, and identifying possible suspicious nesting records.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
