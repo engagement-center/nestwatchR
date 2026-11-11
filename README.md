@@ -4,7 +4,7 @@
 <!-- badges: start -->
 
 [![Static
-Badge](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+Badge](https://repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![Static
 Badge](https://img.shields.io/badge/Dataset%20License-CC%20BY--NC%204.0-blue)](https://creativecommons.org/licenses/by-nc/4.0/deed.en)
 [![Static
@@ -14,8 +14,8 @@ Badge](https://img.shields.io/badge/Code%20License-GPL%20v3-blue)](https://www.g
 
 ## Overview :pushpin:
 
-[NestWatch](https://www.nestwatch.org/) is a participatory science
-project operated by the [Cornell Lab of
+[NestWatch](https://nestwatch.org/) is a participatory science project
+operated by the [Cornell Lab of
 Ornithology](https://birds.cornell.edu/). Since 1965, members of the
 public have been following a standardized protocol for observing and
 reporting the nests of birds in the United States and Canada (and more

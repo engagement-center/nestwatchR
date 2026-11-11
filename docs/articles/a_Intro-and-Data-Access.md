@@ -5,23 +5,22 @@
 ## Background
 
 The goal of the [NestWatch](https://nestwatch.org/), administered by
-[The Cornell Lab of Ornithology](https://www.birds.cornell.edu/home/),
-is to serve as a global, open access repository for data on the
-reproductive success of birds. NestWatch preserves data collected by
-members of the global participatory science community as well as
-professional researchers. The dataset, and these R tools, are freely
-available to enable the study of a suite of nesting parameters.
-NestWatch is designed to record data on the reproductive biology of
-birds, including when and where nesting occurs, the number of eggs laid,
-how many eggs hatch, and how many offspring survive to fledging. Our
-database may be useful for studying reproductive success and how it may
-be changing over time as a result of climate change, habitat
-alterations, urbanization, the spread of non-native plants and animals,
-and other topics. Researchers or members of the public interested in
-archiving nesting data for current and future use should visit the
-[NestWatch web site](https://nestwatch.org/). Large data sets may be
-uploaded by contacting the [NestWatch
-Team](mailto:nestwatch@cornell.edu).
+[The Cornell Lab of Ornithology](https://birds.cornell.edu/home/), is to
+serve as a global, open access repository for data on the reproductive
+success of birds. NestWatch preserves data collected by members of the
+global participatory science community as well as professional
+researchers. The dataset, and these R tools, are freely available to
+enable the study of a suite of nesting parameters. NestWatch is designed
+to record data on the reproductive biology of birds, including when and
+where nesting occurs, the number of eggs laid, how many eggs hatch, and
+how many offspring survive to fledging. Our database may be useful for
+studying reproductive success and how it may be changing over time as a
+result of climate change, habitat alterations, urbanization, the spread
+of non-native plants and animals, and other topics. Researchers or
+members of the public interested in archiving nesting data for current
+and future use should visit the [NestWatch web
+site](https://nestwatch.org/). Large data sets may be uploaded by
+contacting the [NestWatch Team](mailto:nestwatch@cornell.edu).
 
 This vignette gives an overview of the [NestWatch Open
 Dataset](https://data.mendeley.com/datasets/wjf794z7gc/), which
@@ -78,7 +77,7 @@ nw.getdata(version = 1)
 Once run, two dataframes will be available in the environment:
 `NW.attempts` and `NW.checks`. These dataframes are not yet saved to
 your machine–you may wish to use
-[`write.csv()`](https://www.rdocumentation.org/packages/AlphaPart/versions/0.9.8/topics/write.csv/)
+[`write.csv()`](https://rdocumentation.org/packages/AlphaPart/versions/0.9.8/topics/write.csv/)
 or [`saveRDS()`](https://rdrr.io/r/base/readRDS.html) to access these
 data again without the need to re-download the datasets.
 
@@ -166,12 +165,12 @@ fate, clutch size, first lay date, fledge date, etc.
 >   participants with multiple Observer IDs.
 > - **Species Code:** participant provided; categorical; Taxonomic code
 >   for the identity of the nesting species. See [eBird
->   taxonomy](https://www.birds.cornell.edu/clementschecklist/download/)
->   for more details.
+>   taxonomy](https://birds.cornell.edu/clementschecklist/download/) for
+>   more details.
 > - **Species Name:** participant provided; categorical; Common name (in
 >   English) for the identity of the nesting species. See [eBird
->   taxonomy](https://www.birds.cornell.edu/clementschecklist/download/)
->   for more details.
+>   taxonomy](https://birds.cornell.edu/clementschecklist/download/) for
+>   more details.
 > - **Year:** assigned; integer; Year in which the nest attempt started.
 > - **Predator Guard:** participant provided; categorical; For nest
 >   attempts in boxes, this field indicates whether a device intended to

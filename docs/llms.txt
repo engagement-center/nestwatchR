@@ -2,8 +2,8 @@
 
 ## Overview 📌
 
-[NestWatch](https://www.nestwatch.org/) is a participatory science
-project operated by the [Cornell Lab of
+[NestWatch](https://nestwatch.org/) is a participatory science project
+operated by the [Cornell Lab of
 Ornithology](https://birds.cornell.edu/). Since 1965, members of the
 public have been following a standardized protocol for observing and
 reporting the nests of birds in the United States and Canada (and more
